@@ -68,19 +68,18 @@ const ADMIN_PIN = "1414";
 const NAMES = [
   "Seb","Solène","Éliane","Joël","Marie Claude","Alain",
   "Marion","Ludo","Matt","Laura","David","Fabien",
-  "Sophie","Diego","Sophie P","Pauline","Xavier","Rico",
+  "Sophie","Diego","Sophie D","Pauline","Xavier","Rico",
   "Mag","Stephan","Laura B","Kiki","Wojtek"
 ];
 const DAYS = [
   {s:"Mar 23",f:"Mardi 23"},{s:"Mer 24",f:"Mercredi 24"},
   {s:"Jeu 25",f:"Jeudi 25"},{s:"Ven 26",f:"Vendredi 26"},
-  {s:"Sam 27",f:"Samedi 27"},{s:"Dim 28",f:"Dimanche 28"},
   {s:"Lun 29",f:"Lundi 29"},{s:"Mar 30",f:"Mardi 30"}
 ];
 const FUT_PRICE = 65, FUT_LITERS = 14, GLASS_CL = 25;
 const GLASSES_PER_FUT = Math.round((FUT_LITERS*100)/GLASS_CL);
 const PRICE_REAL = FUT_PRICE / GLASSES_PER_FUT;
-const TODAY_IDX = (() => { const d=new Date().getDate(); const m={23:0,24:1,25:2,26:3,27:4,28:5,29:6,30:7}; return d in m ? m[d] : -1; })();
+const TODAY_IDX = (() => { const d=new Date().getDate(); const m={23:0,24:1,25:2,26:3,29:4,30:5}; return d in m ? m[d] : -1; })();
 
 // ── STATE ────────────────────────────────────────
 let counts = {};

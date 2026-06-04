@@ -155,37 +155,41 @@ function renderLogin() {
   return `
   <div class="page">
     <div class="login-hero">
-      <div class="logo-wrap">
-        <svg class="logo-ss" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" width="200" style="display:block;margin:0 auto;">
-          <defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-          <path d="M12,45 Q8,38 14,32 Q20,26 16,20" stroke="#D4860A" stroke-width="1.2" fill="none" opacity="0.6"/>
-          <path d="M10,45 Q5,36 12,28" stroke="#D4860A" stroke-width="0.8" fill="none" opacity="0.4"/>
-          <circle cx="14" cy="19" r="1.5" fill="#D4860A" opacity="0.6"/>
-          <path d="M148,45 Q152,38 146,32 Q140,26 144,20" stroke="#D4860A" stroke-width="1.2" fill="none" opacity="0.6"/>
-          <path d="M150,45 Q155,36 148,28" stroke="#D4860A" stroke-width="0.8" fill="none" opacity="0.4"/>
-          <circle cx="146" cy="19" r="1.5" fill="#D4860A" opacity="0.6"/>
-          <line x1="18" y1="45" x2="52" y2="45" stroke="#D4860A" stroke-width="0.8" opacity="0.4"/>
-          <line x1="108" y1="45" x2="142" y2="45" stroke="#D4860A" stroke-width="0.8" opacity="0.4"/>
-          <path d="M55,20 Q65,12 80,10 Q95,12 105,20" stroke="#D4860A" stroke-width="1" fill="none" opacity="0.5"/>
-          <circle cx="62" cy="16" r="2" fill="#F2A91E" opacity="0.5"/>
-          <circle cx="72" cy="12" r="2.5" fill="#F2A91E" opacity="0.6"/>
-          <circle cx="80" cy="10" r="3" fill="#F2A91E" opacity="0.7"/>
-          <circle cx="88" cy="12" r="2.5" fill="#F2A91E" opacity="0.6"/>
-          <circle cx="98" cy="16" r="2" fill="#F2A91E" opacity="0.5"/>
-          <text x="48" y="68" font-family="Georgia,serif" font-size="52" fill="#F2A91E" font-style="italic" text-anchor="middle" filter="url(#glow)">S</text>
-          <text x="80" y="62" font-family="Georgia,serif" font-size="28" fill="#D4860A" text-anchor="middle" font-style="italic">&amp;</text>
-          <text x="112" y="68" font-family="Georgia,serif" font-size="52" fill="#F2A91E" font-style="italic" text-anchor="middle" filter="url(#glow)">S</text>
-        </svg>
-        <div class="beer-pour-wrap">
-          <div class="beer-glass-anim">
-            <div class="beer-fill"></div>
-            <div class="beer-foam-anim"></div>
+      <div class="hero-card">
+        <!-- Fioritures top -->
+        <div class="hero-ornament">✦ ─────── ✦ ─────── ✦</div>
+
+        <!-- Logo S&S avec bière animée -->
+        <div class="logo-row">
+          <div class="beer-pour-wrap">
+            <div class="beer-stream-anim"></div>
+            <div class="beer-glass-anim">
+              <div class="beer-fill"></div>
+              <div class="beer-foam-anim"></div>
+            </div>
           </div>
-          <div class="beer-stream-anim"></div>
+          <div class="ss-block">
+            <div class="ss-text">S<span class="ss-amp">&amp;</span>S</div>
+            <div class="ss-sub-mariage">MARIAGE</div>
+          </div>
         </div>
+
+        <!-- Séparateur -->
+        <div class="hero-divider">
+          <span class="divider-line"></span>
+          <span class="divider-icon">🍺</span>
+          <span class="divider-line"></span>
+        </div>
+
+        <!-- Titre principal -->
+        <div class="hero-main-title">BIÈRE</div>
+        <div class="hero-love">✦ LOVE EDITION ✦</div>
+
+        <!-- Fioritures bottom -->
+        <div class="hero-ornament" style="margin-top:8px;">✦ ─────── ✦ ─────── ✦</div>
       </div>
-      <div class="login-title">BIÈRES</div>
-      <div class="login-sub">Mar 23 — Mar 30</div>
+
+      <div class="login-sub" style="margin-top:12px;">Mar 23 — Mar 30</div>
       <div class="fut-pill">Fût ${FUT_LITERS}L · ${FUT_PRICE}€ TTC · ${GLASSES_PER_FUT} verres · ${fmtEur(PRICE_REAL)}/verre</div>
     </div>
     <div class="section-lbl">👤 QUI ES-TU ?</div>

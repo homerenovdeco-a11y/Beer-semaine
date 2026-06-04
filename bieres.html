@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#0C0803">
 <title>Bières 🍺</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;1,400;1,700&display=swap" rel="stylesheet">
 <style>
 :root {
   --gold: #F2A91E;
@@ -156,39 +156,42 @@ function renderLogin() {
   <div class="page">
     <div class="login-hero">
       <div class="hero-card">
-        <!-- Fioritures top -->
-        <div class="hero-ornament">✦ ─────── ✦ ─────── ✦</div>
-
-        <!-- Logo S&S avec bière animée -->
+        <div class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+        <svg width="240" height="20" viewBox="0 0 240 20" style="display:block;margin:0 auto 16px;opacity:0.55;">
+          <line x1="0" y1="10" x2="90" y2="10" stroke="#D4860A" stroke-width="0.8" opacity="0.5"/>
+          <circle cx="100" cy="10" r="3" fill="#D4860A" opacity="0.5"/>
+          <circle cx="112" cy="5" r="2" fill="#F2A91E" opacity="0.6"/>
+          <circle cx="120" cy="10" r="4" fill="#F2A91E" opacity="0.7"/>
+          <circle cx="128" cy="5" r="2" fill="#F2A91E" opacity="0.6"/>
+          <circle cx="140" cy="10" r="3" fill="#D4860A" opacity="0.5"/>
+          <line x1="150" y1="10" x2="240" y2="10" stroke="#D4860A" stroke-width="0.8" opacity="0.5"/>
+        </svg>
         <div class="logo-row">
-          <div class="beer-pour-wrap">
-            <div class="beer-stream-anim"></div>
-            <div class="beer-glass-anim">
-              <div class="beer-fill"></div>
-              <div class="beer-foam-anim"></div>
+          <div class="beer-wrap">
+            <div class="stream"></div>
+            <div class="glass">
+              <div class="liquid">
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+              </div>
+              <div class="foam"></div>
             </div>
           </div>
           <div class="ss-block">
-            <div class="ss-text">S<span class="ss-amp">&amp;</span>S</div>
-            <div class="ss-sub-mariage">MARIAGE</div>
+            <div class="ss-letters">S<span class="ss-amp">&amp;</span>S</div>
+            <div class="ss-mariage">Mariage</div>
           </div>
         </div>
-
-        <!-- Séparateur -->
         <div class="hero-divider">
-          <span class="divider-line"></span>
-          <span class="divider-icon">🍺</span>
-          <span class="divider-line"></span>
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line"></div>
         </div>
-
-        <!-- Titre principal -->
-        <div class="hero-main-title">BIÈRE</div>
-        <div class="hero-love">✦ LOVE EDITION ✦</div>
-
-        <!-- Fioritures bottom -->
-        <div class="hero-ornament" style="margin-top:8px;">✦ ─────── ✦ ─────── ✦</div>
+        <div class="title-biere">BIÈRE</div>
+        <div class="love-edition">✦ &nbsp; Love Edition &nbsp; ✦</div>
+        <div class="hero-ornament" style="margin-top:16px;">✦ &nbsp; ✦ &nbsp; ✦</div>
       </div>
-
       <div class="login-sub" style="margin-top:12px;">Mar 23 — Mar 30</div>
       <div class="fut-pill">Fût ${FUT_LITERS}L · ${FUT_PRICE}€ TTC · ${GLASSES_PER_FUT} verres · ${fmtEur(PRICE_REAL)}/verre</div>
     </div>

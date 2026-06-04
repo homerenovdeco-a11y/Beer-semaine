@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bières 🍺">
+<meta name="theme-color" content="#0C0803">
+<title>Bières 🍺</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #F2A91E;
+  --amber: #D4860A;
+  --dark: #0C0803;
+  --dark2: #1A1208;
+  --mid: #6B4C2A;
+  --cream: #FFF8E7;
+  --green: #81c784;
+  --red: #ef9a9a;
+  --border: rgba(212,134,10,0.18);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+body{background:var(--dark);font-family:'Nunito',sans-serif;color:var(--cream);max-width:480px;margin:0 auto;min-height:100vh;overflow-x:hidden;}
+button{cursor:pointer;font-family:'Nunito',sans-serif;outline:none;}
+input{font-family:'Nunito',sans-serif;outline:none;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:rgba(242,169,30,0.2);border-radius:2px;}
+
+/* NOTIFICATION */
+#notif{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:9px 22px;border-radius:30px;font-weight:800;font-size:14px;z-index:9999;color:#1A1208;letter-spacing:1px;box-shadow:0 4px 20px rgba(0,0,0,0.5);white-space:nowrap;pointer-events:none;display:none;transition:opacity 0.3s;}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:8888;}
+#loader .beer{font-size:60px;animation:pulse 1s ease-in-out infinite;}
+#loader p{font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:4px;color:var(--amber);margin-top:12px;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}</style>
+</head>
+<body>
+
+<div id="notif"></div>
+<div id="loader"><div class="beer">🍺</div><p>Connexion...</p></div>
+<div id="app" style="display:none;"></div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ── CONFIG FIREBASE ──────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyBdmzcmnUd4nTRS53m40ArT6WnLvgSdyew",
+  authDomain: "beer-conso.firebaseapp.com",
+  projectId: "beer-conso",
+  storageBucket: "beer-conso.firebasestorage.app",
+  messagingSenderId: "247215118379",
+  appId: "1:247215118379:web:98c025e40ca9c4392db26e",
+  // ⬇️ REMPLACE PAR TON URL REALTIME DATABASE
+  databaseURL: "https://beer-conso-default-rtdb.europe-west1.firebasedatabase.app"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getDatabase(fbApp);
+
+// ── APP CONFIG ───────────────────────────────────
+const ADMIN_PIN = "1414";
+const NAMES = [
+  "Seb","Solène","Éliane","Joël","Marie Claude","Alain",
+  "Marion","Ludo","Matt","Laura","David","Fabien",
+  "Sophie","Diego","Sophie P","Pauline","Xavier","Rico",
+  "Mag","Stephan","Laura B","Kiki","Wojtek"
+];
+const DAYS = [
+  {s:"Mar 23",f:"Mardi 23"},{s:"Mer 24",f:"Mercredi 24"},
+  {s:"Jeu 25",f:"Jeudi 25"},{s:"Ven 26",f:"Vendredi 26"},
+  {s:"Sam 27",f:"Samedi 27"},{s:"Dim 28",f:"Dimanche 28"},
+  {s:"Lun 29",f:"Lundi 29"},{s:"Mar 30",f:"Mardi 30"}
+];
+const FUT_PRICE = 65, FUT_LITERS = 14, GLASS_CL = 25;
+const GLASSES_PER_FUT = Math.round((FUT_LITERS*100)/GLASS_CL);
+const PRICE_REAL = FUT_PRICE / GLASSES_PER_FUT;
+const TODAY_IDX = (() => { const d=new Date().getDate(); const m={23:0,24:1,25:2,26:3,27:4,28:5,29:6,30:7}; return d in m ? m[d] : -1; })();
+
+// ── STATE ────────────────────────────────────────
+let counts = {};
+let isAdmin = false;
+let currentUser = null;
+let screen = "login";
+
+const initCounts = () => { const o={}; NAMES.forEach(n=>{o[n]=new Array(DAYS.length).fill(0);}); return o; };
+counts = initCounts();
+
+// ── FIREBASE REALTIME ────────────────────────────
+const dbRef = ref(db, "bieres/counts");
+
+onValue(dbRef, snap => {
+  const data = snap.val();
+  if (data) {
+    NAMES.forEach(n => { if (Array.isArray(data[n])) counts[n] = data[n]; });
+  }
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  render();
+});
+
+async function saveCount(name, di, val) {
+  counts[name] = [...(counts[name] || new Array(DAYS.length).fill(0))];
+  counts[name][di] = Math.max(0, val);
+  try { await set(dbRef, JSON.parse(JSON.stringify(counts))); } catch(e) { console.error(e); }
+}
+
+async function saveAllCounts(newCounts) {
+  try { await set(dbRef, JSON.parse(JSON.stringify(newCounts))); } catch(e) { console.error(e); }
+}
+
+// ── HELPERS ──────────────────────────────────────
+const fmtEur = n => n.toFixed(2).replace(".",",")+"\u202f€";
+const personTotal = n => (counts[n]||[]).reduce((a,b)=>a+b,0);
+const dayTotal = di => NAMES.reduce((s,n)=>s+(counts[n]?.[di]||0),0);
+const grandTotal = () => NAMES.reduce((s,n)=>s+personTotal(n),0);
+
+function notify(msg, color="#81c784") {
+  const el = document.getElementById("notif");
+  el.textContent = msg;
+  el.style.background = color;
+  el.style.display = "block";
+  el.style.opacity = "1";
+  clearTimeout(window._nt);
+  window._nt = setTimeout(()=>{ el.style.opacity="0"; setTimeout(()=>el.style.display="none",300); }, 1800);
+}
+
+// ── RENDER ───────────────────────────────────────
+function render() {
+  const app = document.getElementById("app");
+  if (screen === "login")  { app.innerHTML = renderLogin(); bindLogin(); }
+  if (screen === "home")   { app.innerHTML = renderHome();  bindHome();  }
+  if (screen === "saisie") { app.innerHTML = renderSaisie(); bindSaisie(); }
+  if (screen === "recap")  { app.innerHTML = renderRecap(); }
+  if (screen === "admin")  { app.innerHTML = renderAdmin(); bindAdmin(); }
+}
+
+// ════════════════════════════════════════════════
+// LOGIN
+// ════════════════════════════════════════════════
+function renderLogin() {
+  const nameButtons = NAMES.map(name => {
+    const t = personTotal(name);
+    return `<button class="name-btn" data-name="${name}">
+      <div class="name-ava">${name[0]}</div>
+      <span class="name-txt">${name}</span>
+      ${t>0?`<span class="name-count">${t}🍺</span>`:""}
+    </button>`;
+  }).join("");
+
+  return `
+  <div class="page">
+    <div class="login-hero">
+      <div class="big-beer">🍺</div>
+      <div class="login-title">BIÈRES</div>
+      <div class="login-sub">Mar 23 — Mar 30</div>
+      <div class="fut-pill">Fût ${FUT_LITERS}L · ${FUT_PRICE}€ TTC · ${GLASSES_PER_FUT} verres · ${fmtEur(PRICE_REAL)}/verre</div>
+    </div>
+    <div class="section-lbl">👤 QUI ES-TU ?</div>
+    <div class="name-grid">${nameButtons}</div>
+    <button id="btn-admin-link" class="admin-link">🔐 Admin</button>
+    <div id="pin-panel" style="display:none;">
+      <div class="pin-wrap">
+        <div class="pin-title">CODE ADMIN</div>
+        <div class="pin-dots" id="pin-dots">
+          <div class="pin-dot"></div><div class="pin-dot"></div>
+          <div class="pin-dot"></div><div class="pin-dot"></div>
+        </div>
+        <div id="pin-err" style="display:none;color:var(--red);font-size:12px;font-weight:800;letter-spacing:1px;margin-bottom:6px;text-align:center;">✗ Code incorrect</div>
+        <div class="pin-grid">
+          ${[1,2,3,4,5,6,7,8,9,null,"0","⌫"].map(d=>
+            d===null ? `<div></div>` :
+            `<button class="pin-btn" data-d="${d}">${d}</button>`
+          ).join("")}
+        </div>
+        <button id="pin-back" class="back-txt">← Retour</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function bindLogin() {
+  let pin = "";
+  document.querySelectorAll(".name-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentUser = btn.dataset.name;
+      isAdmin = false;
+      screen = "home";
+      render();
+    });
+  });
+  document.getElementById("btn-admin-link").addEventListener("click", () => {
+    document.getElementById("btn-admin-link").style.display = "none";
+    document.getElementById("pin-panel").style.display = "block";
+  });
+  document.getElementById("pin-back").addEventListener("click", () => {
+    pin = "";
+    document.getElementById("btn-admin-link").style.display = "block";
+    document.getElementById("pin-panel").style.display = "none";
+    updatePinDots(pin, false);
+    document.getElementById("pin-err").style.display = "none";
+  });
+  document.querySelectorAll(".pin-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const d = btn.dataset.d;
+      if (d === "⌫") { pin = pin.slice(0,-1); updatePinDots(pin,false); document.getElementById("pin-err").style.display="none"; return; }
+      if (pin.length >= 4) return;
+      pin += d;
+      updatePinDots(pin, false);
+      if (pin.length === 4) {
+        if (pin === ADMIN_PIN) {
+          isAdmin = true; currentUser = "Seb"; screen = "home"; render();
+        } else {
+          updatePinDots(pin, true);
+          document.getElementById("pin-err").style.display = "block";
+          setTimeout(() => { pin = ""; updatePinDots(pin, false); document.getElementById("pin-err").style.display="none"; }, 700);
+        }
+      }
+    });
+  });
+}
+
+function updatePinDots(pin, err) {
+  document.querySelectorAll(".pin-dot").forEach((dot, i) => {
+    dot.style.background = pin.length > i ? "var(--gold)" : "rgba(255,255,255,0.1)";
+    dot.style.boxShadow = pin.length > i ? "0 0 12px rgba(242,169,30,0.5)" : "none";
+    dot.style.borderColor = err ? "rgba(239,154,154,0.6)" : "rgba(242,169,30,0.3)";
+  });
+}
+
+// ════════════════════════════════════════════════
+// HOME
+// ════════════════════════════════════════════════
+function renderHome() {
+  const gt = grandTotal();
+  const collected = gt;
+  const futCost = gt * PRICE_REAL;
+  const balance = collected - futCost;
+  const myTot = personTotal(currentUser);
+
+  return `
+  <div class="page">
+    <div class="header">
+      <button id="btn-quit" class="quit-btn">← Quitter</button>
+      <div class="header-name">${isAdmin ? "👑 ADMIN — SEB" : currentUser.toUpperCase()}</div>
+      <div class="sync-dot" id="sync-dot"></div>
+    </div>
+    <div class="my-card">
+      <div class="my-card-lbl">MES VERRES · SEMAINE</div>
+      <div class="my-big">${myTot}</div>
+      <div class="my-due">Je dois <strong style="color:var(--green)">${myTot},00\u202f€</strong></div>
+      <div class="my-real">Coût réel\u202f: ${fmtEur(myTot * PRICE_REAL)}</div>
+    </div>
+    <div class="tri-cards">
+      <div class="tri-card" style="border-color:rgba(242,169,30,0.35)">
+        <div style="font-family:'Bebas Neue',cursive;font-size:20px;color:var(--gold);letter-spacing:1px;">${gt}</div>
+        <div class="tri-lbl">🍺 Total</div>
+      </div>
+      <div class="tri-card" style="border-color:rgba(129,199,116,0.35)">
+        <div style="font-family:'Bebas Neue',cursive;font-size:17px;color:var(--green);letter-spacing:1px;">${fmtEur(collected)}</div>
+        <div class="tri-lbl">💰 Caisse</div>
+      </div>
+      <div class="tri-card" style="border-color:${balance>=0?"rgba(129,199,116,0.35)":"rgba(239,154,154,0.35)"}">
+        <div style="font-family:'Bebas Neue',cursive;font-size:17px;color:${balance>=0?"var(--green)":"var(--red)"};letter-spacing:1px;">${(balance>=0?"+":"")+fmtEur(balance)}</div>
+        <div class="tri-lbl">⚖️ Solde</div>
+      </div>
+    </div>
+    <div class="act-col">
+      <button class="act-btn" id="btn-saisie">
+        <span style="font-size:22px;">✏️</span>
+        <div style="flex:1;text-align:left;">
+          <div style="font-size:14px;font-weight:800;color:var(--cream);">Saisir mes verres</div>
+          <div style="font-size:11px;color:var(--mid);margin-top:1px;">Enregistrer ma consommation</div>
+        </div>
+      </button>
+      <button class="act-btn" id="btn-recap">
+        <span style="font-size:22px;">📊</span>
+        <div style="flex:1;text-align:left;">
+          <div style="font-size:14px;font-weight:800;color:var(--cream);">Tableau complet</div>
+          <div style="font-size:11px;color:var(--mid);margin-top:1px;">Voir tout le monde</div>
+        </div>
+      </button>
+      ${isAdmin ? `<button class="act-btn act-gold" id="btn-admin">
+        <span style="font-size:22px;">👑</span>
+        <div style="flex:1;text-align:left;">
+          <div style="font-size:14px;font-weight:800;color:var(--gold);">Administration</div>
+          <div style="font-size:11px;color:var(--mid);margin-top:1px;">Modifier · Configurer · Réinitialiser</div>
+        </div>
+      </button>` : ""}
+    </div>
+    <div class="foot-sync">⟳ Synchronisation Firebase temps réel</div>
+  </div>`;
+}
+
+function bindHome() {
+  document.getElementById("btn-quit").addEventListener("click", () => { currentUser=null; isAdmin=false; screen="login"; render(); });
+  document.getElementById("btn-saisie").addEventListener("click", () => { screen="saisie"; render(); });
+  document.getElementById("btn-recap").addEventListener("click", () => { screen="recap"; render(); });
+  if (isAdmin) document.getElementById("btn-admin").addEventListener("click", () => { screen="admin"; render(); });
+}
+
+// ════════════════════════════════════════════════
+// SAISIE
+// ════════════════════════════════════════════════
+function renderSaisie() {
+  const name = currentUser;
+  const mc = counts[name] || new Array(DAYS.length).fill(0);
+  const tot = mc.reduce((a,b)=>a+b,0);
+
+  const rows = DAYS.map((day, di) => {
+    const v = mc[di] || 0;
+    const today = di === TODAY_IDX;
+    return `<div class="day-row ${today?"day-today":""}" data-di="${di}">
+      <div>
+        <div class="day-name">${day.f}</div>
+        ${today?`<div class="today-tag">AUJOURD'HUI</div>`:""}
+      </div>
+      <div class="counter">
+        <button class="btn-minus" data-name="${name}" data-di="${di}">−</button>
+        <span class="c-val ${v>0?"c-active":""}" id="val-${di}">${v}</span>
+        <button class="btn-plus" data-name="${name}" data-di="${di}">+</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  return `
+  <div class="page">
+    <div class="top-bar">
+      <button class="back-btn" id="btn-back">← Retour</button>
+      <div class="top-bar-txt">${name}</div>
+      <div style="width:70px;"></div>
+    </div>
+    <div class="saisie-wrap">
+      <div class="tot-banner">
+        <span>Total semaine</span>
+        <span id="tot-val" style="font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);letter-spacing:1px;">${tot} 🍺 · ${tot},00\u202f€</span>
+      </div>
+      ${rows}
+    </div>
+  </div>`;
+}
+
+function bindSaisie() {
+  document.getElementById("btn-back").addEventListener("click", () => { screen="home"; render(); });
+  document.querySelectorAll(".btn-minus,.btn-plus").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const name = btn.dataset.name;
+      const di = parseInt(btn.dataset.di);
+      const delta = btn.classList.contains("btn-plus") ? 1 : -1;
+      const cur = (counts[name]?.[di] || 0);
+      const newVal = Math.max(0, cur + delta);
+      await saveCount(name, di, newVal);
+      // update UI inline without full re-render
+      const valEl = document.getElementById(`val-${di}`);
+      if (valEl) {
+        valEl.textContent = counts[name][di];
+        valEl.className = "c-val" + (counts[name][di]>0?" c-active":"");
+      }
+      // update banner
+      const tot = (counts[name]||[]).reduce((a,b)=>a+b,0);
+      const totEl = document.getElementById("tot-val");
+      if (totEl) totEl.textContent = `${tot} 🍺 · ${tot},00\u202f€`;
+      notify(delta>0?"+1 🍺":"−1 🍺", delta>0?"#81c784":"#ef9a9a");
+    });
+  });
+}
+
+// ════════════════════════════════════════════════
+// RECAP
+// ════════════════════════════════════════════════
+function renderRecap() {
+  const gt = grandTotal();
+  const collected = gt;
+  const futCost = gt * PRICE_REAL;
+  const balance = collected - futCost;
+  const sorted = [...NAMES].sort((a,b)=>personTotal(b)-personTotal(a));
+  const maxV = Math.max(...NAMES.map(personTotal), 1);
+
+  const dayRows = DAYS.map((day,di) => `
+    <div class="ligne ${di===TODAY_IDX?"ligne-hi":""}">
+      <span class="ligne-lbl">${day.f}</span>
+      <span class="ligne-val ${di===TODAY_IDX?"ligne-val-hi":""}">${dayTotal(di)} 🍺</span>
+    </div>`).join("");
+
+  const rankRows = sorted.map((name,i) => {
+    const t = personTotal(name);
+    return `<div class="rank-row ${name===currentUser?"rank-me":""}">
+      <span class="r-i">${i+1}</span>
+      <span class="r-name">${name}</span>
+      <div class="r-bar"><div class="r-fill" style="width:${(t/maxV)*100}%"></div></div>
+      <span class="r-val" style="color:${t>0?"var(--gold)":"rgba(255,255,255,0.15)"}">${t}</span>
+      <span class="r-eur">${t}€</span>
+    </div>`;
+  }).join("");
+
+  return `
+  <div class="page">
+    <div class="top-bar">
+      <button class="back-btn" id="btn-back">← Retour</button>
+      <div class="top-bar-txt">TABLEAU COMPLET</div>
+      <div style="width:70px;"></div>
+    </div>
+    <div class="scroll-wrap">
+      <div class="bloc">
+        <div class="bloc-title">🛢 BILAN FÛT</div>
+        <div class="ligne ligne-hi"><span class="ligne-lbl">Fût</span><span class="ligne-val ligne-val-hi">${FUT_LITERS}L · ${FUT_PRICE}€ TTC</span></div>
+        <div class="ligne"><span class="ligne-lbl">Verres estimés (~${GLASS_CL}cl)</span><span class="ligne-val">${GLASSES_PER_FUT} verres</span></div>
+        <div class="ligne ligne-hi"><span class="ligne-lbl">Prix réel / verre</span><span class="ligne-val ligne-val-hi">${fmtEur(PRICE_REAL)}</span></div>
+        <div class="ligne"><span class="ligne-lbl">Prix facturé / verre</span><span class="ligne-val">1,00\u202f€</span></div>
+        <div class="ligne ligne-hi"><span class="ligne-lbl">Verres consommés</span><span class="ligne-val ligne-val-hi">${gt} 🍺</span></div>
+        <div class="ligne"><span class="ligne-lbl">Collecté</span><span class="ligne-val">${fmtEur(collected)}</span></div>
+        <div class="ligne"><span class="ligne-lbl">Coût fût réel</span><span class="ligne-val">${fmtEur(futCost)}</span></div>
+        <div class="ligne ligne-hi"><span class="ligne-lbl">Solde</span><span class="ligne-val" style="color:${balance>=0?"var(--green)":"var(--red)"}">${(balance>=0?"+":"")+fmtEur(balance)}</span></div>
+      </div>
+      <div class="bloc">
+        <div class="bloc-title">📅 PAR JOUR</div>
+        ${dayRows}
+      </div>
+      <div class="bloc">
+        <div class="bloc-title">🏆 CLASSEMENT</div>
+        ${rankRows}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ════════════════════════════════════════════════
+// ADMIN
+// ════════════════════════════════════════════════
+function renderAdmin() {
+  const personCards = NAMES.map(name => {
+    const mc = counts[name] || new Array(DAYS.length).fill(0);
+    const tot = mc.reduce((a,b)=>a+b,0);
+    const dayBoxes = DAYS.map((day,di) => {
+      const v = mc[di]||0;
+      return `<div class="ad-box ${di===TODAY_IDX?"ad-today":""}">
+        <div class="ad-lbl">${day.s}</div>
+        <div class="ad-val ${v>0?"ad-active":""}" id="adv-${name.replace(/\s/g,"_")}-${di}">${v}</div>
+        <div class="ad-btns">
+          <button class="ad-m" data-name="${name}" data-di="${di}">−</button>
+          <button class="ad-p" data-name="${name}" data-di="${di}">+</button>
+        </div>
+      </div>`;
+    }).join("");
+    return `<div class="ap-wrap">
+      <div class="ap-row" data-person="${name}">
+        <div class="ap-ava">${name[0]}</div>
+        <span class="ap-name">${name}</span>
+        <span class="ap-tot" id="apt-${name.replace(/\s/g,"_")}">${tot}🍺 · ${tot}€</span>
+        <span class="ap-chev" id="chev-${name.replace(/\s/g,"_")}">▼</span>
+      </div>
+      <div class="ad-grid" id="grid-${name.replace(/\s/g,"_")}" style="display:none;">${dayBoxes}</div>
+    </div>`;
+  }).join("");
+
+  return `
+  <div class="page">
+    <div class="top-bar">
+      <button class="back-btn" id="btn-back">← Retour</button>
+      <div class="top-bar-txt">👑 ADMIN</div>
+      <div style="width:70px;"></div>
+    </div>
+    <div class="scroll-wrap">
+      <div class="admin-badge">Mode administrateur · Accès complet</div>
+      <div class="bloc">
+        <div class="bloc-title">✏️ MODIFIER LES COMPTEURS</div>
+        ${personCards}
+      </div>
+      <div class="bloc">
+        <div class="bloc-title">🛢 CONFIG (fixe)</div>
+        <div class="ligne ligne-hi"><span class="ligne-lbl">Fût</span><span class="ligne-val ligne-val-hi">${FUT_LITERS}L · ${FUT_PRICE}€ TTC</span></div>
+        <div class="ligne"><span class="ligne-lbl">Verres estimés</span><span class="ligne-val">${GLASSES_PER_FUT}</span></div>
+        <div class="ligne ligne-hi"><span class="ligne-lbl">Prix réel/verre</span><span class="ligne-val ligne-val-hi">${fmtEur(PRICE_REAL)}</span></div>
+        <div class="ligne"><span class="ligne-lbl">Période</span><span class="ligne-val">Mar 23 → Mar 30</span></div>
+      </div>
+      <div class="bloc">
+        <div class="bloc-title">⚠️ DANGER</div>
+        <button id="btn-reset" class="reset-btn">🔄 Réinitialiser toute la semaine</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function bindAdmin() {
+  document.getElementById("btn-back").addEventListener("click", () => { screen="home"; render(); });
+
+  // Accordion
+  document.querySelectorAll(".ap-row").forEach(row => {
+    row.addEventListener("click", () => {
+      const name = row.dataset.person;
+      const key = name.replace(/\s/g,"_");
+      const grid = document.getElementById(`grid-${key}`);
+      const chev = document.getElementById(`chev-${key}`);
+      const open = grid.style.display !== "none";
+      document.querySelectorAll(".ad-grid").forEach(g=>g.style.display="none");
+      document.querySelectorAll(".ap-chev").forEach(c=>c.textContent="▼");
+      if (!open) { grid.style.display="grid"; chev.textContent="▲"; }
+    });
+  });
+
+  // +/- buttons
+  document.querySelectorAll(".ad-m,.ad-p").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const name = btn.dataset.name;
+      const di = parseInt(btn.dataset.di);
+      const delta = btn.classList.contains("ad-p") ? 1 : -1;
+      const newVal = Math.max(0, (counts[name]?.[di]||0) + delta);
+      await saveCount(name, di, newVal);
+      const key = name.replace(/\s/g,"_");
+      const valEl = document.getElementById(`adv-${key}-${di}`);
+      if (valEl) { valEl.textContent = counts[name][di]; valEl.className = "ad-val"+(counts[name][di]>0?" ad-active":""); }
+      const tot = (counts[name]||[]).reduce((a,b)=>a+b,0);
+      const totEl = document.getElementById(`apt-${key}`);
+      if (totEl) totEl.textContent = `${tot}🍺 · ${tot}€`;
+      notify(delta>0?`+1 🍺 (${name})`:`−1 🍺 (${name})`, delta>0?"#81c784":"#ef9a9a");
+    });
+  });
+
+  document.getElementById("btn-reset").addEventListener("click", async () => {
+    if (!confirm("Réinitialiser TOUS les compteurs pour tout le monde ?")) return;
+    counts = initCounts();
+    await saveAllCounts(counts);
+    notify("Réinitialisé ✓", "#ef9a9a");
+    render();
+  });
+}
+
+</script>
+
+<style>
+.page{min-height:100vh;overflow-y:auto;padding-bottom:24px;}
+/* LOGIN */
+.login-hero{background:linear-gradient(180deg,#1F1409,var(--dark));padding:44px 20px 22px;text-align:center;border-bottom:1px solid var(--border);}
+.big-beer{font-size:60px;display:block;margin-bottom:4px;}
+.login-title{font-family:'Bebas Neue',cursive;font-size:64px;letter-spacing:8px;color:var(--gold);line-height:1;text-shadow:0 0 30px rgba(242,169,30,0.3);}
+.login-sub{font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:6px;color:var(--amber);margin-bottom:10px;}
+.fut-pill{display:inline-block;background:rgba(242,169,30,0.08);border:1px solid rgba(242,169,30,0.22);border-radius:20px;padding:5px 16px;font-size:11px;color:var(--amber);letter-spacing:.5px;}
+.section-lbl{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:4px;color:var(--mid);padding:16px 16px 8px;}
+.name-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px;}
+.name-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:9px 12px;color:var(--cream);transition:background .1s;}
+.name-btn:active{background:rgba(242,169,30,0.08);}
+.name-ava{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A1208;font-weight:800;font-size:13px;flex-shrink:0;}
+.name-txt{flex:1;font-size:13px;font-weight:700;text-align:left;}
+.name-count{font-family:'Bebas Neue',cursive;font-size:15px;color:var(--gold);}
+.admin-link{display:block;margin:18px auto 8px;background:none;border:1px solid rgba(212,134,10,0.2);border-radius:10px;color:var(--mid);font-size:13px;padding:10px 28px;letter-spacing:1px;}
+/* PIN */
+.pin-wrap{padding:32px 24px;text-align:center;}
+.pin-title{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:6px;color:var(--amber);margin-bottom:24px;}
+.pin-dots{display:flex;justify-content:center;gap:18px;margin-bottom:10px;}
+.pin-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(242,169,30,0.3);background:rgba(255,255,255,0.1);transition:all .2s;}
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:260px;margin:14px auto;}
+.pin-btn{height:64px;border-radius:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--cream);font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:2px;transition:background .1s;}
+.pin-btn:active{background:rgba(242,169,30,0.12);}
+.back-txt{background:none;border:none;color:var(--mid);font-size:13px;margin-top:14px;letter-spacing:1px;}
+/* HOME */
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--dark2);position:sticky;top:0;z-index:10;}
+.quit-btn{background:none;border:none;color:var(--gold);font-size:13px;font-weight:700;}
+.header-name{font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:4px;color:var(--gold);}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(129,199,116,0.4);flex-shrink:0;}
+.my-card{margin:14px 14px 10px;background:rgba(242,169,30,0.06);border:1px solid rgba(242,169,30,0.18);border-radius:18px;padding:20px;text-align:center;}
+.my-card-lbl{font-size:10px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:6px;}
+.my-big{font-family:'Bebas Neue',cursive;font-size:80px;color:var(--gold);line-height:1;text-shadow:0 0 30px rgba(242,169,30,0.25);}
+.my-due{font-size:15px;font-weight:700;margin-top:4px;}
+.my-real{font-size:11px;color:var(--mid);margin-top:3px;}
+.tri-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 14px 10px;}
+.tri-card{background:rgba(255,255,255,0.025);border:1px solid;border-radius:12px;padding:10px 6px;text-align:center;}
+.tri-lbl{font-size:10px;color:var(--mid);margin-top:3px;letter-spacing:.5px;}
+.act-col{display:flex;flex-direction:column;gap:8px;padding:0 14px;}
+.act-btn{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:13px 16px;transition:background .1s;}
+.act-btn:active{background:rgba(255,255,255,0.05);}
+.act-gold{background:rgba(242,169,30,0.06)!important;border-color:rgba(242,169,30,0.35)!important;}
+.foot-sync{text-align:center;font-size:10px;color:#3D2B1F;letter-spacing:1px;padding-top:14px;}
+/* TOPBAR */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--dark2);position:sticky;top:0;z-index:10;}
+.back-btn{background:none;border:none;color:var(--gold);font-size:13px;font-weight:700;width:70px;text-align:left;}
+.top-bar-txt{font-family:'Bebas Neue',cursive;font-size:17px;letter-spacing:3px;color:var(--gold);}
+/* SAISIE */
+.saisie-wrap{padding:10px 12px;display:flex;flex-direction:column;gap:7px;}
+.tot-banner{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;background:rgba(242,169,30,0.07);border:1px solid rgba(242,169,30,0.18);border-radius:14px;}
+.day-row{border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.025);}
+.day-today{background:rgba(242,169,30,0.07)!important;border-color:rgba(242,169,30,0.35)!important;}
+.day-name{font-size:14px;font-weight:700;color:var(--cream);}
+.today-tag{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:800;margin-top:2px;}
+.counter{display:flex;align-items:center;gap:12px;}
+.btn-minus{width:44px;height:44px;border-radius:50%;border:2px solid rgba(239,154,154,0.4);background:rgba(239,154,154,0.06);color:var(--red);font-size:24px;display:flex;align-items:center;justify-content:center;padding:0;font-weight:800;}
+.btn-minus:active{background:rgba(239,154,154,0.15);}
+.c-val{font-family:'Bebas Neue',cursive;font-size:38px;letter-spacing:2px;min-width:36px;text-align:center;color:rgba(255,255,255,0.18);}
+.c-active{color:var(--gold)!important;}
+.btn-plus{width:44px;height:44px;border-radius:50%;border:2px solid rgba(129,199,116,0.4);background:rgba(129,199,116,0.06);color:var(--green);font-size:24px;display:flex;align-items:center;justify-content:center;padding:0;font-weight:800;}
+.btn-plus:active{background:rgba(129,199,116,0.15);}
+/* RECAP */
+.scroll-wrap{padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
+.bloc{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;}
+.bloc-title{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:3px;color:var(--amber);padding:10px 14px 6px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.ligne{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.035);}
+.ligne-hi{background:rgba(242,169,30,0.05);}
+.ligne-lbl{font-size:13px;color:var(--mid);}
+.ligne-val{font-size:13px;font-weight:700;color:var(--cream);}
+.ligne-val-hi{color:var(--gold)!important;}
+.rank-row{display:flex;align-items:center;gap:6px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.035);}
+.rank-me{background:rgba(242,169,30,0.04);}
+.r-i{font-size:10px;color:#3D2B1F;width:16px;text-align:right;flex-shrink:0;}
+.r-name{width:82px;font-size:12px;font-weight:700;flex-shrink:0;color:var(--cream);}
+.r-bar{flex:1;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;}
+.r-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));border-radius:3px;transition:width .4s;}
+.r-val{font-family:'Bebas Neue',cursive;font-size:18px;width:24px;text-align:right;flex-shrink:0;}
+.r-eur{font-size:10px;color:var(--mid);width:34px;text-align:right;flex-shrink:0;}
+/* ADMIN */
+.admin-badge{margin:10px 12px;background:rgba(242,169,30,0.07);border:1px solid rgba(242,169,30,0.22);border-radius:10px;padding:8px 14px;font-size:12px;color:var(--amber);text-align:center;letter-spacing:.5px;}
+.ap-wrap{border-bottom:1px solid rgba(255,255,255,0.04);}
+.ap-row{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;}
+.ap-ava{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A1208;font-weight:800;font-size:12px;flex-shrink:0;}
+.ap-name{flex:1;font-size:13px;font-weight:700;color:var(--cream);}
+.ap-tot{font-family:'Bebas Neue',cursive;font-size:16px;color:var(--gold);letter-spacing:1px;}
+.ap-chev{font-size:9px;color:var(--mid);margin-left:4px;}
+.ad-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:6px 10px 12px;}
+.ad-box{border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:6px 3px;text-align:center;background:rgba(255,255,255,0.02);}
+.ad-today{border-color:rgba(242,169,30,0.35)!important;}
+.ad-lbl{font-size:9px;color:var(--mid);margin-bottom:3px;letter-spacing:.3px;}
+.ad-val{font-family:'Bebas Neue',cursive;font-size:22px;line-height:1;margin-bottom:4px;color:rgba(255,255,255,0.18);}
+.ad-active{color:var(--gold)!important;}
+.ad-btns{display:flex;gap:3px;justify-content:center;}
+.ad-m{width:24px;height:24px;border-radius:50%;border:1px solid rgba(239,154,154,0.3);background:none;color:var(--red);font-size:14px;padding:0;display:flex;align-items:center;justify-content:center;}
+.ad-p{width:24px;height:24px;border-radius:50%;border:1px solid rgba(129,199,116,0.3);background:none;color:var(--green);font-size:14px;padding:0;display:flex;align-items:center;justify-content:center;}
+.reset-btn{margin:12px 14px;background:rgba(239,154,154,0.05);border:1px solid rgba(239,154,154,0.28);border-radius:10px;color:var(--red);font-size:13px;font-weight:700;letter-spacing:1px;padding:12px;width:calc(100% - 28px);}
+</style>
+</body>
+</html>

@@ -69,7 +69,7 @@ const NAMES = [
   "Seb","Solène","Éliane","Joël","Marie Claude","Alain",
   "Marion","Ludo","Matt","Laura","David","Fabien",
   "Sophie","Diego","Sophie D","Pauline","Xavier","Rico",
-  "Mag","Stephan","Laura B","Kiki","Wojtek"
+  "Mag","Stephan","Laura D","Kiki","Wojtek"
 ];
 const DAYS = [
   {s:"Mar 23",f:"Mardi 23"},{s:"Mer 24",f:"Mercredi 24"},
@@ -135,7 +135,7 @@ function render() {
   if (screen === "login")  { app.innerHTML = renderLogin(); bindLogin(); }
   if (screen === "home")   { app.innerHTML = renderHome();  bindHome();  }
   if (screen === "saisie") { app.innerHTML = renderSaisie(); bindSaisie(); }
-  if (screen === "recap")  { app.innerHTML = renderRecap(); }
+  if (screen === "recap")  { app.innerHTML = renderRecap(); bindRecap(); }
   if (screen === "admin")  { app.innerHTML = renderAdmin(); bindAdmin(); }
 }
 
@@ -155,7 +155,35 @@ function renderLogin() {
   return `
   <div class="page">
     <div class="login-hero">
-      <div class="big-beer">🍺</div>
+      <div class="logo-wrap">
+        <svg class="logo-ss" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" width="200" style="display:block;margin:0 auto;">
+          <defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+          <path d="M12,45 Q8,38 14,32 Q20,26 16,20" stroke="#D4860A" stroke-width="1.2" fill="none" opacity="0.6"/>
+          <path d="M10,45 Q5,36 12,28" stroke="#D4860A" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <circle cx="14" cy="19" r="1.5" fill="#D4860A" opacity="0.6"/>
+          <path d="M148,45 Q152,38 146,32 Q140,26 144,20" stroke="#D4860A" stroke-width="1.2" fill="none" opacity="0.6"/>
+          <path d="M150,45 Q155,36 148,28" stroke="#D4860A" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <circle cx="146" cy="19" r="1.5" fill="#D4860A" opacity="0.6"/>
+          <line x1="18" y1="45" x2="52" y2="45" stroke="#D4860A" stroke-width="0.8" opacity="0.4"/>
+          <line x1="108" y1="45" x2="142" y2="45" stroke="#D4860A" stroke-width="0.8" opacity="0.4"/>
+          <path d="M55,20 Q65,12 80,10 Q95,12 105,20" stroke="#D4860A" stroke-width="1" fill="none" opacity="0.5"/>
+          <circle cx="62" cy="16" r="2" fill="#F2A91E" opacity="0.5"/>
+          <circle cx="72" cy="12" r="2.5" fill="#F2A91E" opacity="0.6"/>
+          <circle cx="80" cy="10" r="3" fill="#F2A91E" opacity="0.7"/>
+          <circle cx="88" cy="12" r="2.5" fill="#F2A91E" opacity="0.6"/>
+          <circle cx="98" cy="16" r="2" fill="#F2A91E" opacity="0.5"/>
+          <text x="48" y="68" font-family="Georgia,serif" font-size="52" fill="#F2A91E" font-style="italic" text-anchor="middle" filter="url(#glow)">S</text>
+          <text x="80" y="62" font-family="Georgia,serif" font-size="28" fill="#D4860A" text-anchor="middle" font-style="italic">&amp;</text>
+          <text x="112" y="68" font-family="Georgia,serif" font-size="52" fill="#F2A91E" font-style="italic" text-anchor="middle" filter="url(#glow)">S</text>
+        </svg>
+        <div class="beer-pour-wrap">
+          <div class="beer-glass-anim">
+            <div class="beer-fill"></div>
+            <div class="beer-foam-anim"></div>
+          </div>
+          <div class="beer-stream-anim"></div>
+        </div>
+      </div>
       <div class="login-title">BIÈRES</div>
       <div class="login-sub">Mar 23 — Mar 30</div>
       <div class="fut-pill">Fût ${FUT_LITERS}L · ${FUT_PRICE}€ TTC · ${GLASSES_PER_FUT} verres · ${fmtEur(PRICE_REAL)}/verre</div>
@@ -429,6 +457,13 @@ function renderRecap() {
 }
 
 // ════════════════════════════════════════════════
+// BIND RECAP
+// ════════════════════════════════════════════════
+function bindRecap() {
+  document.getElementById("btn-back").addEventListener("click", () => { screen="home"; render(); });
+}
+
+// ════════════════════════════════════════════════
 // ADMIN
 // ════════════════════════════════════════════════
 function renderAdmin() {
@@ -535,6 +570,17 @@ function bindAdmin() {
 <style>
 .page{min-height:100vh;overflow-y:auto;padding-bottom:24px;}
 /* LOGIN */
+
+.logo-wrap{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:4px;}
+.beer-pour-wrap{position:relative;width:36px;height:60px;flex-shrink:0;}
+.beer-glass-anim{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:28px;height:44px;border:2px solid rgba(242,169,30,0.6);border-top:none;border-radius:0 0 6px 6px;overflow:hidden;background:rgba(255,255,255,0.03);}
+.beer-fill{position:absolute;bottom:0;left:0;right:0;height:0;background:linear-gradient(180deg,rgba(242,169,30,0.9),rgba(180,100,0,0.8));animation:fillGlass 3s ease-in-out infinite;}
+.beer-foam-anim{position:absolute;top:-4px;left:-2px;right:-2px;height:10px;background:rgba(255,255,255,0.85);border-radius:50% 50% 0 0;animation:foamBounce 3s ease-in-out infinite;opacity:0;}
+.beer-stream-anim{position:absolute;top:0;left:50%;transform:translateX(-50%);width:4px;background:linear-gradient(180deg,rgba(242,169,30,0.9),rgba(242,169,30,0.3));border-radius:2px;animation:streamFlow 3s ease-in-out infinite;height:0;}
+@keyframes fillGlass{0%{height:0;}60%{height:85%;}80%{height:85%;}100%{height:0;}}
+@keyframes foamBounce{0%,40%{opacity:0;}50%{opacity:1;transform:translateY(0);}70%{opacity:1;}90%,100%{opacity:0;transform:translateY(-3px);}}
+@keyframes streamFlow{0%{height:0;opacity:0;}10%{height:16px;opacity:1;}60%{height:16px;opacity:1;}70%,100%{height:0;opacity:0;}}
+
 .login-hero{background:linear-gradient(180deg,#1F1409,var(--dark));padding:44px 20px 22px;text-align:center;border-bottom:1px solid var(--border);}
 .big-beer{font-size:60px;display:block;margin-bottom:4px;}
 .login-title{font-family:'Bebas Neue',cursive;font-size:64px;letter-spacing:8px;color:var(--gold);line-height:1;text-shadow:0 0 30px rgba(242,169,30,0.3);}

@@ -237,8 +237,8 @@ async function saveConfig(newConfig) {
 }
 
 // Helpers
-const glassesPerFut = ()=> Math.round((config.futLiters*100)/25);
-const pricePerGlass = ()=> config.futPrice / glassesPerFut();
+const glassesPerFut = (liters)=> Math.round(((liters||config.futLiters)*100)/25);
+const pricePerGlass = (price, liters)=> (price||config.futPrice) / glassesPerFut(liters||config.futLiters);
 const fmtEur = n=> n.toFixed(2).replace(".",",")+"\u202f€";
 const personTotal = n=> (counts[n]||[]).reduce((a,b)=>a+b,0);
 const dayTotal = di=> NAMES.reduce((s,n)=>s+(counts[n]?.[di]||0),0);
@@ -312,8 +312,9 @@ function renderLogin() {
       </div>
     </div>
     <div class="login-sub">Mar 23 — Mar 30</div>
-    <div style="text-align:center;margin-bottom:10px;">
-      <span class="fut-pill">Fût ${config.futLiters}L · ${config.futPrice}€ · ${glassesPerFut()} verres · ${fmtEur(pricePerGlass())}/verre</span>
+    <div style="text-align:center;margin-bottom:10px;display:flex;flex-direction:column;gap:5px;align-items:center;">
+      <span class="fut-pill">🍺 Fût 1 · ${config.futLiters}L · ${config.futPrice}€ · ${glassesPerFut()}v · ${fmtEur(pricePerGlass())}/v${config.biereName?' — '+config.biereName:''}</span>
+      ${config.fut2Active?`<span class="fut-pill" style="border-color:rgba(100,181,246,0.4);color:#64b5f6;">🍺 Fût 2 · ${config.fut2Liters}L · ${config.fut2Price}€ · ${glassesPerFut(config.fut2Liters)}v · ${fmtEur(pricePerGlass(config.fut2Price,config.fut2Liters))}/v${config.fut2Name?' — '+config.fut2Name:''}</span>`:''}
     </div>
     <div class="section-lbl">👤 QUI ES-TU ?</div>
     <div class="name-grid">${nameButtons}</div>
@@ -391,8 +392,9 @@ function renderHome() {
       <div class="my-real">Coût réel\u202f: ${fmtEur(myTot*pricePerGlass())}</div>
     </div>
     <div class="fut-home-info">
-      🛢 Fût ${config.futLiters}L · ${config.futPrice}€ · ${fmtEur(pricePerGlass())}/verre
+      🛢 Fût 1 · ${config.futLiters}L · ${config.futPrice}€ · ${fmtEur(pricePerGlass())}/verre
       ${config.biereName?`<div class="fut-biere-name">🍺 ${config.biereName}</div>`:""}
+      ${config.fut2Active?`<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06);">🛢 Fût 2 · ${config.fut2Liters}L · ${config.fut2Price}€ · ${fmtEur(pricePerGlass(config.fut2Price,config.fut2Liters))}/verre${config.fut2Name?`<div class="fut-biere-name" style="color:#64b5f6;">🍺 ${config.fut2Name}</div>`:''}</div>`:""}
     </div>
     <div class="tri-cards">
       <div class="tri-card" style="border-color:rgba(242,169,30,0.35)">
@@ -494,10 +496,14 @@ function renderRecap() {
     <div class="scroll-wrap">
       <div class="bloc">
         <div class="bloc-title">🛢 BILAN FÛT</div>
-        ${config.biereName?`<div class="ligne ligne-hi"><span class="ligne-lbl">Modèle</span><span class="ligne-val ligne-val-hi">🍺 ${config.biereName}</span></div>`:""}
-        <div class="ligne ligne-hi"><span class="ligne-lbl">Fût</span><span class="ligne-val ligne-val-hi">${config.futLiters}L · ${config.futPrice}€ TTC</span></div>
-        <div class="ligne"><span class="ligne-lbl">Verres (~25cl)</span><span class="ligne-val">${glassesPerFut()} verres</span></div>
-        <div class="ligne ligne-hi"><span class="ligne-lbl">Prix réel / verre</span><span class="ligne-val ligne-val-hi">${fmtEur(pricePerGlass())}</span></div>
+        <div class="ligne ligne-hi"><span class="ligne-lbl">🛢 Fût 1</span><span class="ligne-val ligne-val-hi">${config.futLiters}L · ${config.futPrice}€</span></div>
+        ${config.biereName?`<div class="ligne"><span class="ligne-lbl">Modèle fût 1</span><span class="ligne-val">🍺 ${config.biereName}</span></div>`:""}
+        <div class="ligne"><span class="ligne-lbl">Verres fût 1 (~25cl)</span><span class="ligne-val">${glassesPerFut()} verres · ${fmtEur(pricePerGlass())}/v</span></div>
+        ${config.fut2Active?`
+        <div class="ligne ligne-hi"><span class="ligne-lbl">🛢 Fût 2</span><span class="ligne-val" style="color:#64b5f6;">${config.fut2Liters}L · ${config.fut2Price}€</span></div>
+        ${config.fut2Name?`<div class="ligne"><span class="ligne-lbl">Modèle fût 2</span><span class="ligne-val">🍺 ${config.fut2Name}</span></div>`:""}
+        <div class="ligne"><span class="ligne-lbl">Verres fût 2 (~25cl)</span><span class="ligne-val">${glassesPerFut(config.fut2Liters)} verres · ${fmtEur(pricePerGlass(config.fut2Price,config.fut2Liters))}/v</span></div>
+        `:""}
         <div class="ligne"><span class="ligne-lbl">Prix facturé / verre</span><span class="ligne-val">1,00\u202f€</span></div>
         <div class="ligne ligne-hi"><span class="ligne-lbl">Verres consommés</span><span class="ligne-val ligne-val-hi">${gt} 🍺</span></div>
         <div class="ligne"><span class="ligne-lbl">Collecté</span><span class="ligne-val">${fmtEur(collected)}</span></div>
@@ -566,7 +572,7 @@ function renderAdmin() {
 
       <!-- CONFIG FÛT -->
       <div class="bloc">
-        <div class="bloc-title">🛢 CONFIGURATION FÛT</div>
+        <div class="bloc-title">🛢 FÛT 1</div>
         <div class="config-row">
           <span class="config-lbl">Prix du fût (€)</span>
           <input class="config-input" type="number" id="cfg-price" value="${config.futPrice}" min="1" step="1">
@@ -576,11 +582,39 @@ function renderAdmin() {
           <input class="config-input" type="number" id="cfg-liters" value="${config.futLiters}" min="1" step="1">
         </div>
         <div class="config-info" id="cfg-calc">
-          Verres estimés (~25cl)\u202f: <strong style="color:var(--gold)">${glassesPerFut()}</strong> · Prix réel\u202f: <strong style="color:var(--gold)">${fmtEur(pricePerGlass())}</strong>
+          Verres (~25cl)\u202f: <strong style="color:var(--gold)">${glassesPerFut()}</strong> · Prix réel\u202f: <strong style="color:var(--gold)">${fmtEur(pricePerGlass())}</strong>
         </div>
         <div class="config-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
-          <span class="config-lbl">Modèle de bière dans le fût</span>
-          <input type="text" class="config-input" id="cfg-biere" placeholder="ex: Leffe Blonde, Heineken…" value="${config.biereName||""}" style="width:100%;font-family:'Nunito',sans-serif;font-size:13px;letter-spacing:0;">
+          <span class="config-lbl">Modèle de bière — fût 1</span>
+          <input type="text" class="config-input" id="cfg-biere" placeholder="ex: Leffe Blonde…" value="${config.biereName||""}" style="width:100%;font-family:'Nunito',sans-serif;font-size:13px;letter-spacing:0;">
+        </div>
+      </div>
+
+      <div class="bloc">
+        <div class="bloc-title" style="color:#64b5f6;">🛢 FÛT 2</div>
+        <div class="config-row">
+          <span class="config-lbl">Activer le fût 2</span>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="cfg-fut2-active" ${config.fut2Active?"checked":""} style="width:20px;height:20px;accent-color:var(--gold);">
+            <span style="font-size:13px;color:var(--mid);">Activé</span>
+          </label>
+        </div>
+        <div id="fut2-fields" style="display:${config.fut2Active?"block":"none"}">
+          <div class="config-row">
+            <span class="config-lbl">Prix du fût 2 (€)</span>
+            <input class="config-input" type="number" id="cfg-price2" value="${config.fut2Price||65}" min="1" step="1">
+          </div>
+          <div class="config-row">
+            <span class="config-lbl">Volume fût 2 (L)</span>
+            <input class="config-input" type="number" id="cfg-liters2" value="${config.fut2Liters||14}" min="1" step="1">
+          </div>
+          <div class="config-info" id="cfg-calc2">
+            Verres (~25cl)\u202f: <strong style="color:#64b5f6;">${glassesPerFut(config.fut2Liters||14)}</strong> · Prix réel\u202f: <strong style="color:#64b5f6;">${fmtEur(pricePerGlass(config.fut2Price||65,config.fut2Liters||14))}</strong>
+          </div>
+          <div class="config-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
+            <span class="config-lbl">Modèle de bière — fût 2</span>
+            <input type="text" class="config-input" id="cfg-biere2" placeholder="ex: Kronenbourg…" value="${config.fut2Name||""}" style="width:100%;font-family:'Nunito',sans-serif;font-size:13px;letter-spacing:0;">
+          </div>
         </div>
         <button class="save-config-btn" id="btn-save-config">✅ Enregistrer la configuration</button>
       </div>
@@ -603,23 +637,44 @@ function renderAdmin() {
 function bindAdmin() {
   document.getElementById("btn-back").addEventListener("click",()=>{ screen="home"; render(); });
 
-  // Live calc update
+  // Live calc fut1
   const updateCalc=()=>{
     const p=parseFloat(document.getElementById("cfg-price").value)||65;
     const l=parseFloat(document.getElementById("cfg-liters").value)||14;
     const g=Math.round((l*100)/25);
     const ppg=(p/g).toFixed(2).replace(".",",")+"\u202f€";
-    document.getElementById("cfg-calc").innerHTML=`Verres estimés (~25cl)\u202f: <strong style="color:var(--gold)">${g}</strong> · Prix réel\u202f: <strong style="color:var(--gold)">${ppg}</strong>`;
+    document.getElementById("cfg-calc").innerHTML=`Verres (~25cl)\u202f: <strong style="color:var(--gold)">${g}</strong> · Prix réel\u202f: <strong style="color:var(--gold)">${ppg}</strong>`;
   };
   document.getElementById("cfg-price").addEventListener("input",updateCalc);
   document.getElementById("cfg-liters").addEventListener("input",updateCalc);
 
+  // Toggle fut2
+  document.getElementById("cfg-fut2-active").addEventListener("change",function(){
+    document.getElementById("fut2-fields").style.display=this.checked?"block":"none";
+  });
+
+  // Live calc fut2
+  const updateCalc2=()=>{
+    const p2=parseFloat(document.getElementById("cfg-price2").value)||65;
+    const l2=parseFloat(document.getElementById("cfg-liters2").value)||14;
+    const g2=Math.round((l2*100)/25);
+    const ppg2=(p2/g2).toFixed(2).replace(".",",")+"\u202f€";
+    document.getElementById("cfg-calc2").innerHTML=`Verres (~25cl)\u202f: <strong style="color:#64b5f6;">${g2}</strong> · Prix réel\u202f: <strong style="color:#64b5f6;">${ppg2}</strong>`;
+  };
+  document.getElementById("cfg-price2").addEventListener("input",updateCalc2);
+  document.getElementById("cfg-liters2").addEventListener("input",updateCalc2);
+
   // Save config
   document.getElementById("btn-save-config").addEventListener("click",async()=>{
+    const fut2Active=document.getElementById("cfg-fut2-active").checked;
     const newConfig={
       futPrice: parseFloat(document.getElementById("cfg-price").value)||65,
       futLiters: parseFloat(document.getElementById("cfg-liters").value)||14,
-      biereName: document.getElementById("cfg-biere").value.trim()
+      biereName: document.getElementById("cfg-biere").value.trim(),
+      fut2Active: fut2Active,
+      fut2Price: parseFloat(document.getElementById("cfg-price2").value)||65,
+      fut2Liters: parseFloat(document.getElementById("cfg-liters2").value)||14,
+      fut2Name: document.getElementById("cfg-biere2").value.trim()
     };
     config={...newConfig};
     await saveConfig(newConfig);

@@ -268,7 +268,7 @@ const REACT_EMOJIS=["🍺","🔥","😂","💀","👑","🎉"];
 
 let counts={},cfg={p1:65,l1:14,n1:"",p2:65,l2:14,n2:"",f2:false};
 let avatars={},chatMsgs=[],reactions={},annonce=null;
-let isAdmin=false,user=null,screen="home-sub",subScreen="home";
+let isAdmin=false,user=null,screen="login",subScreen="home";
 let unreadChat=0,lastChatSeen=0;
 
 const init=()=>{const o={};NAMES.forEach(n=>{o[n]=new Array(DAYS.length).fill(0);});return o;};
@@ -295,7 +295,7 @@ async function saveAva(n,emoji){try{await set(ref(db,`bieres/avatars/${n.replace
 async function saveAnnonce(txt){try{await set(ANNREF,{text:txt,ts:Date.now(),from:"Admin"});}catch(e){}}
 
 // Firebase listeners
-onValue(CREF,s=>{const d=s.val();if(d)NAMES.forEach(n=>{if(Array.isArray(d[n]))counts[n]=d[n];});document.getElementById("loader").style.display="none";document.getElementById("app").style.display="block";if(screen!=="login")render();});
+onValue(CREF,s=>{const d=s.val();if(d)NAMES.forEach(n=>{if(Array.isArray(d[n]))counts[n]=d[n];});document.getElementById("loader").style.display="none";document.getElementById("app").style.display="block";render();});
 onValue(CFGREF,s=>{const d=s.val();if(d)cfg={...cfg,...d};if(screen!=="login")render();});
 onValue(AVREF,s=>{const d=s.val();if(d){Object.keys(d).forEach(k=>{avatars[k.replace(/_/g," ")]=d[k];});}if(screen!=="login")render();});
 onValue(ANNREF,s=>{const d=s.val();annonce=d||null;if(screen!=="login")render();});

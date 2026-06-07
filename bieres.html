@@ -1970,31 +1970,77 @@ onValue(WIZZ_REF, s => {
 });
 
 function triggerWizz(from) {
-  // Shake the whole app
-  const app = document.getElementById("app");
-  if(app) { app.classList.add("wizz-active"); setTimeout(()=>app.classList.remove("wizz-active"),700); }
-  // Play wizz sound
+  // Son en PREMIER pour contourner les restrictions navigateur
   playWizzSound();
-  // Show notification
-  notif(`⚡ WIZZ de ${from} !`, "#FF8F00");
+  // Shake x3 pour plus d'effet
+  const app = document.getElementById("app");
+  if(app) {
+    app.classList.add("wizz-active");
+    setTimeout(()=>{ app.classList.remove("wizz-active"); setTimeout(()=>{ app.classList.add("wizz-active"); setTimeout(()=>app.classList.remove("wizz-active"),700); },100); },700);
+  }
+  // Notification orange bien visible
+  notif(`⚡ WIZZ de ${from} ! ⚡`, "#FF6F00");
+  // Flash de l'écran
+  const flash = document.createElement("div");
+  flash.style.cssText = "position:fixed;inset:0;background:rgba(255,111,0,0.25);z-index:99997;pointer-events:none;animation:fadeIn .1s ease;";
+  document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(), 300);
 }
 
 function playWizzSound() {
   try {
     const ctx = new(window.AudioContext||window.webkitAudioContext)();
-    const freqs = [880,1320,880,1320,880,1760];
-    freqs.forEach((f,i) => {
+
+    // MSN Nudge authentique — séquence de bips rapides montants
+    // Reproduction fidèle du son "nudge" de MSN Messenger
+    const notes = [
+      {f:1318, t:0.00, d:0.07, v:0.6},  // E6
+      {f:1046, t:0.08, d:0.07, v:0.5},  // C6
+      {f:1318, t:0.16, d:0.07, v:0.6},  // E6
+      {f:1046, t:0.24, d:0.07, v:0.5},  // C6
+      {f:1568, t:0.34, d:0.10, v:0.7},  // G6
+      {f:1318, t:0.46, d:0.10, v:0.6},  // E6
+      {f:1760, t:0.58, d:0.14, v:0.8},  // A6 — note finale
+    ];
+
+    const masterGain = ctx.createGain();
+    // Légère distorsion pour ressembler au son MSN (haut-parleur PC)
+    const distortion = ctx.createWaveShaper();
+    function makeDistortionCurve(amount) {
+      const n = 256, curve = new Float32Array(n);
+      for(let i=0;i<n;i++){const x=i*2/n-1;curve[i]=(Math.PI+amount)*x/(Math.PI+amount*Math.abs(x));}
+      return curve;
+    }
+    distortion.curve = makeDistortionCurve(30);
+    distortion.oversample = "2x";
+    masterGain.gain.value = 0.8;
+    masterGain.connect(ctx.destination);
+
+    notes.forEach(note => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = "square";
-      osc.frequency.value = f;
-      const t = ctx.currentTime + i * 0.06;
-      gain.gain.setValueAtTime(0.15, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.056);
+      osc.frequency.value = note.f;
+      // Légère variation de pitch pour simuler le son pixelisé MSN
+      osc.frequency.setValueAtTime(note.f, ctx.currentTime + note.t);
+      osc.frequency.linearRampToValueAtTime(note.f * 1.02, ctx.currentTime + note.t + note.d/2);
+      osc.frequency.linearRampToValueAtTime(note.f, ctx.currentTime + note.t + note.d);
+
+      gain.gain.setValueAtTime(0, ctx.currentTime + note.t);
+      gain.gain.linearRampToValueAtTime(note.v, ctx.currentTime + note.t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + note.t + note.d);
+
+      osc.connect(gain);
+      gain.connect(distortion);
+      distortion.connect(masterGain);
+      osc.start(ctx.currentTime + note.t);
+      osc.stop(ctx.currentTime + note.t + note.d + 0.01);
     });
-  } catch(e) {}
+
+    // Vibration du téléphone en plus
+    if(navigator.vibrate) navigator.vibrate([80,40,80,40,80,40,120]);
+
+  } catch(e) { console.log("Wizz sound error:", e); }
 }
 
 async function sendWizz(to) {

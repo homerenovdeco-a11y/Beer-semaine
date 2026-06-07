@@ -283,6 +283,36 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 .page{animation:fadeIn .25s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
+
+/* ══ BLIND TEST ══ */
+.bt-modal{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9100;display:flex;align-items:center;justify-content:center;padding:14px;}
+.bt-card{background:var(--dark2);border:1px solid rgba(242,169,30,0.3);border-radius:22px;padding:22px 18px;width:100%;max-width:440px;text-align:center;}
+.bt-vinyl{font-size:72px;animation:vinylSpin 3s linear infinite;display:block;margin:0 auto 12px;}
+@keyframes vinylSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.bt-vinyl.paused{animation-play-state:paused;}
+.bt-bar{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;margin:12px 0;overflow:hidden;}
+.bt-bar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--gold));border-radius:3px;transition:width 1s linear;}
+.bt-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+.bt-choice{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 8px;font-size:13px;font-weight:700;color:var(--cream);transition:all .2s;}
+.bt-choice.correct{background:rgba(129,199,116,0.2);border-color:var(--green);color:var(--green);}
+.bt-choice.wrong{background:rgba(239,154,154,0.15);border-color:var(--red);color:var(--red);}
+.bt-scores-row{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.04);}
+
+/* ══ ROUE ══ */
+.roue-modal{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9100;display:flex;align-items:center;justify-content:center;padding:14px;}
+.roue-wrap{position:relative;width:280px;height:280px;margin:0 auto;}
+.roue-canvas{border-radius:50%;box-shadow:0 0 40px rgba(242,169,30,0.3);}
+.roue-arrow{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:28px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));}
+.roue-result{font-family:'Bebas Neue',cursive;font-size:24px;color:var(--gold);letter-spacing:3px;text-align:center;margin-top:16px;min-height:32px;}
+
+/* ══ PLAYLIST ══ */
+.playlist-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.playlist-num{font-family:'Bebas Neue',cursive;font-size:18px;color:var(--mid);width:24px;text-align:center;}
+.playlist-info{flex:1;}
+.playlist-title{font-size:13px;font-weight:700;color:var(--cream);}
+.playlist-artist{font-size:11px;color:var(--mid);}
+.playlist-ava{font-size:16px;}
+
 /* ══ BINGO ══ */
 .bingo-modal{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9000;display:flex;align-items:center;justify-content:center;padding:14px;overflow-y:auto;}
 .bingo-card{background:var(--dark2);border:1px solid rgba(242,169,30,0.3);border-radius:22px;padding:20px 16px;width:100%;max-width:440px;}
@@ -722,6 +752,15 @@ function rHome(){
     <button onclick="showCitationsModal()" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:12px 10px;display:flex;align-items:center;gap:8px;color:var(--cream);">
       <span style="font-size:20px;">💬</span><div style="text-align:left;"><div style="font-size:12px;font-weight:800;">Citations</div><div style="font-size:10px;color:var(--mid);">${citations.length} ce soir</div></div>
     </button>
+    <button onclick="showBlindTest()" style="background:rgba(206,147,216,0.07);border:1px solid rgba(206,147,216,0.2);border-radius:14px;padding:12px 10px;display:flex;align-items:center;gap:8px;color:var(--cream);">
+      <span style="font-size:20px;">🎵</span><div style="text-align:left;"><div style="font-size:12px;font-weight:800;color:var(--purple);">Blind Test</div><div style="font-size:10px;color:var(--mid);">Devine la chanson</div></div>
+    </button>
+    <button onclick="showRoue()" style="background:rgba(242,169,30,0.07);border:1px solid rgba(242,169,30,0.2);border-radius:14px;padding:12px 10px;display:flex;align-items:center;gap:8px;color:var(--cream);">
+      <span style="font-size:20px;">🎡</span><div style="text-align:left;"><div style="font-size:12px;font-weight:800;color:var(--gold);">Roue Bière</div><div style="font-size:10px;color:var(--mid);">Tente ta chance !</div></div>
+    </button>
+    <button onclick="showPlaylist()" style="background:rgba(206,147,216,0.07);border:1px solid rgba(206,147,216,0.2);border-radius:14px;padding:12px 10px;display:flex;align-items:center;gap:8px;color:var(--cream);">
+      <span style="font-size:20px;">🎶</span><div style="text-align:left;"><div style="font-size:12px;font-weight:800;color:var(--purple);">Playlist</div><div style="font-size:10px;color:var(--mid);">${playlist.length} chanson${playlist.length>1?"s":""}</div></div>
+    </button>
   </div>
 
   <!-- Bilan + avatar -->
@@ -858,6 +897,20 @@ function rRecap(){
       <div class="ligne"><span class="llbl">🎰 Paris lancés</span><span class="lval">${paris.length}</span></div>
     </div>
 
+    <!-- Blind Test Classement -->
+    <div class="bloc">
+      <div class="bloc-title">🎵 CLASSEMENT BLIND TEST</div>
+      ${Object.keys(btScores).length===0?
+        `<div style="padding:14px;font-size:13px;color:var(--mid);text-align:center;">Personne n'a encore joué !</div>` :
+        Object.entries(btScores).sort((a,b)=>b[1]-a[1]).map(([n,s],i)=>
+          `<div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.035);">
+            <span style="font-size:14px;">${i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1}</span>
+            <span style="font-size:15px;">${getAva(n)}</span>
+            <span style="flex:1;font-size:13px;font-weight:700;">${n}</span>
+            <span style="font-family:'Bebas Neue',cursive;font-size:20px;color:var(--purple);">${s} PT</span>
+          </div>`
+        ).join("")}
+    </div>
     <!-- Quiz Classement -->
     <div class="bloc">
       <div class="bloc-title">🧠 CLASSEMENT QUIZ</div>
@@ -1088,8 +1141,12 @@ onValue(QUIZ_SCORES_REF, s => {
 
 // Check if quiz notification should show (10h)
 function shouldShowQuizNotif() {
-  const h = new Date().getHours();
-  const d = new Date().getDate();
+  const now = new Date();
+  const h = now.getHours();
+  const d = now.getDate();
+  const m = now.getMonth() + 1; // mois 1-12
+  // Bloqué avant le 23 juillet 2025
+  if(m < 7 || (m === 7 && d < 23)) return false;
   const dayIdx = {23:0,24:1,25:2,26:3,29:4,30:5}[d];
   if(dayIdx === undefined) return false;
   const alreadyPlayed = quizPlayed[user] === String(d);
@@ -1138,6 +1195,23 @@ function playTrumpet() {
 
 function showQuiz() {
   if(!user) return;
+  // Bloqué avant le 23 juillet 2025
+  const now = new Date();
+  const m = now.getMonth() + 1, d2 = now.getDate();
+  if(m < 7 || (m === 7 && d2 < 23)) {
+    const modal = document.createElement("div");
+    modal.className = "quiz-modal";
+    modal.innerHTML = `<div class="quiz-card" style="text-align:center;padding:32px 24px;">
+      <div style="font-size:56px;margin-bottom:12px;">🔒</div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:3px;color:var(--gold);margin-bottom:8px;">QUIZ VERROUILLÉ</div>
+      <div style="font-size:14px;color:var(--mid);line-height:1.6;">Le quiz sera disponible<br>à partir du <strong style="color:var(--gold);">Mardi 23 juillet 2025</strong><br>à partir de 10h 🍺</div>
+      <button style="margin-top:20px;background:rgba(242,169,30,0.15);border:1px solid rgba(242,169,30,0.3);border-radius:12px;color:var(--gold);font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;padding:10px 28px;" id="close-quiz-lock">OK</button>
+    </div>`;
+    document.body.appendChild(modal);
+    document.getElementById("close-quiz-lock").onclick = () => modal.remove();
+    modal.onclick = e => { if(e.target===modal) modal.remove(); };
+    return;
+  }
   const d = getTodayDate();
   if(quizPlayed[user] === d) {
     showQuizLocked();
@@ -1637,6 +1711,375 @@ function showBilanFinal() {
   document.getElementById("btn-print-bilan").onclick = () => window.print();
 }
 window.showBilanFinal = showBilanFinal;
+
+
+// ══════════════════════════════════════════
+// AMBIANCE
+// ══════════════════════════════════════════
+
+const PLAYLIST_REF = ref(db, "bieres/playlist");
+const BT_SCORES_REF = ref(db, "bieres/btScores");
+let playlist = [], btScores = {}, btPlayed = {};
+
+onValue(PLAYLIST_REF, s => { const d=s.val(); playlist=d?Object.values(d).sort((a,b)=>a.ts-b.ts):[]; if(screen!=="login")render(); });
+onValue(BT_SCORES_REF, s => { const d=s.val(); if(d){ btScores=d.scores||{}; btPlayed=d.played||{}; } if(screen!=="login")render(); });
+
+// ══ BLIND TEST ══
+const BT_SONGS = [
+  // Jour 1
+  [{title:"Freed From Desire",artist:"Gala",choices:["Gala","Corona","La Bouche","Haddaway"],a:0,hint:"🎵 Na na na na na..."},
+   {title:"Here Comes the Hotstepper",artist:"Ini Kamoze",choices:["Ini Kamoze","Shaggy","Sean Paul","Buju Banton"],a:0,hint:"🎵 Murder she wrote..."},
+   {title:"Mambo No. 5",artist:"Lou Bega",choices:["Ricky Martin","Marc Anthony","Lou Bega","Enrique Iglesias"],a:2,hint:"🎵 A little bit of Monica..."},
+   {title:"Les Lacs du Connemara",artist:"Michel Sardou",choices:["Sardou","Dassin","Hallyday","Balavoine"],a:0,hint:"🎵 Emmène-moi au bout..."},
+   {title:"Sandstorm",artist:"Darude",choices:["Darude","Scooter","Cascada","ATB"],a:0,hint:"🎵 Le classique des soirées"},
+   {title:"Jump Around",artist:"House of Pain",choices:["Cypress Hill","House of Pain","Public Enemy","NWA"],a:1,hint:"🎵 Jump! Jump! Jump!"},
+   {title:"Mr. Brightside",artist:"The Killers",choices:["Franz Ferdinand","Arctic Monkeys","The Killers","Bloc Party"],a:2,hint:"🎵 Coming out of my cage..."},
+   {title:"Livin' on a Prayer",artist:"Bon Jovi",choices:["Bon Jovi","Aerosmith","Guns N' Roses","Def Leppard"],a:0,hint:"🎵 Tommy used to work..."},
+   {title:"Africa",artist:"Toto",choices:["Toto","Chicago","Foreigner","Journey"],a:0,hint:"🎵 I hear the drums..."},
+   {title:"Don't Stop Me Now",artist:"Queen",choices:["Queen","David Bowie","Elton John","The Rolling Stones"],a:0,hint:"🎵 Tonight I'm gonna have..."}],
+  // Jour 2
+  [{title:"Pump Up the Jam",artist:"Technotronic",choices:["Technotronic","2 Unlimited","Snap","C+C Music Factory"],a:0,hint:"🎵 Pump it up!"},
+   {title:"Sweet Caroline",artist:"Neil Diamond",choices:["Neil Diamond","Tom Jones","Engelbert","Tony Bennett"],a:0,hint:"🎵 Bah bah bah!"},
+   {title:"Dancing Queen",artist:"ABBA",choices:["ABBA","Boney M","Gloria Gaynor","Diana Ross"],a:0,hint:"🎵 Feel the beat..."},
+   {title:"Bohemian Rhapsody",artist:"Queen",choices:["Queen","Led Zeppelin","The Who","Pink Floyd"],a:0,hint:"🎵 Is this the real life?"},
+   {title:"Uptown Funk",artist:"Bruno Mars",choices:["Bruno Mars","Justin Timberlake","Pharrell","Usher"],a:0,hint:"🎵 Don't believe me just watch"},
+   {title:"September",artist:"Earth Wind & Fire",choices:["Earth Wind & Fire","The Temptations","Kool & the Gang","Parliament"],a:0,hint:"🎵 Do you remember..."},
+   {title:"Crazy in Love",artist:"Beyoncé",choices:["Beyoncé","Rihanna","Mariah Carey","Alicia Keys"],a:0,hint:"🎵 Got me looking so crazy..."},
+   {title:"Chelsea Dagger",artist:"The Fratellis",choices:["The Fratellis","Kaiser Chiefs","Razorlight","The Kooks"],a:0,hint:"🎵 Da da da da dadadada"},
+   {title:"Twist and Shout",artist:"The Beatles",choices:["The Beatles","The Rolling Stones","The Kinks","The Doors"],a:0,hint:"🎵 Well shake it up baby"},
+   {title:"Macarena",artist:"Los del Rio",choices:["Los del Rio","Ricky Martin","Marc Anthony","Daddy Yankee"],a:0,hint:"🎵 Heyyy Macarena!"}],
+  // Jour 3
+  [{title:"Mr. Brightside",artist:"The Killers",choices:["The Killers","Interpol","Editors","Snow Patrol"],a:0,hint:"🎵 Indie anthem"},
+   {title:"I Gotta Feeling",artist:"Black Eyed Peas",choices:["Black Eyed Peas","LMFAO","Flo Rida","Taio Cruz"],a:0,hint:"🎵 Tonight's gonna be..."},
+   {title:"Thunderstruck",artist:"AC/DC",choices:["AC/DC","Metallica","Aerosmith","Guns N Roses"],a:0,hint:"🎵 Thunder!"},
+   {title:"Can't Stop the Feeling",artist:"Justin Timberlake",choices:["Justin Timberlake","Bruno Mars","Pharrell","Robin Thicke"],a:0,hint:"🎵 Trolls soundtrack"},
+   {title:"Take On Me",artist:"A-ha",choices:["A-ha","Alphaville","Duran Duran","Tears for Fears"],a:0,hint:"🎵 Take on me..."},
+   {title:"Wannabe",artist:"Spice Girls",choices:["Spice Girls","TLC","Destiny's Child","En Vogue"],a:0,hint:"🎵 Tell me what you want..."},
+   {title:"Blinding Lights",artist:"The Weeknd",choices:["The Weeknd","Drake","Post Malone","Khalid"],a:0,hint:"🎵 I've been running..."},
+   {title:"Daft Punk — Get Lucky",artist:"Daft Punk ft Pharrell",choices:["Daft Punk ft Pharrell","Justice","Disclosure","Modjo"],a:0,hint:"🎵 We're up all night to..."},
+   {title:"Gangnam Style",artist:"PSY",choices:["PSY","CL","Big Bang","2NE1"],a:0,hint:"🎵 Oppan Gangnam Style"},
+   {title:"Eye of the Tiger",artist:"Survivor",choices:["Survivor","Journey","Foreigner","REO Speedwagon"],a:0,hint:"🎵 Rising up, back on the street"}],
+  // Jour 4
+  [{title:"Alors on Danse",artist:"Stromae",choices:["Stromae","Soprano","Black M","Maître Gims"],a:0,hint:"🎵 Qui dit études dit travail..."},
+   {title:"Lose Yourself",artist:"Eminem",choices:["Eminem","Jay-Z","50 Cent","Nas"],a:0,hint:"🎵 Mom's spaghetti"},
+   {title:"Wake Me Up",artist:"Avicii",choices:["Avicii","Calvin Harris","David Guetta","Tiësto"],a:0,hint:"🎵 Feeling my way through..."},
+   {title:"Superstition",artist:"Stevie Wonder",choices:["Stevie Wonder","Marvin Gaye","James Brown","Curtis Mayfield"],a:0,hint:"🎵 Very superstitious..."},
+   {title:"All Night Long",artist:"Lionel Richie",choices:["Lionel Richie","Michael Jackson","Diana Ross","Stevie Wonder"],a:0,hint:"🎵 Well my friends the time has come..."},
+   {title:"Shake It Off",artist:"Taylor Swift",choices:["Taylor Swift","Katy Perry","Ariana Grande","Dua Lipa"],a:0,hint:"🎵 Haters gonna hate..."},
+   {title:"Starships",artist:"Nicki Minaj",choices:["Nicki Minaj","Iggy Azalea","Cardi B","Lil Kim"],a:0,hint:"🎵 Starships were meant to fly"},
+   {title:"Sweet Home Alabama",artist:"Lynyrd Skynyrd",choices:["Lynyrd Skynyrd","CCR","Tom Petty","Eagles"],a:0,hint:"🎵 Big wheels keep on turning"},
+   {title:"Smells Like Teen Spirit",artist:"Nirvana",choices:["Nirvana","Pearl Jam","Soundgarden","Alice in Chains"],a:0,hint:"🎵 Load up on guns..."},
+   {title:"YMCA",artist:"Village People",choices:["Village People","Gloria Gaynor","Donna Summer","Sister Sledge"],a:0,hint:"🎵 Young man!"}],
+  // Jour 5
+  [{title:"Shape of You",artist:"Ed Sheeran",choices:["Ed Sheeran","Sam Smith","James Arthur","Lewis Capaldi"],a:0,hint:"🎵 The club isn't the best place..."},
+   {title:"Happy",artist:"Pharrell Williams",choices:["Pharrell Williams","Bruno Mars","Robin Thicke","John Legend"],a:0,hint:"🎵 Clap along if you feel..."},
+   {title:"Despacito",artist:"Luis Fonsi",choices:["Luis Fonsi","J Balvin","Bad Bunny","Ozuna"],a:0,hint:"🎵 Sí, sabes que ya llevo..."},
+   {title:"God is a Woman",artist:"Ariana Grande",choices:["Ariana Grande","Billie Eilish","Dua Lipa","Lizzo"],a:0,hint:"🎵 You, you love it how I move you"},
+   {title:"Old Town Road",artist:"Lil Nas X",choices:["Lil Nas X","Post Malone","Travis Scott","Cardi B"],a:0,hint:"🎵 I got the horses in the back"},
+   {title:"Levitating",artist:"Dua Lipa",choices:["Dua Lipa","Doja Cat","Lizzo","Cardi B"],a:0,hint:"🎵 If you wanna run away with me"},
+   {title:"Billie Jean",artist:"Michael Jackson",choices:["Michael Jackson","Prince","James Brown","Stevie Wonder"],a:0,hint:"🎵 Billie Jean is not my lover"},
+   {title:"Le Freak",artist:"Chic",choices:["Chic","Kool & the Gang","Earth Wind & Fire","Gap Band"],a:0,hint:"🎵 Freak out!"},
+   {title:"Jump",artist:"Kris Kross",choices:["Kris Kross","MC Hammer","Vanilla Ice","Young MC"],a:0,hint:"🎵 Wiggidy wiggidy wack!"},
+   {title:"99 Luftballons",artist:"Nena",choices:["Nena","Falco","Sandra","Modern Talking"],a:0,hint:"🎵 Hast du etwas Zeit für mich?"}],
+  // Jour 6
+  [{title:"Que je t'aime",artist:"Johnny Hallyday",choices:["Johnny Hallyday","Michel Sardou","Claude François","Joe Dassin"],a:0,hint:"🎵 Légende française"},
+   {title:"Perfect",artist:"Ed Sheeran",choices:["Ed Sheeran","John Legend","Bruno Mars","Michael Bublé"],a:0,hint:"🎵 La chanson de mariage"},
+   {title:"Can You Feel the Love Tonight",artist:"Elton John",choices:["Elton John","Phil Collins","Billy Joel","Lionel Richie"],a:0,hint:"🎵 Le Roi Lion"},
+   {title:"All of Me",artist:"John Legend",choices:["John Legend","Sam Smith","Ed Sheeran","James Arthur"],a:0,hint:"🎵 What would I do without your smart mouth"},
+   {title:"You Are the Best Thing",artist:"Ray LaMontagne",choices:["Ray LaMontagne","Jack Johnson","Jason Mraz","Ben Harper"],a:0,hint:"🎵 Baby I know..."},
+   {title:"Thinking Out Loud",artist:"Ed Sheeran",choices:["Ed Sheeran","Sam Smith","James Bay","Lewis Capaldi"],a:0,hint:"🎵 When your legs don't work..."},
+   {title:"La Vie en Rose",artist:"Édith Piaf",choices:["Édith Piaf","Juliette Gréco","Dalida","Barbara"],a:0,hint:"🎵 Quand il me prend dans ses bras..."},
+   {title:"Can't Help Falling in Love",artist:"Elvis Presley",choices:["Elvis Presley","Frank Sinatra","Dean Martin","Tony Bennett"],a:0,hint:"🎵 Wise men say..."},
+   {title:"Marry You",artist:"Bruno Mars",choices:["Bruno Mars","Justin Timberlake","Pharrell","Adam Levine"],a:0,hint:"🎵 It's a beautiful night..."},
+   {title:"S&S — Le duo parfait",artist:"Seb & Solène",choices:["Seb & Solène","Les mariés","Nous deux","Tout le monde"],a:0,hint:"🎵 La réponse évidente 💍"}]
+];
+
+async function saveBTScore(name, score) {
+  try {
+    const ns = {...btScores, [name]: (btScores[name]||0) + score};
+    const np = {...btPlayed, [name]: String(new Date().getDate())};
+    await set(BT_SCORES_REF, {scores:ns, played:np});
+  } catch(e){}
+}
+
+function playNote(freq, duration) {
+  try {
+    const ctx = new(window.AudioContext||window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + duration);
+  } catch(e){}
+}
+
+function playCorrectSound(){ playNote(880, 0.15); setTimeout(()=>playNote(1108,0.15),150); }
+function playWrongSound(){ playNote(220, 0.3); }
+
+function showBlindTest() {
+  if(!user) return;
+  const now = new Date(), m=now.getMonth()+1, d=now.getDate();
+  if(m < 7 || (m===7 && d < 23)) {
+    showLockModal("Blind Test disponible à partir du 23 juillet 🎵");
+    return;
+  }
+  const dayIdx = {23:0,24:1,25:2,26:3,29:4,30:5}[d] || 0;
+  const songs = BT_SONGS[dayIdx] || BT_SONGS[0];
+  runBlindTest(songs);
+}
+
+function runBlindTest(songs) {
+  let qIdx=0, score=0, answered=false, timerVal=20, timerInterval;
+  const modal = document.createElement("div");
+  modal.className = "bt-modal";
+  document.body.appendChild(modal);
+
+  function renderQ() {
+    if(qIdx >= songs.length) { showBTResult(); return; }
+    answered = false; timerVal = 20;
+    const s = songs[qIdx];
+    modal.innerHTML = `<div class="bt-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:3px;color:var(--purple);">🎵 BLIND TEST ${qIdx+1}/${songs.length}</div>
+        <div style="font-family:'Bebas Neue',cursive;font-size:26px;color:var(--gold);" id="bt-timer">${timerVal}</div>
+      </div>
+      <div class="bt-bar"><div class="bt-bar-fill" id="bt-prog" style="width:100%;"></div></div>
+      <span class="bt-vinyl" id="bt-vinyl">🎵</span>
+      <div style="font-size:13px;color:var(--mid);margin-bottom:16px;">${s.hint}</div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:2px;color:var(--amber);margin-bottom:12px;">QUI CHANTE CETTE CHANSON ?</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:12px;font-style:italic;">"${s.title}"</div>
+      <div class="bt-choices">
+        ${s.choices.map((c,i)=>`<button class="bt-choice" data-i="${i}">${c}</button>`).join("")}
+      </div>
+      <div style="text-align:center;margin-top:10px;font-family:'Bebas Neue',cursive;font-size:14px;color:var(--amber);">SCORE : ${score}</div>
+    </div>`;
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(()=>{
+      timerVal--;
+      const te=document.getElementById("bt-timer"), pe=document.getElementById("bt-prog");
+      if(te){ te.textContent=timerVal; if(timerVal<=5)te.style.color="var(--red)"; }
+      if(pe) pe.style.width=(timerVal/20*100)+"%";
+      if(timerVal<=0){ clearInterval(timerInterval); if(!answered) revealBT(-1, s.a); }
+    }, 1000);
+
+    document.querySelectorAll(".bt-choice").forEach(b=>{
+      b.addEventListener("click",()=>{ if(answered)return; clearInterval(timerInterval); revealBT(parseInt(b.dataset.i),s.a); });
+    });
+  }
+
+  function revealBT(chosen, correct) {
+    answered = true;
+    const isOk = chosen===correct;
+    if(isOk){ score++; playCorrectSound(); }
+    else playWrongSound();
+    const vinyl = document.getElementById("bt-vinyl");
+    if(vinyl){ vinyl.classList.add("paused"); vinyl.textContent=isOk?"🎉":"😅"; }
+    document.querySelectorAll(".bt-choice").forEach((b,i)=>{
+      b.disabled=true;
+      if(i===correct) b.classList.add("correct");
+      else if(i===chosen) b.classList.add("wrong");
+    });
+    setTimeout(()=>{ qIdx++; renderQ(); }, 1400);
+  }
+
+  async function showBTResult() {
+    clearInterval(timerInterval);
+    await saveBTScore(user, score);
+    const isPerfect = score===songs.length;
+    modal.innerHTML = `<div class="bt-card">
+      <div style="font-size:56px;margin-bottom:12px;">${score>=8?"🎤":score>=5?"🎵":"😅"}</div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:3px;color:var(--purple);margin-bottom:6px;">RÉSULTAT BLIND TEST</div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:64px;color:var(--gold);line-height:1;">${score}/${songs.length}</div>
+      <div style="font-size:14px;color:var(--mid);margin:8px 0;">${score>=8?"🏆 Expert musical !":score>=5?"👍 Pas mal !":"🍺 La bière t'a ramolli les oreilles ?"}</div>
+      ${isPerfect?`<div style="background:rgba(206,147,216,0.12);border:1px solid rgba(206,147,216,0.3);border-radius:14px;padding:12px;margin:10px 0;font-size:14px;font-weight:700;">🎤 PARFAIT ! Tu mérites une 🍺 gratuite !</div>`:""}
+      <div style="font-size:12px;color:var(--mid);margin-bottom:14px;">+${score} points ajoutés à ton score blind test</div>
+      <button id="close-bt-result" style="background:rgba(206,147,216,0.15);border:1px solid rgba(206,147,216,0.3);border-radius:12px;color:var(--purple);font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;padding:10px 28px;">FERMER</button>
+    </div>`;
+    if(isPerfect) showConfetti();
+    document.getElementById("close-bt-result").onclick=()=>{ modal.remove(); render(); };
+    modal.onclick=e=>{ if(e.target===modal){modal.remove();render();} };
+  }
+
+  renderQ();
+}
+window.showBlindTest = showBlindTest;
+
+// ══ ROUE DE LA FORTUNE BIÈRE ══
+const ROUE_ITEMS = [
+  {label:"Cul sec !",color:"#F2A91E",emoji:"🍺"},
+  {label:"Offre une tournée",color:"#81c784",emoji:"🥂"},
+  {label:"Chante une chanson",color:"#ce93d8",emoji:"🎤"},
+  {label:"Truth or Dare",color:"#64b5f6",emoji:"🎯"},
+  {label:"+2 verres",color:"#ef9a9a",emoji:"🔥"},
+  {label:"Danse !",color:"#F2A91E",emoji:"💃"},
+  {label:"Embrasse quelqu'un",color:"#ffb74d",emoji:"💋"},
+  {label:"Échange de verre",color:"#81c784",emoji:"🔄"},
+  {label:"Mime une chanson",color:"#ce93d8",emoji:"🎭"},
+  {label:"Shot offert",color:"#ef9a9a",emoji:"🥃"},
+  {label:"Compliment public",color:"#64b5f6",emoji:"💬"},
+  {label:"Chef de soirée 5min",color:"#F2A91E",emoji:"👑"},
+];
+
+function showRoue() {
+  const modal = document.createElement("div");
+  modal.className = "roue-modal";
+  modal.innerHTML = `<div style="text-align:center;width:100%;max-width:400px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0 14px;margin-bottom:16px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;color:var(--gold);">🎡 ROUE BIÈRE</div>
+      <button id="close-roue" style="background:none;border:none;color:var(--mid);font-size:22px;">✕</button>
+    </div>
+    <div class="roue-wrap">
+      <div class="roue-arrow">▼</div>
+      <canvas class="roue-canvas" id="roue-canvas" width="280" height="280"></canvas>
+    </div>
+    <div class="roue-result" id="roue-result"></div>
+    <button id="btn-spin" style="margin-top:16px;background:linear-gradient(135deg,var(--amber),var(--gold));border:none;border-radius:16px;color:#1A1208;font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;padding:14px 40px;box-shadow:0 4px 20px rgba(242,169,30,0.35);">🎡 TOURNER !</button>
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById("close-roue").onclick = () => modal.remove();
+  modal.onclick = e => { if(e.target===modal) modal.remove(); };
+
+  const canvas = document.getElementById("roue-canvas");
+  const ctx = canvas.getContext("2d");
+  const n = ROUE_ITEMS.length;
+  const arc = (2 * Math.PI) / n;
+  let currentAngle = 0, spinning = false;
+
+  function drawWheel(angle) {
+    ctx.clearRect(0,0,280,280);
+    ROUE_ITEMS.forEach((item, i) => {
+      const start = angle + i * arc;
+      ctx.beginPath();
+      ctx.moveTo(140,140);
+      ctx.arc(140,140,130,start,start+arc);
+      ctx.closePath();
+      ctx.fillStyle = item.color;
+      ctx.fill();
+      ctx.strokeStyle = "rgba(0,0,0,0.3)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      // Text
+      ctx.save();
+      ctx.translate(140,140);
+      ctx.rotate(start + arc/2);
+      ctx.textAlign = "right";
+      ctx.fillStyle = "#1A1208";
+      ctx.font = "bold 11px Nunito, sans-serif";
+      ctx.fillText(item.emoji + " " + item.label, 120, 4);
+      ctx.restore();
+    });
+    // Center circle
+    ctx.beginPath();
+    ctx.arc(140,140,20,0,2*Math.PI);
+    ctx.fillStyle = "#1A1208";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(242,169,30,0.5)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = "#F2A91E";
+    ctx.font = "bold 14px Bebas Neue, cursive";
+    ctx.textAlign = "center";
+    ctx.fillText("S&S",140,145);
+  }
+
+  drawWheel(0);
+
+  document.getElementById("btn-spin").onclick = () => {
+    if(spinning) return;
+    spinning = true;
+    document.getElementById("roue-result").textContent = "";
+    const targetAngle = Math.random() * 2 * Math.PI + 8 * Math.PI + Math.PI * 4;
+    const duration = 4000;
+    const start = performance.now();
+    let lastAngle = currentAngle;
+
+    function animate(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      currentAngle = lastAngle + targetAngle * eased;
+      drawWheel(currentAngle);
+      if(progress < 1) { requestAnimationFrame(animate); }
+      else {
+        spinning = false;
+        // Find winning segment
+        const normalizedAngle = ((currentAngle % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+        const winIdx = Math.floor(((2*Math.PI - normalizedAngle) % (2*Math.PI)) / arc) % n;
+        const winner = ROUE_ITEMS[winIdx];
+        document.getElementById("roue-result").innerHTML = `<span style="font-size:28px;">${winner.emoji}</span> ${winner.label}`;
+        playTrumpet();
+        setTimeout(()=>showConfetti(),200);
+      }
+    }
+    requestAnimationFrame(animate);
+  };
+}
+window.showRoue = showRoue;
+
+// ══ PLAYLIST ══
+async function addToPlaylist(title, artist) {
+  if(!title.trim()||!user) return;
+  try {
+    await push(PLAYLIST_REF, {title:title.trim(), artist:artist.trim()||"Inconnu", user, ava:getAva(user), ts:Date.now()});
+    notif("🎵 Ajouté à la playlist !", "#ce93d8");
+  } catch(e){}
+}
+
+function showPlaylist() {
+  const modal = document.createElement("div");
+  modal.className = "bt-modal";
+  modal.innerHTML = `<div class="bt-card" style="text-align:left;max-height:85vh;overflow-y:auto;padding:16px 14px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;color:var(--purple);">🎵 PLAYLIST</div>
+      <button id="close-pl" style="background:none;border:none;color:var(--mid);font-size:22px;">✕</button>
+    </div>
+    <!-- Ajouter -->
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:12px;margin-bottom:12px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:12px;letter-spacing:2px;color:var(--amber);margin-bottom:8px;">PROPOSER UNE CHANSON</div>
+      <input id="pl-title" type="text" placeholder="Titre de la chanson" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--cream);font-size:13px;padding:8px 11px;width:100%;margin-bottom:6px;" maxlength="60">
+      <input id="pl-artist" type="text" placeholder="Artiste" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--cream);font-size:13px;padding:8px 11px;width:100%;margin-bottom:8px;" maxlength="40">
+      <button id="btn-add-pl" style="background:rgba(206,147,216,0.15);border:1px solid rgba(206,147,216,0.3);border-radius:10px;color:var(--purple);font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:2px;padding:9px;width:100%;">🎵 AJOUTER</button>
+    </div>
+    <!-- Liste -->
+    ${playlist.length===0?`<div style="text-align:center;padding:20px;color:var(--mid);">Aucune chanson proposée encore !</div>`:""}
+    ${playlist.map((s,i)=>`<div class="playlist-item">
+      <span class="playlist-num">${i+1}</span>
+      <div class="playlist-info">
+        <div class="playlist-title">${s.title}</div>
+        <div class="playlist-artist">${s.artist}</div>
+      </div>
+      <span class="playlist-ava">${s.ava}</span>
+    </div>`).join("")}
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById("close-pl").onclick = () => modal.remove();
+  modal.onclick = e => { if(e.target===modal) modal.remove(); };
+  document.getElementById("btn-add-pl").onclick = async () => {
+    const t=document.getElementById("pl-title").value, a=document.getElementById("pl-artist").value;
+    if(!t.trim()){notif("Entre un titre !","#ef9a9a");return;}
+    await addToPlaylist(t,a);
+    modal.remove();
+  };
+}
+window.showPlaylist = showPlaylist;
+
+function showLockModal(msg) {
+  const modal = document.createElement("div");
+  modal.className = "quiz-modal";
+  modal.innerHTML = `<div class="quiz-card" style="text-align:center;padding:32px 24px;">
+    <div style="font-size:56px;margin-bottom:12px;">🔒</div>
+    <div style="font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;color:var(--gold);margin-bottom:8px;">VERROUILLÉ</div>
+    <div style="font-size:14px;color:var(--mid);line-height:1.6;">${msg}</div>
+    <button style="margin-top:20px;background:rgba(242,169,30,0.15);border:1px solid rgba(242,169,30,0.3);border-radius:12px;color:var(--gold);font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;padding:10px 28px;" id="close-lock-modal">OK</button>
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById("close-lock-modal").onclick = () => modal.remove();
+  modal.onclick = e => { if(e.target===modal) modal.remove(); };
+}
 
 window.toggleTheme=toggleTheme;
 </script>

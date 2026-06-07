@@ -87,12 +87,6 @@ input,textarea{font-family:'Nunito',sans-serif;outline:none;}
 .roulette-winner{font-family:'Bebas Neue',cursive;font-size:32px;color:var(--gold);letter-spacing:3px;margin:8px 0;}
 .roulette-sub{font-size:13px;color:var(--mid);}
 
-/* ÉQUIPES */
-.teams-wrap{display:flex;gap:8px;margin:8px 14px 0;}
-.team-card{flex:1;border-radius:14px;padding:10px 12px;text-align:center;border:1px solid;}
-.team-name{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:2px;}
-.team-score{font-family:'Bebas Neue',cursive;font-size:36px;line-height:1;}
-.team-members{font-size:10px;color:var(--mid);margin-top:3px;line-height:1.4;}
 
 /* GENERAL */
 .page{min-height:100vh;padding-bottom:68px;}
@@ -245,6 +239,33 @@ input,textarea{font-family:'Nunito',sans-serif;outline:none;}
 .bnav-lbl{font-size:9px;letter-spacing:.5px;text-transform:uppercase;font-weight:700;}
 .bnav-badge{position:absolute;top:5px;right:calc(50% - 20px);background:var(--red);border-radius:10px;padding:1px 4px;font-size:9px;color:#1A1208;font-weight:800;}
 
+
+/* ══ QUIZ ══ */
+.quiz-modal{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;}
+.quiz-card{background:var(--dark2);border:1px solid rgba(242,169,30,0.3);border-radius:24px;padding:24px 20px;width:100%;max-width:440px;box-shadow:0 0 60px rgba(242,169,30,0.15);}
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.quiz-q-num{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:3px;color:var(--amber);}
+.quiz-timer{font-family:'Bebas Neue',cursive;font-size:28px;color:var(--gold);letter-spacing:2px;transition:color .3s;}
+.quiz-timer.urgent{color:var(--red);animation:blink .5s ease-in-out infinite;}
+.quiz-progress{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:20px;overflow:hidden;}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));border-radius:2px;transition:width 1s linear;}
+.quiz-question{font-size:16px;font-weight:700;color:var(--cream);line-height:1.5;margin-bottom:20px;min-height:60px;}
+.quiz-choices{display:flex;flex-direction:column;gap:8px;}
+.quiz-choice{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 16px;font-size:14px;color:var(--cream);text-align:left;transition:all .2s;font-weight:600;}
+.quiz-choice:active{transform:scale(0.98);}
+.quiz-choice.correct{background:rgba(129,199,116,0.2);border-color:var(--green);color:var(--green);}
+.quiz-choice.wrong{background:rgba(239,154,154,0.15);border-color:var(--red);color:var(--red);}
+.quiz-choice.reveal{background:rgba(129,199,116,0.1);border-color:rgba(129,199,116,0.4);}
+.quiz-choice:disabled{cursor:default;}
+.quiz-result{text-align:center;padding:10px 0;}
+.quiz-result-score{font-family:'Bebas Neue',cursive;font-size:72px;color:var(--gold);line-height:1;text-shadow:0 0 30px rgba(242,169,30,0.3);}
+.quiz-result-label{font-size:14px;color:var(--mid);letter-spacing:1px;margin-top:4px;}
+.quiz-result-msg{font-size:18px;font-weight:800;margin:12px 0;color:var(--cream);}
+.quiz-scores-row{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.quiz-locked{text-align:center;padding:30px 20px;}
+.quiz-locked-icon{font-size:60px;display:block;margin-bottom:12px;}
+.quiz-notif-banner{margin:8px 14px 0;background:rgba(242,169,30,0.1);border:1px solid rgba(242,169,30,0.3);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;}
+
 /* PDF EXPORT */
 @media print{.bnav,.topbar{display:none!important;}.page{padding-bottom:0!important;}}
 </style>
@@ -270,9 +291,7 @@ const TIDX=(()=>{const d=new Date().getDate(),m={23:0,24:1,25:2,26:3,29:4,30:5};
 const EMOJIS=["🍺","🎉","🥂","🎸","🌟","🦁","🐯","🦊","🐸","🦄","🍕","🌈","🎯","🔥","💎","🎪","🐙","🦋","🌺","🏆","⚡","🎭","🌊","🎨"];
 const REACT_EMOJIS=["🍺","🔥","😂","💀","👑","🎉"];
 const BADGE_DEFS=[{id:"first5",icon:"🥇",label:"Premiers 5",check:t=>t>=5},{id:"ten",icon:"🔟",label:"10 verres",check:t=>t>=10},{id:"king",icon:"👑",label:"Roi du fût",check:(t,rank)=>rank===0&&t>0},{id:"streak",icon:"🔥",label:"Assidu",check:(t,r,s)=>s>=3}];
-// Équipes fixes
-const TEAM1={name:"ÉQUIPE A",members:["Seb","Ludo","Matt","Diego","Xavier","Kiki","Wojtek","Joelle","Alain","Marion","Stephan","Rico"],color:"rgba(242,169,30,0.12)",border:"rgba(242,169,30,0.3)",textColor:"var(--gold)"};
-const TEAM2={name:"ÉQUIPE B",members:["Solène","Éliane","Joël","Marie Claude","Laura","David","Fabien","Sophie","Sophie D","Pauline","Mag","Laura D"],color:"rgba(100,181,246,0.1)",border:"rgba(100,181,246,0.3)",textColor:"var(--blue)"};
+
 
 let counts={},cfg={p1:65,l1:14,n1:"",p2:65,l2:14,n2:"",f2:false};
 let avatars={},chatMsgs=[],reactions={},annonce=null;
@@ -295,7 +314,7 @@ const getStreak=n=>{let s=0;for(let i=DAYS.length-1;i>=0;i--){if((counts[n]||[])
 const getBadges=n=>{const t=ptot(n),rank=getRank(n),streak=getStreak(n);return BADGE_DEFS.filter(b=>b.check(t,rank,streak));};
 const getDayRecord=()=>{if(TIDX<0)return null;let max=0,who="";NAMES.forEach(n=>{const v=(counts[n]||[])[TIDX]||0;if(v>max){max=v;who=n;}});return max>0?{who,val:max}:null;};
 const fmtTime=ts=>{if(!ts)return"";const d=new Date(ts);return d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});};
-const teamScore=t=>t.members.reduce((s,n)=>s+ptot(n),0);
+
 const isSoiree=()=>{const h=new Date().getHours();return h>=18||h<4;};
 const getSoireeStart=()=>{const now=new Date();if(now.getHours()<4)now.setDate(now.getDate()-1);now.setHours(18,0,0,0);return now.getTime();};
 const getSoireeDuration=()=>{if(!isSoiree())return null;const diff=Date.now()-getSoireeStart();const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);return`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;};
@@ -487,7 +506,6 @@ function rHome(){
   const pct1=Math.min(100,Math.round((gt/gpf(cfg.l1))*100));
   const rem1=Math.max(0,gpf(cfg.l1)-gt);
   const pred=getPrediction();
-  const t1score=teamScore(TEAM1),t2score=teamScore(TEAM2);
 
   return`<div class="page">
   <div class="topbar">
@@ -497,6 +515,8 @@ function rHome(){
   </div>
 
   ${annonce?`<div class="ann-banner"><span style="font-size:20px;">📢</span><div><div style="font-size:13px;color:var(--cream);font-weight:700;">${annonce.text}</div><div style="font-size:10px;color:var(--mid);margin-top:2px;">${fmtTime(annonce.ts)}</div></div></div>`:""}
+
+  ${shouldShowQuizNotif() ? `<div class="quiz-notif-banner" onclick="showQuiz()"><span style="font-size:24px;">🧠</span><div><div style="font-size:13px;font-weight:800;color:var(--gold);">QUIZ DU JOUR DISPONIBLE !</div><div style="font-size:11px;color:var(--mid);margin-top:2px;">10 questions · 10 secondes chacune · Appuie pour jouer</div></div><span style="font-size:20px;margin-left:auto;">▶️</span></div>` : ""}
 
   ${isSoiree()?`<div class="soiree-banner"><div class="soiree-dot"></div><div><div class="soiree-txt">🔥 SOIRÉE EN COURS</div><div class="soiree-sub">${getSoireeVerres()} verres ce soir · ${DAYS[TIDX]?.f||""}</div></div><div class="soiree-chrono" id="soiree-chrono">${getSoireeDuration()}</div></div>`:""}
 
@@ -510,20 +530,7 @@ function rHome(){
 
   ${record?`<div style="margin:0 14px 8px;background:rgba(206,147,216,0.07);border:1px solid rgba(206,147,216,0.2);border-radius:14px;padding:9px 14px;display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">⭐</span><div><div style="font-size:13px;font-weight:700;">Record du jour — ${getAva(record.who)} ${record.who}</div><div style="font-size:11px;color:var(--mid);margin-top:1px;">${record.val} verre${record.val>1?"s":""} · ${DAYS[TIDX]?.f||""}</div></div></div>`:""}
 
-  <!-- Équipes -->
-  <div class="teams-wrap">
-    <div class="team-card" style="background:${TEAM1.color};border-color:${TEAM1.border};">
-      <div class="team-name" style="color:${TEAM1.textColor};">${TEAM1.name}</div>
-      <div class="team-score" style="color:${TEAM1.textColor};">${t1score}</div>
-      <div class="team-members">${TEAM1.members.slice(0,4).map(n=>getAva(n)).join("")}${TEAM1.members.length>4?"…":""}</div>
-    </div>
-    <div style="display:flex;align-items:center;font-family:'Bebas Neue',cursive;font-size:20px;color:var(--mid);">VS</div>
-    <div class="team-card" style="background:${TEAM2.color};border-color:${TEAM2.border};">
-      <div class="team-name" style="color:${TEAM2.textColor};">${TEAM2.name}</div>
-      <div class="team-score" style="color:${TEAM2.textColor};">${t2score}</div>
-      <div class="team-members">${TEAM2.members.slice(0,4).map(n=>getAva(n)).join("")}${TEAM2.members.length>4?"…":""}</div>
-    </div>
-  </div>
+
 
   <!-- Jauges fûts -->
   <div class="fut-gauge-wrap">
@@ -547,6 +554,11 @@ function rHome(){
   </div>
 
   <div class="acts" style="margin-top:8px;">
+    <button class="act" id="btn-quiz" onclick="showQuiz()" style="background:rgba(100,181,246,0.06);border-color:rgba(100,181,246,0.3);">
+      <span class="act-ico">🧠</span>
+      <div><div class="act-lbl" style="color:var(--blue);">Quiz du jour</div>
+      <div class="act-sub">10 questions · Gagne une bière !</div></div>
+    </button>
     <button class="act act-purple" id="btn-roulette"><span class="act-ico">🎰</span><div><div class="act-lbl" style="color:var(--purple);">Roulette tournée</div><div class="act-sub">Qui paie la prochaine ?</div></div></button>
     <button class="act" id="btn-chg-ava"><span class="act-ico">😎</span><div><div class="act-lbl">Changer d'avatar</div><div class="act-sub">Personnalise ton profil</div></div></button>
   </div>
@@ -616,7 +628,6 @@ function rRecap(){
   const gt=gtot(),sorted=[...NAMES].sort((a,b)=>ptot(b)-ptot(a)),maxV=Math.max(...NAMES.map(ptot),1);
   const maxDayIdx=DAYS.reduce((mx,_,i)=>dtot(i)>dtot(mx)?i:mx,0);
   const avgPerPerson=(gt/NAMES.length).toFixed(1);
-  const t1=teamScore(TEAM1),t2=teamScore(TEAM2);
   return`<div class="page">
   <div class="topbar"><div style="width:60px;"></div><div class="topbar-title">📊 STATS</div>
     <button id="btn-pdf" style="background:none;border:none;color:var(--amber);font-size:12px;font-weight:700;letter-spacing:1px;">PDF</button>
@@ -641,12 +652,20 @@ function rRecap(){
       <div class="ligne ligne-hi"><span class="llbl">Collecté (prix réel)</span><span class="lval lval-hi">${eur(gt*ppg(cfg.p1,cfg.l1))}</span></div>
       <div class="ligne"><span class="llbl">Prix / verre</span><span class="lval">${eur(ppg(cfg.p1,cfg.l1))}</span></div>
     </div>
-    <!-- Équipes -->
+
+    <!-- Quiz Classement -->
     <div class="bloc">
-      <div class="bloc-title">⚔️ TOURNOI ÉQUIPES</div>
-      <div class="ligne ligne-hi"><span class="llbl" style="color:var(--gold);">${TEAM1.name}</span><span class="lval lval-hi">${t1} 🍺</span></div>
-      <div class="ligne"><span class="llbl" style="color:var(--blue);">${TEAM2.name}</span><span class="lval lval-blue">${t2} 🍺</span></div>
-      <div class="ligne ligne-hi"><span class="llbl">Mène</span><span class="lval lval-hi">${t1>t2?TEAM1.name:t2>t1?TEAM2.name:"Égalité !"} ${t1!==t2?`(+${Math.abs(t1-t2)} verres)`:""}</span></div>
+      <div class="bloc-title">🧠 CLASSEMENT QUIZ</div>
+      ${Object.keys(quizScores).length===0?
+        `<div style="padding:16px 14px;font-size:13px;color:var(--mid);text-align:center;">Personne n'a encore joué aujourd'hui !</div>` :
+        Object.entries(quizScores).sort((a,b)=>b[1]-a[1]).map(([n,s],i)=>
+          `<div class="quiz-scores-row${n===user?" rank-me":""}">
+            <span style="font-size:14px;">${i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1}</span>
+            <span style="font-size:15px;margin:0 4px;">${getAva(n)}</span>
+            <span style="flex:1;font-size:13px;font-weight:700;">${n}</span>
+            <span style="font-family:'Bebas Neue',cursive;font-size:20px;color:var(--gold);">${s} PT</span>
+          </div>`
+        ).join("")}
     </div>
     <!-- Classement -->
     <div class="bloc">
@@ -776,6 +795,284 @@ function bAdmin(){
 
 // PDF Export
 window.addEventListener("click",e=>{if(e.target.id==="btn-pdf")window.print();});
+
+// ══════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════
+const QUIZ_QUESTIONS = [
+  // Jour 1
+  [{q:"Quelle bière est surnommée 'la déprime' ?",choices:["Leffe","Kronenbourg","Desperados","Kwak"],a:1},
+   {q:"Dans quel pays le champagne a-t-il été inventé ?",choices:["Italie","Espagne","France","Allemagne"],a:2},
+   {q:"Quelle est la teneur en alcool d'un verre de bière standard ?",choices:["2-3%","4-6%","8-10%","12-14%"],a:1},
+   {q:"Quel est le cocktail à base de vodka et jus de tomate ?",choices:["Bloody Mary","Cosmopolitan","Mojito","Screwdriver"],a:0},
+   {q:"Quelle céréale est principalement utilisée pour fabriquer la bière ?",choices:["Blé","Maïs","Orge","Seigle"],a:2},
+   {q:"Où est née la Guinness ?",choices:["Écosse","Angleterre","Irlande","Pays de Galles"],a:2},
+   {q:"Le rosé de Provence est traditionnellement de quelle couleur ?",choices:["Rouge foncé","Saumon pâle","Rose vif","Orange"],a:1},
+   {q:"Quel alcool entre dans la composition du Gin Tonic ?",choices:["Vodka","Rhum","Gin","Tequila"],a:2},
+   {q:"La Trappiste est brassée par qui ?",choices:["Des agriculteurs","Des moines","Des militaires","Des paysans"],a:1},
+   {q:"Combien de litres contient un fût standard dit 'demi' ?",choices:["15L","20L","25L","30L"],a:2}],
+  // Jour 2
+  [{q:"Le Champagne Moët & Chandon est originaire de quelle région ?",choices:["Bordeaux","Bourgogne","Champagne","Alsace"],a:2},
+   {q:"Qu'est-ce que le 'houblon' dans la bière ?",choices:["Une levure","Une plante aromatisante","Un sucre","Un colorant"],a:1},
+   {q:"La Corona est une bière de quel pays ?",choices:["Espagne","Cuba","Mexique","Brésil"],a:2},
+   {q:"Le Pastis est une boisson typique de quelle région ?",choices:["Normandie","Bretagne","Provence","Alsace"],a:2},
+   {q:"Quelle est la différence entre ale et lager ?",choices:["La couleur","La fermentation","Le pays","Le prix"],a:1},
+   {q:"Le porto est un vin fortifié venant de quel pays ?",choices:["Espagne","France","Portugal","Italie"],a:2},
+   {q:"Quelle est la marque de bière la plus vendue au monde ?",choices:["Heineken","Budweiser","Snow","Corona"],a:2},
+   {q:"Le Mojito est un cocktail originaire de :",choices:["Mexique","Cuba","Jamaïque","Brésil"],a:1},
+   {q:"Quel est l'autre nom du 'cidre bouché' ?",choices:["Poiré","Cidre brut","Cidre effervescent","Pommeau"],a:2},
+   {q:"Le Ricard est fabriqué à base de :",choices:["Genièvre","Anis et réglisse","Absinthe","Fenouil pur"],a:1}],
+  // Jour 3
+  [{q:"La Kriek est une bière belge à base de :",choices:["Fraise","Cerise","Framboïse","Pêche"],a:1},
+   {q:"Quel verre est traditionnellement utilisé pour la Guinness ?",choices:["Chope","Tulipe","Pint","Flûte"],a:2},
+   {q:"Le Sake est une boisson japonaise à base de :",choices:["Orge","Blé","Riz","Millet"],a:2},
+   {q:"Quelle est la ville de la Oktoberfest ?",choices:["Berlin","Hambourg","Munich","Stuttgart"],a:2},
+   {q:"Le Chablis est un vin blanc de quelle région ?",choices:["Loire","Bourgogne","Bordeaux","Alsace"],a:1},
+   {q:"La Stella Artois est originaire de quel pays ?",choices:["France","Pays-Bas","Belgique","Allemagne"],a:2},
+   {q:"Un 'double' whisky correspond à combien de cl ?",choices:["2cl","4cl","6cl","8cl"],a:2},
+   {q:"Le Limoncello est une liqueur typique de :",choices:["Espagne","France","Grèce","Italie"],a:3},
+   {q:"Quelle est la fermentation haute ou basse dans une lager ?",choices:["Haute","Basse","Les deux","Aucune"],a:1},
+   {q:"La Chimay est une bière brassée dans quel pays ?",choices:["France","Luxembourg","Belgique","Pays-Bas"],a:2}],
+  // Jour 4 (Ven 26)
+  [{q:"Le Cointreau est une liqueur à base de :",choices:["Citron","Orange","Pamplemousse","Bergamote"],a:1},
+   {q:"Le Spritz est originaire de quelle région ?",choices:["Toscane","Sicile","Vénétie","Lombardie"],a:2},
+   {q:"Qu'est-ce que le 'bock' en Allemagne ?",choices:["Un verre","Une bière forte","Un tonneau","Un bar"],a:1},
+   {q:"Le Calvados est un alcool distillé à base de :",choices:["Poire","Prune","Pomme","Raisin"],a:2},
+   {q:"Quelle est la couleur d'une bière 'blanche' ?",choices:["Transparente","Jaune paille","Trouble blanc","Rosée"],a:2},
+   {q:"Le Whisky Jack Daniel's vient de quel état américain ?",choices:["Kentucky","Tennessee","Texas","Georgia"],a:1},
+   {q:"Le Kir Royal est fait avec quel champagne ou vin ?",choices:["Bordeaux rouge","Crémant ou Champagne","Porto blanc","Sancerre"],a:1},
+   {q:"Quel fruit donne le Cognac ?",choices:["Pomme","Cerise","Raisin","Poire"],a:2},
+   {q:"La bière IPA signifie :",choices:["Irish Pale Ale","India Pale Ale","Italian Premium Ale","International Pilsner Ale"],a:1},
+   {q:"Un 'magnum' de champagne contient :",choices:["1L","1.5L","2L","3L"],a:1}],
+  // Jour 5 (Lun 29)
+  [{q:"Le Tequila Sunrise contient quel jus ?",choices:["Citron","Tomate","Orange","Ananas"],a:2},
+   {q:"Quelle bière est associée au film 'Beerfest' ?",choices:["Beck's","Paulaner","Spaten","Erdinger"],a:1},
+   {q:"Le Beaujolais Nouveau sort chaque année le :",choices:["1er novembre","3ème jeudi de novembre","1er décembre","31 octobre"],a:1},
+   {q:"La Trappiste Rochefort est brassée en :",choices:["France","Belgique","Luxembourg","Hollande"],a:1},
+   {q:"Qu'est-ce qu'un 'blind tasting' ?",choices:["Dégustation les yeux bandés","Dégustation sans étiquette","Dégustation à l'aveugle","Les deux dernières"],a:3},
+   {q:"Le rhum agricole est fabriqué à partir de :",choices:["Mélasse","Canne à sucre fraîche","Betterave","Maïs"],a:1},
+   {q:"La Heineken est brassée depuis :",choices:["1864","1886","1900","1920"],a:0},
+   {q:"Quel est le degré minimal du vin pour l'appellation 'grand cru' ?",choices:["11°","12°","13°","14°"],a:1},
+   {q:"Un Negroni contient du Campari et :",choices:["Vodka + Vermouth","Gin + Vermouth rouge","Rhum + Cointreau","Whisky + Amaretto"],a:1},
+   {q:"La fermentation alcoolique transforme le sucre en :",choices:["Vinaigre","CO2 + Alcool","Eau + Sel","Acide lactique"],a:1}],
+  // Jour 6 (Mar 30)
+  [{q:"Quelle est la bière officielle du mariage S&S ?",choices:["Heineken","Leffe","Celle du fût bien sûr !","Corona"],a:2},
+   {q:"Combien de verres de bière dans un fût de 14L ?",choices:["42","56","66","70"],a:1},
+   {q:"Qui boit le plus cette semaine ?",choices:["Seb","Solène","Quelqu'un d'autre","Le fût répond à tout"],a:3},
+   {q:"Le champagne du mariage était :",choices:["Moët","Veuve Clicquot","Un secret","Le meilleur !"],a:3},
+   {q:"Combien de mariés dans un mariage traditionnel ?",choices:["1","2","3","Ça dépend"],a:1},
+   {q:"La bière se boit :",choices:["Froide uniquement","À température ambiante","Selon ses goûts","Toujours avec citron"],a:2},
+   {q:"Un toast se lève pour :",choices:["Manger","Célébrer","Protester","Se muscler"],a:1},
+   {q:"Santé en espagnol ?",choices:["Cheers","Tchin","Salud","Prost"],a:2},
+   {q:"Santé en allemand ?",choices:["Santé","Na zdorovie","Skål","Prost"],a:3},
+   {q:"La meilleure soirée de la semaine c'était :",choices:["Mardi 23","Vendredi 26","Lundi 29","Toutes !"],a:3}]
+];
+
+const QUIZ_REF = ref(db, "bieres/quiz");
+const QUIZ_SCORES_REF = ref(db, "bieres/quizScores");
+let quizScores = {}, quizPlayed = {}, quizActive = false;
+
+onValue(QUIZ_SCORES_REF, s => {
+  const d = s.val();
+  if(d) {
+    quizScores = d.scores || {};
+    quizPlayed = d.played || {};
+  }
+  if(screen !== "login") render();
+});
+
+// Check if quiz notification should show (10h)
+function shouldShowQuizNotif() {
+  const h = new Date().getHours();
+  const d = new Date().getDate();
+  const dayIdx = {23:0,24:1,25:2,26:3,29:4,30:5}[d];
+  if(dayIdx === undefined) return false;
+  const alreadyPlayed = quizPlayed[user] === String(d);
+  return !alreadyPlayed && (h >= 10);
+}
+
+function getQuizDayIdx() {
+  const d = new Date().getDate();
+  const m = {23:0,24:1,25:2,26:3,29:4,30:5};
+  return d in m ? m[d] : 0;
+}
+
+function getTodayDate() {
+  return String(new Date().getDate());
+}
+
+async function saveQuizScore(name, score) {
+  try {
+    const newScores = {...quizScores, [name]: (quizScores[name]||0) + score};
+    const newPlayed = {...quizPlayed, [name]: getTodayDate()};
+    await set(QUIZ_SCORES_REF, {scores: newScores, played: newPlayed});
+  } catch(e) {}
+}
+
+// Trumpet sound
+function playTrumpet() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523, 659, 784, 1047, 784, 1047];
+    const times = [0, 0.15, 0.3, 0.5, 0.65, 0.8];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + times[i]);
+      gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + times[i] + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + times[i] + 0.13);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + times[i]);
+      osc.stop(ctx.currentTime + times[i] + 0.14);
+    });
+  } catch(e) {}
+}
+
+function showQuiz() {
+  if(!user) return;
+  const d = getTodayDate();
+  if(quizPlayed[user] === d) {
+    showQuizLocked();
+    return;
+  }
+  const dayIdx = getQuizDayIdx();
+  const questions = QUIZ_QUESTIONS[dayIdx] || QUIZ_QUESTIONS[0];
+  playTrumpet();
+  runQuiz(questions);
+}
+
+function showQuizLocked() {
+  const modal = document.createElement("div");
+  modal.className = "quiz-modal";
+  const myScore = quizScores[user] || 0;
+  const sorted = Object.entries(quizScores).sort((a,b)=>b[1]-a[1]);
+  const scoresHtml = sorted.slice(0,5).map(([n,s],i)=>
+    `<div class="quiz-scores-row"><span>${i===0?"🥇":i===1?"🥈":i===2?"🥉":"  "} ${getAva(n)} ${n}</span><span style="font-family:'Bebas Neue',cursive;font-size:18px;color:var(--gold);">${s} pt</span></div>`
+  ).join("");
+  modal.innerHTML = `<div class="quiz-card">
+    <div class="quiz-locked">
+      <span class="quiz-locked-icon">✅</span>
+      <div style="font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:3px;color:var(--gold);">DÉJÀ JOUÉ AUJOURD'HUI</div>
+      <div style="font-size:13px;color:var(--mid);margin-top:6px;">Reviens demain pour un nouveau quiz !</div>
+      <div style="margin:16px 0;font-family:'Bebas Neue',cursive;font-size:36px;color:var(--gold);">TON SCORE TOTAL : ${myScore} PT</div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:10px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:3px;color:var(--amber);padding:6px 14px;">🏆 CLASSEMENT QUIZ</div>
+      ${scoresHtml}
+    </div>
+    <button style="margin:14px auto;display:block;background:rgba(242,169,30,0.15);border:1px solid rgba(242,169,30,0.3);border-radius:12px;color:var(--gold);font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;padding:10px 28px;" id="close-quiz-locked">FERMER</button>
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById("close-quiz-locked").onclick = () => modal.remove();
+  modal.onclick = e => { if(e.target===modal) modal.remove(); };
+}
+
+function runQuiz(questions) {
+  let qIdx = 0, score = 0, answered = false;
+  let timerVal = 10, timerInterval;
+
+  const modal = document.createElement("div");
+  modal.className = "quiz-modal";
+  document.body.appendChild(modal);
+
+  function renderQ() {
+    if(qIdx >= questions.length) {
+      showResult();
+      return;
+    }
+    answered = false;
+    timerVal = 10;
+    const q = questions[qIdx];
+    modal.innerHTML = `<div class="quiz-card">
+      <div class="quiz-header">
+        <span class="quiz-q-num">QUESTION ${qIdx+1} / ${questions.length}</span>
+        <span class="quiz-timer" id="qtimer">${timerVal}</span>
+      </div>
+      <div class="quiz-progress"><div class="quiz-progress-fill" id="qprog" style="width:100%;"></div></div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-choices">
+        ${q.choices.map((c,i)=>`<button class="quiz-choice" data-i="${i}">${String.fromCharCode(65+i)}. ${c}</button>`).join("")}
+      </div>
+      <div style="text-align:center;margin-top:12px;font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:2px;color:var(--amber);">SCORE : ${score}</div>
+    </div>`;
+
+    // Timer
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      timerVal--;
+      const el = document.getElementById("qtimer");
+      const prog = document.getElementById("qprog");
+      if(el) { el.textContent = timerVal; if(timerVal<=3) el.classList.add("urgent"); }
+      if(prog) prog.style.width = (timerVal/10*100)+"%";
+      if(timerVal <= 0) {
+        clearInterval(timerInterval);
+        if(!answered) revealAnswer(-1, q.a);
+      }
+    }, 1000);
+
+    // Choices
+    document.querySelectorAll(".quiz-choice").forEach(b => {
+      b.addEventListener("click", () => {
+        if(answered) return;
+        clearInterval(timerInterval);
+        revealAnswer(parseInt(b.dataset.i), q.a);
+      });
+    });
+  }
+
+  function revealAnswer(chosen, correct) {
+    answered = true;
+    const isCorrect = chosen === correct;
+    if(isCorrect) { score++; playBeerSound(); }
+    document.querySelectorAll(".quiz-choice").forEach((b,i) => {
+      b.disabled = true;
+      if(i === correct) b.classList.add("correct");
+      else if(i === chosen) b.classList.add("wrong");
+    });
+    setTimeout(() => { qIdx++; renderQ(); }, 1200);
+  }
+
+  async function showResult() {
+    clearInterval(timerInterval);
+    await saveQuizScore(user, score);
+    const pct = Math.round((score/questions.length)*100);
+    const isPerfect = score === 10;
+    let msg = isPerfect ? "🏆 PARFAIT ! 10/10 ! Légende absolue !" : score>=8 ? "🍺 Excellent ! Tu mérites ta bière !" : score>=6 ? "👍 Bien joué !" : score>=4 ? "Pas mal du tout !" : "😅 Boire aide à apprendre !";
+    const beerWon = score >= 8 ? 1 : 0;
+    modal.querySelector ? null : null;
+    modal.innerHTML = `<div class="quiz-card">
+      <div class="quiz-result">
+        <div style="font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:3px;color:var(--amber);margin-bottom:8px;">RÉSULTAT DU QUIZ</div>
+        <div class="quiz-result-score">${score}/${questions.length}</div>
+        <div class="quiz-result-label">${pct}% de bonnes réponses</div>
+        <div class="quiz-result-msg">${msg}</div>
+        ${beerWon>0?`<div style="background:rgba(242,169,30,0.1);border:1px solid rgba(242,169,30,0.3);border-radius:14px;padding:12px;margin:10px 0;font-size:15px;font-weight:700;">${isPerfect?"🎉 10/10 PARFAIT !<br>":""}🍺 Tu gagnes <strong style="color:var(--gold);">1 bière gratuite</strong> !${isPerfect?`<br><span style="font-size:13px;color:var(--purple);">✨ Score parfait — montre ce message à Seb !</span>`:""}<br><span style="font-size:12px;color:var(--mid);">Montre ce message au barman 😄</span></div>`:""}
+        <div style="font-size:13px;color:var(--mid);margin-top:8px;">+${score} points ajoutés à ton score total</div>
+      </div>
+      <button style="margin:10px auto;display:block;background:rgba(242,169,30,0.15);border:1px solid rgba(242,169,30,0.3);border-radius:12px;color:var(--gold);font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;padding:10px 28px;" id="close-quiz-result">FERMER</button>
+    </div>`;
+    if(isPerfect) showConfetti();
+    document.getElementById("close-quiz-result").onclick = () => { modal.remove(); render(); };
+    modal.onclick = e => { if(e.target===modal){modal.remove();render();} };
+  }
+
+  renderQ();
+}
+
+window.showQuiz = showQuiz;
+
+// Auto-trigger quiz at 10h if not played
+function checkQuizTrigger() {
+  const h = new Date().getHours(), m = new Date().getMinutes();
+  if(h === 10 && m === 0 && user && !quizPlayed[user]) {
+    setTimeout(() => { if(document.body.contains(document.getElementById("app"))) showQuiz(); }, 500);
+  }
+}
+setInterval(checkQuizTrigger, 60000);
+
 window.toggleTheme=toggleTheme;
 </script>
 </body>

@@ -339,6 +339,24 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 .roue-arrow{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:28px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));}
 .roue-result{font-family:'Bebas Neue',cursive;font-size:24px;color:var(--gold);letter-spacing:3px;text-align:center;margin-top:16px;min-height:32px;}
 
+
+/* ══ MSN EMOTICONS ══ */
+.msn-picker{display:none;position:absolute;bottom:60px;left:0;right:0;background:#FFFFFF;border:1.5px solid rgba(180,120,50,0.2);border-radius:16px;padding:10px;box-shadow:0 8px 32px rgba(180,120,50,0.2);z-index:200;max-height:220px;overflow-y:auto;}
+.msn-picker.open{display:block;}
+.msn-grid{display:flex;flex-wrap:wrap;gap:4px;}
+.msn-btn{font-size:22px;width:36px;height:36px;border-radius:8px;background:none;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;}
+.msn-btn:active,.msn-btn:hover{background:rgba(212,134,10,0.1);transform:scale(1.2);}
+.msn-toggle{background:none;border:1.5px solid rgba(180,120,50,0.2);border-radius:20px;padding:5px 10px;font-size:18px;cursor:pointer;flex-shrink:0;transition:all .15s;}
+.msn-toggle:active{transform:scale(0.9);}
+.chat-input-area{position:relative;display:flex;flex-direction:column;}
+
+/* ══ WIZZ ══ */
+@keyframes wizzShake{0%{transform:translate(0,0) rotate(0);}10%{transform:translate(-8px,-4px) rotate(-3deg);}20%{transform:translate(8px,4px) rotate(3deg);}30%{transform:translate(-6px,6px) rotate(-2deg);}40%{transform:translate(6px,-6px) rotate(2deg);}50%{transform:translate(-4px,4px) rotate(-1deg);}60%{transform:translate(4px,-2px) rotate(1deg);}70%{transform:translate(-2px,2px) rotate(0);}80%{transform:translate(2px,-2px) rotate(0);}100%{transform:translate(0,0) rotate(0);}}
+.wizz-active{animation:wizzShake .6s ease-in-out!important;}
+.wizz-msg{background:linear-gradient(135deg,#FFF3E0,#FFE0B2)!important;border-color:rgba(212,134,10,0.3)!important;}
+.wizz-btn{background:linear-gradient(135deg,#FF6F00,#FF8F00);border:none;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:800;color:#FFFFFF;letter-spacing:1px;cursor:pointer;box-shadow:0 2px 8px rgba(255,111,0,0.3);}
+.wizz-btn:active{transform:scale(0.95);}
+
 /* ══ PLAYLIST ══ */
 .playlist-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);}
 .playlist-num{font-family:'Bebas Neue',cursive;font-size:18px;color:var(--mid);width:24px;text-align:center;}
@@ -416,6 +434,8 @@ const NAMES=["Seb","Solène","Éliane","Joël","Marie Claude","Alain","Marion","
 const DAYS=[{s:"Mar 23",f:"Mardi 23"},{s:"Mer 24",f:"Mercredi 24"},{s:"Jeu 25",f:"Jeudi 25"},{s:"Ven 26",f:"Vendredi 26"},{s:"Lun 29",f:"Lundi 29"},{s:"Mar 30",f:"Mardi 30"}];
 const TIDX=(()=>{const d=new Date().getDate(),m={23:0,24:1,25:2,26:3,29:4,30:5};return d in m?m[d]:-1;})();
 const EMOJIS=[
+  // 🦒 GIRAFES SPÉCIALES
+  "🦒","🦒","🦒","🦒","🦒","🦒",
   // Animaux drôles
   "🐸","🦊","🐧","🦆","🐨","🦥","🦦","🦝","🐙","🦑","🦀","🐡","🦭","🐻‍❄️","🦬","🦙","🦘","🦔","🐿️","🦫",
   // Têtes rigolotes
@@ -436,6 +456,8 @@ const BADGE_DEFS=[{id:"first5",icon:"🥇",label:"Premiers 5",check:t=>t>=5},{id
 let counts={},cfg={p1:65,l1:14,n1:"",p2:65,l2:14,n2:"",f2:false};
 let avatars={},chatMsgs=[],reactions={},annonce=null;
 let isAdmin=false,user=null,screen="login",subScreen="home";
+// Remember last user
+try{const lu=localStorage.getItem("last_user");if(lu&&NAMES.includes(lu)){user=lu;screen="main";}}catch(e){}
 let unreadChat=0,lastChatSeen=0,lightMode=false;
 let earnedBadges={};
 
@@ -448,7 +470,14 @@ const eur=n=>n.toFixed(2).replace(".",",")+"\u202f€";
 const ptot=n=>(counts[n]||[]).reduce((a,b)=>a+b,0);
 const dtot=di=>NAMES.reduce((s,n)=>s+(counts[n]?.[di]||0),0);
 const gtot=()=>NAMES.reduce((s,n)=>s+ptot(n),0);
-const getAva=n=>avatars[n.replace(/\s/g,"_")]||avatars[n]||n[0];
+const getAva=n=>{
+  const key=n.replace(/\s/g,"_");
+  if(avatars[key]) return avatars[key];
+  if(avatars[n]) return avatars[n];
+  // fallback to localStorage
+  try{const ls=localStorage.getItem("ava_"+key);if(ls)return ls;}catch(e){}
+  return n[0];
+};
 const getRank=n=>[...NAMES].sort((a,b)=>ptot(b)-ptot(a)).indexOf(n);
 const getStreak=n=>{let s=0;for(let i=DAYS.length-1;i>=0;i--){if((counts[n]||[])[i]>0)s++;else break;}return s;};
 const getBadges=n=>{const t=ptot(n),rank=getRank(n),streak=getStreak(n);return BADGE_DEFS.filter(b=>b.check(t,rank,streak));};
@@ -465,7 +494,14 @@ async function saveC(c){try{await set(CREF,JSON.parse(JSON.stringify(c)));}catch
 async function saveCFG(c){try{await set(CFGREF,JSON.parse(JSON.stringify(c)));}catch(e){}}
 async function sendChat(text){if(!text.trim()||!user)return;try{await push(CHATREF,{user,ava:getAva(user),text:text.trim(),ts:Date.now()});}catch(e){}}
 async function saveReact(dayKey,emoji){try{const r={...(reactions[dayKey]||{})};r[emoji]=(r[emoji]||0)+1;await set(ref(db,`bieres/reactions/${dayKey}`),r);}catch(e){}}
-async function saveAva(n,emoji){try{await set(ref(db,`bieres/avatars/${n.replace(/\s/g,"_")}`),emoji);avatars[n.replace(/\s/g,"_")]=emoji;}catch(e){}}
+async function saveAva(n,emoji){
+  try{
+    await set(ref(db,`bieres/avatars/${n.replace(/\s/g,"_")}`),emoji);
+    avatars[n.replace(/\s/g,"_")]=emoji;
+    // Also save to localStorage as backup
+    try{localStorage.setItem("ava_"+n.replace(/\s/g,"_"),emoji);}catch(e){}
+  }catch(e){}
+}
 async function saveAnnonce(txt){try{await set(ANNREF,txt?{text:txt,ts:Date.now()}:null);}catch(e){}}
 
 onValue(CREF,s=>{const d=s.val();if(d)NAMES.forEach(n=>{if(Array.isArray(d[n]))counts[n]=d[n];});document.getElementById("loader").style.display="none";document.getElementById("app").style.display="block";render();});
@@ -601,6 +637,7 @@ function bLogin(){
   let pin="";
   document.querySelectorAll(".name-btn").forEach(b=>b.addEventListener("click",()=>{
     user=b.dataset.n;isAdmin=false;
+    try{localStorage.setItem("last_user",user);}catch(e){}
     // Show avatar picker only if no avatar yet
     if(!getAva(user) || getAva(user)===user[0]) { screen="avatar"; render(); }
     else { screen="main"; subScreen="home"; render(); }
@@ -624,12 +661,13 @@ function upDots(pin,err){document.querySelectorAll(".pin-dot").forEach((d,i)=>{d
 function rAvatarPicker(){
   const current=getAva(user);
   const cats=[
-    {label:"🐾 Animaux",range:[0,20]},
-    {label:"😂 Têtes",range:[20,40]},
-    {label:"🍺 Festif",range:[40,60]},
-    {label:"🎮 Activités",range:[60,80]},
-    {label:"✨ Magie",range:[80,100]},
-    {label:"🎩 Objets",range:[100,120]},
+    {label:"🦒 Girafes",range:[0,6]},
+    {label:"🐾 Animaux",range:[6,26]},
+    {label:"😂 Têtes",range:[26,46]},
+    {label:"🍺 Festif",range:[46,66]},
+    {label:"🎮 Activités",range:[66,86]},
+    {label:"✨ Magie",range:[86,106]},
+    {label:"🎩 Objets",range:[106,126]},
   ];
   const catBtns=cats.map((c,i)=>`<button class="cat-btn" data-from="${c.range[0]}" data-to="${c.range[1]}" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--cream);white-space:nowrap;">${c.label}</button>`).join("");
   const allBtns=EMOJIS.map((e,i)=>`<button class="av-btn${e===current?" selected":""}" data-e="${e}" data-idx="${i}">${e}</button>`).join("");
@@ -981,6 +1019,7 @@ function rRecap(){
 function rChat(){
   const msgs=chatMsgs.slice(-60).map(m=>{
     const isMe=m.user===user;
+    const isWizz=m.text&&m.text.startsWith("⚡ WIZZ");
     return`<div class="chat-msg" style="flex-direction:${isMe?"row-reverse":"row"};">
       <div class="chat-ava">${m.ava||m.user[0]}</div>
       <div><div class="chat-bubble${isMe?" mine":""}">
@@ -1005,6 +1044,111 @@ function bChat(){
   const send=async()=>{const inp=document.getElementById("chat-in");const txt=inp.value.trim();if(!txt)return;await sendChat(txt);inp.value="";};
   document.getElementById("chat-send").onclick=send;
   document.getElementById("chat-in").addEventListener("keydown",e=>{if(e.key==="Enter")send();});
+
+  // MSN Emoticons
+  const MSN_EMOJIS = [
+    // Classiques MSN
+    "😊","😀","😂","🤣","😍","🥰","😘","😗","😙","😚",
+    "😋","😛","😜","🤪","😝","🤑","🤗","🤭","🤫","🤔",
+    "😐","😑","😶","😏","😒","🙄","😬","🤥","😔","😪",
+    "😴","🤤","😷","🤒","🤕","🤢","🤧","🥵","🥶","🥴",
+    "😵","🤯","🤠","🥸","😎","🧐","🤓","😕","😟","🙁",
+    "😮","😯","😲","😳","🥺","😦","😧","😨","😰","😥",
+    "😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱",
+    "😤","😡","🤬","😈","👿","💀","☠️","💩","🤡","👹",
+    "👺","👻","👽","👾","🤖","😺","😸","😹","😻","😼",
+    "😽","🙀","😿","😾",
+    // Gestes MSN
+    "👍","👎","👌","🤌","🤏","✌️","🤞","🤟","🤘","🤙",
+    "👈","👉","👆","🖕","👇","☝️","👍","✊","👊","🤛",
+    "🤜","👏","🙌","🫶","👐","🤲","🤝","🙏","✍️","💅",
+    "🤳","💪","🦵","🦶","👂","👃","👀","👁️","👅","🦷",
+    // Coeurs MSN
+    "❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔",
+    "❤️‍🔥","❤️‍🩹","💕","💞","💓","💗","💖","💘","💝","💟",
+    "☮️","✝️","☪️","🔯","☯️","✡️","🛐","⛎","♈","♉",
+    "💯","🔥","⭐","🌟","💫","✨","🎉","🎊","🎈","🎁",
+    "🎵","🎶","🎸","🥁","🎤","🎧","🎼","🎹","🎺","🎻",
+    // Animaux MSN
+    "🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯",
+    "🦁","🐮","🐷","🐸","🐵","🙈","🙉","🙊","🐔","🐧",
+    "🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄",
+    "🦒","🦒","🦒","🦒","🦒","🦒","🦒","🦒","🦒","🦒",
+    "🐝","🐛","🦋","🐌","🐞","🐜","🦟","🦗","🕷️","🦂",
+    // Nourriture MSN
+    "🍕","🍔","🌭","🌮","🌯","🥙","🥗","🍿","🧂","🥓",
+    "🍺","🍻","🥂","🍾","🥃","🍹","🧃","🥤","🧋","☕",
+    "🍵","🫖","🧉","🍶","🍸","🍷","🥃","🍯","🧁","🎂",
+    // Objets MSN
+    "💻","🖥️","🖨️","⌨️","🖱️","📱","📞","☎️","📟","📠",
+    "📺","📷","📸","📹","🎥","📡","🔭","🔬","💡","🔦",
+    "🕯️","🪔","🧯","💰","💵","💴","💶","💷","💸","💳",
+    "📧","📨","📩","📪","📫","📬","📭","📮","📯","📰",
+    "🔑","🗝️","🔒","🔓","🔨","⛏️","🔧","🔩","🪛","🔗",
+    "💊","💉","🩺","🩻","🩹","🧬","🦠","🧫","🧪","⚗️",
+    "🎯","🎲","🎰","🎮","🕹️","🃏","🀄","🎴","🎭","🎨",
+    "🚀","🛸","🛺","🚁","✈️","🚂","🚃","🚄","🚅","🚆",
+    "⚽","🏀","🏈","⚾","🥎","🎾","🏐","🏉","🥏","🎱",
+    // Flags & symboles MSN
+    "🏳️","🏴","🚩","🏁","🏳️‍🌈","🏳️‍⚧️","🇫🇷","🇧🇪","🇨🇭","🇱🇺",
+    "⚡","🌈","☀️","🌤️","⛅","🌥️","☁️","🌦️","🌧️","⛈️",
+    "❄️","🌨️","🌩️","🌪️","🌫️","🌬️","🌀","🌊","🌁","🌃",
+  ];
+
+  const msnGrid = document.getElementById("msn-grid");
+  const msnPicker = document.getElementById("msn-picker");
+  const msnToggle = document.getElementById("msn-toggle");
+  const chatIn = document.getElementById("chat-in");
+
+  if(msnGrid) {
+    MSN_EMOJIS.forEach(e => {
+      const btn = document.createElement("button");
+      btn.className = "msn-btn";
+      btn.textContent = e;
+      btn.addEventListener("click", () => {
+        chatIn.value += e;
+        chatIn.focus();
+        msnPicker.classList.remove("open");
+      });
+      msnGrid.appendChild(btn);
+    });
+  }
+
+  if(msnToggle) {
+    msnToggle.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      msnPicker.classList.toggle("open");
+    });
+  }
+  // Close picker on outside click
+  document.addEventListener("click", (e) => {
+    if(msnPicker && !msnPicker.contains(e.target) && e.target !== msnToggle) {
+      msnPicker.classList.remove("open");
+    }
+  }, {once: false});
+  // Wizz buttons
+  document.querySelectorAll(".wizz-btn").forEach(b=>{
+    b.addEventListener("click",()=>sendWizz(b.dataset.n));
+  });
+  // Show all wizz targets
+  const showMoreBtn = document.getElementById("show-more-wizz");
+  if(showMoreBtn) {
+    showMoreBtn.addEventListener("click",()=>{
+      const modal = document.createElement("div");
+      modal.className="bingo-modal";
+      modal.innerHTML=`<div class="bingo-card" style="max-height:70vh;overflow-y:auto;">
+        <div style="font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:3px;color:#FF8F00;margin-bottom:12px;">⚡ ENVOYER UN WIZZ</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          ${NAMES.filter(n=>n!==user).map(n=>`<button class="wizz-btn" data-n="${n}" style="padding:10px 8px;border-radius:12px;font-size:13px;">${getAva(n)} ${n}</button>`).join("")}
+        </div>
+        <button id="close-wizz-modal" style="margin-top:14px;display:block;width:100%;background:rgba(180,120,50,0.1);border:1.5px solid rgba(180,120,50,0.2);border-radius:12px;padding:10px;color:var(--mid);font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:2px;">FERMER</button>
+      </div>`;
+      document.body.appendChild(modal);
+      modal.querySelectorAll(".wizz-btn").forEach(b=>b.addEventListener("click",()=>{sendWizz(b.dataset.n);modal.remove();}));
+      document.getElementById("close-wizz-modal").onclick=()=>modal.remove();
+      modal.onclick=e=>{if(e.target===modal)modal.remove();};
+    });
+  }
 }
 
 // ══ ADMIN ══
@@ -1752,6 +1896,54 @@ window.showBilanFinal = showBilanFinal;
 // ══════════════════════════════════════════
 
 const PLAYLIST_REF = ref(db, "bieres/playlist");
+const WIZZ_REF = ref(db, "bieres/wizz");
+let lastWizzTs = 0;
+
+onValue(WIZZ_REF, s => {
+  const d = s.val();
+  if(!d || !user) return;
+  // If wizz is for me and it's recent (< 5s)
+  if(d.to === user && d.ts > lastWizzTs && Date.now() - d.ts < 5000) {
+    lastWizzTs = d.ts;
+    triggerWizz(d.from);
+  }
+});
+
+function triggerWizz(from) {
+  // Shake the whole app
+  const app = document.getElementById("app");
+  if(app) { app.classList.add("wizz-active"); setTimeout(()=>app.classList.remove("wizz-active"),700); }
+  // Play wizz sound
+  playWizzSound();
+  // Show notification
+  notif(`⚡ WIZZ de ${from} !`, "#FF8F00");
+}
+
+function playWizzSound() {
+  try {
+    const ctx = new(window.AudioContext||window.webkitAudioContext)();
+    const freqs = [880,1320,880,1320,880,1760];
+    freqs.forEach((f,i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.value = f;
+      const t = ctx.currentTime + i * 0.06;
+      gain.gain.setValueAtTime(0.15, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.056);
+    });
+  } catch(e) {}
+}
+
+async function sendWizz(to) {
+  if(!user || to === user) return;
+  try {
+    await set(WIZZ_REF, {from: user, to, ts: Date.now()});
+    notif(`⚡ Wizz envoyé à ${to} !`, "#FF8F00");
+  } catch(e) {}
+}
 const BT_SCORES_REF = ref(db, "bieres/btScores");
 let playlist = [], btScores = {}, btPlayed = {};
 

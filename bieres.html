@@ -5,718 +5,465 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Bières 🍺">
+<meta name="apple-mobile-web-app-title" content="Bières S&S">
 <meta name="theme-color" content="#0C0803">
-<title>Bières 🍺</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;1,400;1,700&display=swap" rel="stylesheet">
+<title>Bières S&S 🍺</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
 <style>
-:root{--gold:#F2A91E;--amber:#D4860A;--dark:#0C0803;--dark2:#1A1208;--mid:#6B4C2A;--cream:#FFF8E7;--green:#81c784;--red:#ef9a9a;--border:rgba(212,134,10,0.18);}
+:root{--gold:#F2A91E;--amber:#D4860A;--dark:#0C0803;--dark2:#1A1208;--mid:#6B4C2A;--cream:#FFF8E7;--green:#81c784;--red:#ef9a9a;--blue:#64b5f6;--border:rgba(212,134,10,0.18);}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
-body{background:var(--dark);font-family:'Nunito',sans-serif;color:var(--cream);max-width:480px;margin:0 auto;min-height:100vh;overflow-x:hidden;}
-button{cursor:pointer;font-family:'Nunito',sans-serif;outline:none;}
-input,textarea{font-family:'Nunito',sans-serif;outline:none;}
-::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-thumb{background:rgba(242,169,30,0.2);border-radius:2px;}
+body{background:var(--dark);font-family:'Nunito',sans-serif;color:var(--cream);max-width:480px;margin:0 auto;min-height:100vh;}
+button{cursor:pointer;font-family:'Nunito',sans-serif;border:none;outline:none;}
+input{font-family:'Nunito',sans-serif;outline:none;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:rgba(242,169,30,0.2);border-radius:2px;}
 
-#notif{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:9px 22px;border-radius:30px;font-weight:800;font-size:14px;z-index:9999;color:#1A1208;letter-spacing:1px;box-shadow:0 4px 20px rgba(0,0,0,0.5);white-space:nowrap;pointer-events:none;display:none;transition:opacity 0.3s;}
+#notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);padding:8px 20px;border-radius:30px;font-weight:800;font-size:13px;z-index:9999;color:#1A1208;letter-spacing:1px;box-shadow:0 4px 20px rgba(0,0,0,0.5);white-space:nowrap;pointer-events:none;display:none;transition:opacity .3s;}
 #loader{position:fixed;inset:0;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:8888;}
-#loader .beer{font-size:60px;animation:pulse 1s ease-in-out infinite;}
-#loader p{font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:4px;color:var(--amber);margin-top:12px;}
-@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+#loader span{font-size:64px;animation:pulse 1s ease-in-out infinite;}
+#loader p{font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:4px;color:var(--amber);margin-top:10px;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.2);}}
 
-/* HERO */
-.hero-card{margin:0 14px;background:linear-gradient(160deg,#1A1208,#0C0803);border:1px solid rgba(212,134,10,0.3);border-radius:24px;padding:28px 20px 22px;text-align:center;box-shadow:0 0 40px rgba(212,134,10,0.06),inset 0 1px 0 rgba(255,255,255,0.04);}
-.hero-ornament{font-family:'Bebas Neue',cursive;font-size:11px;color:rgba(212,134,10,0.45);letter-spacing:3px;margin-bottom:14px;}
-.logo-row{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin-bottom:14px;}
-.beer-wrap{position:relative;width:44px;height:80px;flex-shrink:0;}
-.stream{position:absolute;top:0;left:50%;transform:translateX(-50%);width:6px;background:linear-gradient(180deg,#F2A91E,rgba(212,134,10,0.5));border-radius:3px;height:0;animation:stream 3.2s ease-in-out infinite;z-index:3;}
-.glass{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:36px;height:56px;border:2.5px solid rgba(242,169,30,0.75);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;background:rgba(255,255,255,0.03);}
-.glass::after{content:"";position:absolute;right:-10px;top:8px;width:10px;height:20px;border:2px solid rgba(242,169,30,0.6);border-left:none;border-radius:0 8px 8px 0;}
-.liquid{position:absolute;bottom:0;left:0;right:0;height:0;background:linear-gradient(180deg,rgba(242,169,30,0.95),rgba(160,80,0,0.9));animation:fill 3.2s ease-in-out infinite;}
-.bubble{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,220,100,0.7);animation:bubble 3.2s ease-in-out infinite;}
-.bubble:nth-child(2){left:8px;animation-delay:0.3s;width:2px;height:2px;}
-.bubble:nth-child(3){left:18px;animation-delay:0.6s;}
-.foam{position:absolute;top:0;left:-2px;right:-2px;height:12px;background:rgba(255,255,255,0.88);border-radius:6px 6px 0 0;opacity:0;animation:foam 3.2s ease-in-out infinite;}
-.ss-block{text-align:center;}
-.ss-letters{font-family:'Playfair Display','Georgia',serif;font-size:72px;color:#F2A91E;line-height:1;font-style:italic;font-weight:700;text-shadow:0 0 30px rgba(242,169,30,0.35),0 2px 6px rgba(0,0,0,0.6);letter-spacing:-2px;}
-.ss-amp{font-size:40px;color:#D4860A;vertical-align:middle;margin:0 3px;font-weight:400;}
-.ss-mariage{font-size:10px;letter-spacing:7px;color:rgba(212,134,10,0.7);text-transform:uppercase;font-style:normal;font-weight:400;margin-top:3px;font-family:'Georgia',serif;}
-.hero-divider{display:flex;align-items:center;gap:12px;margin:12px 0;}
-.divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,134,10,0.35),transparent);}
-.divider-diamond{width:5px;height:5px;background:#D4860A;transform:rotate(45deg);opacity:0.6;flex-shrink:0;}
-.title-biere{font-family:'Bebas Neue',cursive;font-size:52px;letter-spacing:12px;color:#F2A91E;line-height:1;text-shadow:0 0 30px rgba(242,169,30,0.3);text-indent:12px;}
-.love-edition{font-family:'Georgia',serif;font-size:11px;letter-spacing:5px;color:#D4860A;font-style:italic;margin-top:6px;}
-.biere-model-badge{display:inline-block;margin-top:10px;background:rgba(242,169,30,0.1);border:1px solid rgba(242,169,30,0.25);border-radius:20px;padding:4px 14px;font-size:12px;color:var(--gold);letter-spacing:1px;font-style:italic;}
+/* ═══ HERO ═══ */
+.hero{margin:20px 14px 0;background:linear-gradient(160deg,#1e1508,#0C0803);border:1px solid rgba(212,134,10,0.3);border-radius:22px;padding:24px 16px 20px;text-align:center;}
+.orn{font-family:'Bebas Neue',cursive;font-size:10px;color:rgba(212,134,10,0.4);letter-spacing:3px;margin-bottom:12px;}
+.logo-row{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin-bottom:12px;}
+.beer-wrap{position:relative;width:42px;height:76px;flex-shrink:0;}
+.bstream{position:absolute;top:0;left:50%;transform:translateX(-50%);width:6px;background:linear-gradient(180deg,#F2A91E,rgba(212,134,10,0.4));border-radius:3px;height:0;animation:bstream 3s ease-in-out infinite;z-index:3;}
+.bglass{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:34px;height:52px;border:2px solid rgba(242,169,30,0.7);border-top:none;border-radius:0 0 9px 9px;overflow:hidden;background:rgba(255,255,255,0.03);}
+.bglass::after{content:'';position:absolute;right:-9px;top:7px;width:9px;height:18px;border:2px solid rgba(242,169,30,0.55);border-left:none;border-radius:0 7px 7px 0;}
+.bliq{position:absolute;bottom:0;left:0;right:0;height:0;background:linear-gradient(180deg,rgba(242,169,30,0.95),rgba(155,75,0,0.9));animation:bliq 3s ease-in-out infinite;}
+.bfoam{position:absolute;top:0;left:-2px;right:-2px;height:11px;background:rgba(255,255,255,0.87);border-radius:5px 5px 0 0;opacity:0;animation:bfoam 3s ease-in-out infinite;}
+.bub{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,220,80,0.7);animation:bub 3s ease-in-out infinite;}
+.bub:nth-child(2){left:7px;animation-delay:.3s;width:2px;height:2px;}
+.bub:nth-child(3){left:17px;animation-delay:.55s;}
+@keyframes bstream{0%{height:0;opacity:0;}8%{height:22px;opacity:1;}58%{height:22px;opacity:1;}68%,100%{height:0;opacity:0;}}
+@keyframes bliq{0%{height:0;}62%{height:80%;}78%{height:80%;}100%{height:0;}}
+@keyframes bfoam{0%,46%{opacity:0;}56%{opacity:1;}74%{opacity:1;transform:translateY(-1px);}90%,100%{opacity:0;transform:translateY(-4px);}}
+@keyframes bub{0%,38%{bottom:2px;opacity:0;}48%{opacity:.8;}72%{bottom:55%;opacity:.3;}78%,100%{opacity:0;}}
 
-@keyframes stream{0%{height:0;opacity:0;}8%{height:24px;opacity:1;}58%{height:24px;opacity:1;}70%{height:0;opacity:0;}100%{height:0;opacity:0;}}
-@keyframes fill{0%{height:0;}65%{height:82%;}80%{height:82%;}100%{height:0;}}
-@keyframes foam{0%,48%{opacity:0;transform:translateY(0);}58%{opacity:1;}75%{opacity:1;transform:translateY(-2px);}92%,100%{opacity:0;transform:translateY(-5px);}}
-@keyframes bubble{0%,40%{bottom:0;opacity:0;}50%{opacity:0.8;}75%{bottom:60%;opacity:0.4;}80%,100%{opacity:0;}}
+.ss{font-family:'Playfair Display',serif;font-size:68px;color:var(--gold);line-height:1;font-style:italic;font-weight:700;text-shadow:0 0 28px rgba(242,169,30,0.3),0 2px 6px rgba(0,0,0,0.6);letter-spacing:-2px;}
+.ss-amp{font-size:38px;color:var(--amber);vertical-align:middle;margin:0 2px;}
+.ss-mar{font-size:10px;letter-spacing:7px;color:rgba(212,134,10,0.65);text-transform:uppercase;margin-top:2px;font-family:'Nunito',sans-serif;font-weight:400;font-style:normal;}
+.hdiv{display:flex;align-items:center;gap:10px;margin:10px 0;}
+.hdivl{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,134,10,0.3),transparent);}
+.hdivm{width:5px;height:5px;background:var(--amber);transform:rotate(45deg);opacity:.55;flex-shrink:0;}
+.htitle{font-family:'Bebas Neue',cursive;font-size:48px;letter-spacing:11px;color:var(--gold);line-height:1;text-shadow:0 0 28px rgba(242,169,30,0.25);text-indent:11px;}
+.hlove{font-size:11px;letter-spacing:5px;color:var(--amber);font-style:italic;margin-top:5px;font-family:'Nunito',sans-serif;}
+.hmodel{display:inline-block;margin-top:8px;background:rgba(242,169,30,0.09);border:1px solid rgba(242,169,30,0.22);border-radius:20px;padding:3px 13px;font-size:12px;color:var(--gold);font-style:italic;}
 
-/* GENERAL */
-.page{min-height:100vh;overflow-y:auto;padding-bottom:24px;}
-.section-lbl{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:4px;color:var(--mid);padding:16px 16px 8px;}
-.name-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px;}
-.name-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:9px 12px;color:var(--cream);}
-.name-btn:active{background:rgba(242,169,30,0.08);}
-.name-ava{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A1208;font-weight:800;font-size:13px;flex-shrink:0;}
-.name-txt{flex:1;font-size:13px;font-weight:700;text-align:left;}
-.name-count{font-family:'Bebas Neue',cursive;font-size:15px;color:var(--gold);}
-.admin-link{display:block;margin:18px auto 8px;background:none;border:1px solid rgba(212,134,10,0.2);border-radius:10px;color:var(--mid);font-size:13px;padding:10px 28px;letter-spacing:1px;}
-.login-sub{font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:5px;color:var(--amber);text-align:center;padding-top:14px;}
-.fut-pill{display:inline-block;background:rgba(242,169,30,0.08);border:1px solid rgba(242,169,30,0.22);border-radius:20px;padding:5px 16px;font-size:11px;color:var(--amber);letter-spacing:.5px;margin-top:6px;}
+/* ═══ GENERAL ═══ */
+.page{min-height:100vh;padding-bottom:28px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--dark2);position:sticky;top:0;z-index:10;}
+.topbar-title{font-family:'Bebas Neue',cursive;font-size:17px;letter-spacing:3px;color:var(--gold);}
+.topbar-back{background:none;color:var(--gold);font-size:13px;font-weight:700;width:70px;text-align:left;}
+.topbar-quit{background:none;color:var(--gold);font-size:13px;font-weight:700;}
 
-/* PIN */
-.pin-wrap{padding:32px 24px;text-align:center;}
-.pin-title{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:6px;color:var(--amber);margin-bottom:24px;}
-.pin-dots{display:flex;justify-content:center;gap:18px;margin-bottom:10px;}
-.pin-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(242,169,30,0.3);background:rgba(255,255,255,0.1);transition:all .2s;}
-.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:260px;margin:14px auto;}
-.pin-btn{height:64px;border-radius:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--cream);font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:2px;}
-.pin-btn:active{background:rgba(242,169,30,0.12);}
-.back-txt{background:none;border:none;color:var(--mid);font-size:13px;margin-top:14px;letter-spacing:1px;}
-
-/* HOME */
-.header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--dark2);position:sticky;top:0;z-index:10;}
-.quit-btn{background:none;border:none;color:var(--gold);font-size:13px;font-weight:700;}
-.header-name{font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:4px;color:var(--gold);}
-.sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.my-card{margin:14px 14px 10px;background:rgba(242,169,30,0.06);border:1px solid rgba(242,169,30,0.18);border-radius:18px;padding:20px;text-align:center;}
-.my-card-lbl{font-size:10px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:6px;}
-.my-big{font-family:'Bebas Neue',cursive;font-size:80px;color:var(--gold);line-height:1;text-shadow:0 0 30px rgba(242,169,30,0.25);}
-.my-due{font-size:15px;font-weight:700;margin-top:4px;}
-.my-real{font-size:11px;color:var(--mid);margin-top:3px;}
-.tri-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 14px 10px;}
-.tri-card{background:rgba(255,255,255,0.025);border:1px solid;border-radius:12px;padding:10px 6px;text-align:center;}
-.tri-lbl{font-size:10px;color:var(--mid);margin-top:3px;letter-spacing:.5px;}
-.act-col{display:flex;flex-direction:column;gap:8px;padding:0 14px;}
-.act-btn{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:13px 16px;}
-.act-btn:active{background:rgba(255,255,255,0.05);}
-.act-gold{background:rgba(242,169,30,0.06)!important;border-color:rgba(242,169,30,0.35)!important;}
-.foot-sync{text-align:center;font-size:10px;color:#3D2B1F;letter-spacing:1px;padding-top:14px;}
-.fut-home-info{margin:8px 14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:10px 14px;text-align:center;font-size:12px;color:var(--mid);}
-.fut-home-info strong{color:var(--gold);}
-.fut-biere-name{font-style:italic;color:var(--amber);font-size:13px;margin-top:2px;}
-
-/* TOPBAR */
-.top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--dark2);position:sticky;top:0;z-index:10;}
-.back-btn{background:none;border:none;color:var(--gold);font-size:13px;font-weight:700;width:70px;text-align:left;}
-.top-bar-txt{font-family:'Bebas Neue',cursive;font-size:17px;letter-spacing:3px;color:var(--gold);}
-
-/* SAISIE */
-.saisie-wrap{padding:10px 12px;display:flex;flex-direction:column;gap:7px;}
-.tot-banner{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;background:rgba(242,169,30,0.07);border:1px solid rgba(242,169,30,0.18);border-radius:14px;}
-.day-row{border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.025);}
-.day-today{background:rgba(242,169,30,0.07)!important;border-color:rgba(242,169,30,0.35)!important;}
-.day-name{font-size:14px;font-weight:700;color:var(--cream);}
-.today-tag{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:800;margin-top:2px;}
-.counter{display:flex;align-items:center;gap:12px;}
-.btn-minus{width:44px;height:44px;border-radius:50%;border:2px solid rgba(239,154,154,0.4);background:rgba(239,154,154,0.06);color:var(--red);font-size:24px;display:flex;align-items:center;justify-content:center;padding:0;font-weight:800;}
-.btn-minus:active{background:rgba(239,154,154,0.15);}
-.c-val{font-family:'Bebas Neue',cursive;font-size:38px;letter-spacing:2px;min-width:36px;text-align:center;color:rgba(255,255,255,0.18);}
-.c-active{color:var(--gold)!important;}
-.btn-plus{width:44px;height:44px;border-radius:50%;border:2px solid rgba(129,199,116,0.4);background:rgba(129,199,116,0.06);color:var(--green);font-size:24px;display:flex;align-items:center;justify-content:center;padding:0;font-weight:800;}
-.btn-plus:active{background:rgba(129,199,116,0.15);}
-
-/* RECAP */
-.scroll-wrap{padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
-.bloc{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;}
+.bloc{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.065);border-radius:16px;overflow:hidden;margin-bottom:8px;}
 .bloc-title{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:3px;color:var(--amber);padding:10px 14px 6px;border-bottom:1px solid rgba(255,255,255,0.05);}
 .ligne{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.035);}
 .ligne-hi{background:rgba(242,169,30,0.05);}
-.ligne-lbl{font-size:13px;color:var(--mid);}
-.ligne-val{font-size:13px;font-weight:700;color:var(--cream);}
-.ligne-val-hi{color:var(--gold)!important;}
+.llbl{font-size:13px;color:var(--mid);}
+.lval{font-size:13px;font-weight:700;color:var(--cream);}
+.lval-hi{color:var(--gold)!important;}
+.lval-blue{color:var(--blue)!important;}
+
+/* ═══ LOGIN ═══ */
+.sub{font-family:'Bebas Neue',cursive;font-size:17px;letter-spacing:5px;color:var(--amber);text-align:center;padding:12px 0 4px;}
+.fut-info{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 14px 10px;}
+.fut-badge{background:rgba(242,169,30,0.08);border:1px solid rgba(242,169,30,0.2);border-radius:20px;padding:4px 14px;font-size:11px;color:var(--amber);}
+.fut-badge2{background:rgba(100,181,246,0.07);border:1px solid rgba(100,181,246,0.2);border-radius:20px;padding:4px 14px;font-size:11px;color:var(--blue);}
+.slbl{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:4px;color:var(--mid);padding:12px 16px 8px;}
+.name-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px;}
+.name-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:9px 12px;color:var(--cream);}
+.name-btn:active{background:rgba(242,169,30,0.08);}
+.nava{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A1208;font-weight:800;font-size:13px;flex-shrink:0;}
+.ntxt{flex:1;font-size:13px;font-weight:700;text-align:left;}
+.ncount{font-family:'Bebas Neue',cursive;font-size:15px;color:var(--gold);}
+.admin-lnk{display:block;margin:16px auto 6px;background:none;border:1px solid rgba(212,134,10,0.2);border-radius:10px;color:var(--mid);font-size:13px;padding:10px 28px;letter-spacing:1px;}
+/* PIN */
+.pin-wrap{padding:28px 24px;text-align:center;}
+.pin-title{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:6px;color:var(--amber);margin-bottom:22px;}
+.pin-dots{display:flex;justify-content:center;gap:16px;margin-bottom:10px;}
+.pin-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(242,169,30,0.3);background:rgba(255,255,255,0.1);transition:all .2s;}
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:250px;margin:14px auto;}
+.pin-btn{height:62px;border-radius:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--cream);font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:2px;}
+.pin-btn:active{background:rgba(242,169,30,0.12);}
+.pin-back{background:none;color:var(--mid);font-size:13px;margin-top:14px;letter-spacing:1px;}
+
+/* ═══ HOME ═══ */
+.my-card{margin:14px 14px 8px;background:rgba(242,169,30,0.06);border:1px solid rgba(242,169,30,0.18);border-radius:18px;padding:18px;text-align:center;}
+.my-lbl{font-size:10px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:5px;}
+.my-big{font-family:'Bebas Neue',cursive;font-size:76px;color:var(--gold);line-height:1;text-shadow:0 0 28px rgba(242,169,30,0.22);}
+.my-due{font-size:15px;font-weight:700;margin-top:4px;}
+.my-real{font-size:11px;color:var(--mid);margin-top:2px;}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 14px 8px;}
+.tri-c{background:rgba(255,255,255,0.025);border:1px solid;border-radius:12px;padding:10px 5px;text-align:center;}
+.tri-v{font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:1px;line-height:1;}
+.tri-l{font-size:10px;color:var(--mid);margin-top:3px;letter-spacing:.5px;}
+.acts{display:flex;flex-direction:column;gap:7px;padding:0 14px;}
+.act{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:13px 15px;}
+.act:active{background:rgba(255,255,255,0.05);}
+.act-gold{background:rgba(242,169,30,0.06)!important;border-color:rgba(242,169,30,0.3)!important;}
+.act-ico{font-size:22px;flex-shrink:0;}
+.act-lbl{font-size:14px;font-weight:800;color:var(--cream);}
+.act-sub{font-size:11px;color:var(--mid);margin-top:1px;}
+.fsync{text-align:center;font-size:10px;color:#3D2B1F;letter-spacing:1px;padding-top:12px;}
+.fut-bar{margin:0 14px 8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:9px 14px;}
+.fut-bar-row{font-size:12px;color:var(--mid);line-height:1.7;}
+.fut-bar-row strong{color:var(--gold);}
+.fut-bar-row.blue strong{color:var(--blue);}
+
+/* ═══ SAISIE ═══ */
+.saisie-wrap{padding:10px 12px;display:flex;flex-direction:column;gap:7px;}
+.tot-ban{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;background:rgba(242,169,30,0.07);border:1px solid rgba(242,169,30,0.18);border-radius:14px;}
+.tot-lbl{font-size:11px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;}
+.tot-val{font-family:'Bebas Neue',cursive;font-size:20px;color:var(--gold);letter-spacing:1px;}
+.day-row{border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:11px 15px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.02);}
+.day-today{background:rgba(242,169,30,0.06)!important;border-color:rgba(242,169,30,0.3)!important;}
+.day-name{font-size:14px;font-weight:700;}
+.today-tag{font-size:9px;color:var(--gold);letter-spacing:2px;font-weight:800;margin-top:2px;}
+.ctr{display:flex;align-items:center;gap:11px;}
+.bminus{width:44px;height:44px;border-radius:50%;border:2px solid rgba(239,154,154,0.4);background:rgba(239,154,154,0.06);color:var(--red);font-size:24px;display:flex;align-items:center;justify-content:center;font-weight:800;}
+.bminus:active{background:rgba(239,154,154,0.15);}
+.cval{font-family:'Bebas Neue',cursive;font-size:36px;letter-spacing:2px;min-width:34px;text-align:center;color:rgba(255,255,255,0.18);}
+.cval-on{color:var(--gold)!important;}
+.bplus{width:44px;height:44px;border-radius:50%;border:2px solid rgba(129,199,116,0.4);background:rgba(129,199,116,0.06);color:var(--green);font-size:24px;display:flex;align-items:center;justify-content:center;font-weight:800;}
+.bplus:active{background:rgba(129,199,116,0.15);}
+
+/* ═══ RECAP ═══ */
+.scroll{padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
 .rank-row{display:flex;align-items:center;gap:6px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.035);}
 .rank-me{background:rgba(242,169,30,0.04);}
-.r-i{font-size:10px;color:#3D2B1F;width:16px;text-align:right;flex-shrink:0;}
-.r-name{width:82px;font-size:12px;font-weight:700;flex-shrink:0;color:var(--cream);}
-.r-bar{flex:1;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;}
-.r-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));border-radius:3px;transition:width .4s;}
-.r-val{font-family:'Bebas Neue',cursive;font-size:18px;width:24px;text-align:right;flex-shrink:0;}
-.r-eur{font-size:10px;color:var(--mid);width:34px;text-align:right;flex-shrink:0;}
+.ri{font-size:10px;color:#3D2B1F;width:16px;text-align:right;flex-shrink:0;}
+.rn{width:80px;font-size:12px;font-weight:700;flex-shrink:0;}
+.rb{flex:1;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;}
+.rbf{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));border-radius:3px;}
+.rv{font-family:'Bebas Neue',cursive;font-size:18px;width:24px;text-align:right;flex-shrink:0;}
+.re{font-size:10px;color:var(--mid);width:40px;text-align:right;flex-shrink:0;}
 
-/* ADMIN */
-.admin-badge{margin:10px 12px;background:rgba(242,169,30,0.07);border:1px solid rgba(242,169,30,0.22);border-radius:10px;padding:8px 14px;font-size:12px;color:var(--amber);text-align:center;letter-spacing:.5px;}
+/* ═══ ADMIN ═══ */
+.admin-badge{margin:8px 12px;background:rgba(242,169,30,0.07);border:1px solid rgba(242,169,30,0.2);border-radius:10px;padding:7px 14px;font-size:12px;color:var(--amber);text-align:center;}
 .ap-wrap{border-bottom:1px solid rgba(255,255,255,0.04);}
-.ap-row{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;}
+.ap-row{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;}
 .ap-ava{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A1208;font-weight:800;font-size:12px;flex-shrink:0;}
-.ap-name{flex:1;font-size:13px;font-weight:700;color:var(--cream);}
-.ap-tot{font-family:'Bebas Neue',cursive;font-size:16px;color:var(--gold);letter-spacing:1px;}
+.ap-name{flex:1;font-size:13px;font-weight:700;}
+.ap-tot{font-family:'Bebas Neue',cursive;font-size:15px;color:var(--gold);letter-spacing:1px;}
 .ap-chev{font-size:9px;color:var(--mid);margin-left:4px;}
-.ad-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:6px 10px 12px;}
-.ad-box{border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:6px 3px;text-align:center;background:rgba(255,255,255,0.02);}
+.ad-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:5px 10px 10px;}
+.ad-box{border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:5px 2px;text-align:center;background:rgba(255,255,255,0.02);}
 .ad-today{border-color:rgba(242,169,30,0.35)!important;}
-.ad-lbl{font-size:9px;color:var(--mid);margin-bottom:3px;letter-spacing:.3px;}
-.ad-val{font-family:'Bebas Neue',cursive;font-size:22px;line-height:1;margin-bottom:4px;color:rgba(255,255,255,0.18);}
-.ad-active{color:var(--gold)!important;}
+.ad-lbl{font-size:9px;color:var(--mid);margin-bottom:2px;}
+.ad-val{font-family:'Bebas Neue',cursive;font-size:22px;line-height:1;margin-bottom:3px;color:rgba(255,255,255,0.18);}
+.ad-on{color:var(--gold)!important;}
 .ad-btns{display:flex;gap:3px;justify-content:center;}
-.ad-m{width:28px;height:28px;border-radius:50%;border:1px solid rgba(239,154,154,0.3);background:none;color:var(--red);font-size:16px;padding:0;display:flex;align-items:center;justify-content:center;}
-.ad-p{width:28px;height:28px;border-radius:50%;border:1px solid rgba(129,199,116,0.3);background:none;color:var(--green);font-size:16px;padding:0;display:flex;align-items:center;justify-content:center;}
-.reset-btn{margin:12px 14px;background:rgba(239,154,154,0.05);border:1px solid rgba(239,154,154,0.28);border-radius:10px;color:var(--red);font-size:13px;font-weight:700;letter-spacing:1px;padding:12px;width:calc(100% - 28px);}
-
-/* CONFIG FUT admin */
-.config-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);}
-.config-lbl{font-size:13px;color:var(--cream);}
-.config-input{background:rgba(255,255,255,0.07);border:1px solid rgba(242,169,30,0.3);border-radius:8px;color:var(--gold);font-size:16px;font-family:'Bebas Neue',cursive;letter-spacing:1px;padding:6px 10px;width:90px;text-align:center;}
-.config-input:focus{border-color:var(--gold);}
-.config-textarea{background:rgba(255,255,255,0.05);border:1px solid rgba(242,169,30,0.25);border-radius:8px;color:var(--cream);font-size:13px;padding:8px 12px;width:100%;resize:none;margin:0 14px;width:calc(100% - 28px);}
-.config-textarea:focus{border-color:var(--gold);}
-.config-info{padding:8px 14px;font-size:11px;color:var(--mid);font-style:italic;}
-.save-config-btn{margin:10px 14px;background:rgba(129,199,116,0.08);border:1px solid rgba(129,199,116,0.3);border-radius:10px;color:var(--green);font-size:13px;font-weight:700;letter-spacing:1px;padding:11px;width:calc(100% - 28px);}
+.adm{width:26px;height:26px;border-radius:50%;border:1px solid rgba(239,154,154,0.3);background:none;color:var(--red);font-size:15px;display:flex;align-items:center;justify-content:center;}
+.adp{width:26px;height:26px;border-radius:50%;border:1px solid rgba(129,199,116,0.3);background:none;color:var(--green);font-size:15px;display:flex;align-items:center;justify-content:center;}
+.cfg-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.cfg-lbl{font-size:13px;color:var(--cream);}
+.cfg-in{background:rgba(255,255,255,0.07);border:1px solid rgba(242,169,30,0.3);border-radius:8px;color:var(--gold);font-size:16px;font-family:'Bebas Neue',cursive;padding:5px 10px;width:85px;text-align:center;}
+.cfg-in:focus{border-color:var(--gold);}
+.cfg-in-txt{background:rgba(255,255,255,0.05);border:1px solid rgba(242,169,30,0.22);border-radius:8px;color:var(--cream);font-size:13px;padding:7px 11px;width:calc(100% - 28px);margin:0 14px;}
+.cfg-in-txt:focus{border-color:var(--gold);}
+.cfg-info{padding:6px 14px;font-size:11px;color:var(--mid);font-style:italic;}
+.cfg-check{display:flex;align-items:center;gap:8px;}
+.cfg-check input{width:20px;height:20px;accent-color:var(--gold);}
+.save-btn{margin:10px 14px;background:rgba(129,199,116,0.08);border:1px solid rgba(129,199,116,0.28);border-radius:10px;color:var(--green);font-size:13px;font-weight:700;letter-spacing:1px;padding:11px;width:calc(100% - 28px);}
+.reset-btn{margin:10px 14px;background:rgba(239,154,154,0.05);border:1px solid rgba(239,154,154,0.25);border-radius:10px;color:var(--red);font-size:13px;font-weight:700;letter-spacing:1px;padding:11px;width:calc(100% - 28px);}
 </style>
 </head>
 <body>
-
 <div id="notif"></div>
-<div id="loader"><div class="beer">🍺</div><p>Connexion...</p></div>
+<div id="loader"><span>🍺</span><p>Connexion...</p></div>
 <div id="app" style="display:none;"></div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getDatabase,ref,onValue,set}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBdmzcmnUd4nTRS53m40ArT6WnLvgSdyew",
-  authDomain: "beer-conso.firebaseapp.com",
-  projectId: "beer-conso",
-  storageBucket: "beer-conso.firebasestorage.app",
-  messagingSenderId: "247215118379",
-  appId: "1:247215118379:web:98c025e40ca9c4392db26e",
-  databaseURL: "https://beer-conso-default-rtdb.europe-west1.firebasedatabase.app"
-};
-const fbApp = initializeApp(firebaseConfig);
-const db = getDatabase(fbApp);
+const FB={apiKey:"AIzaSyBdmzcmnUd4nTRS53m40ArT6WnLvgSdyew",authDomain:"beer-conso.firebaseapp.com",projectId:"beer-conso",storageBucket:"beer-conso.firebasestorage.app",messagingSenderId:"247215118379",appId:"1:247215118379:web:98c025e40ca9c4392db26e",databaseURL:"https://beer-conso-default-rtdb.europe-west1.firebasedatabase.app"};
+const db=getDatabase(initializeApp(FB));
+const CREF=ref(db,"bieres/counts");
+const CFGREF=ref(db,"bieres/config");
 
-const ADMIN_PIN = "1414";
-const NAMES = [
-  "Seb","Solène","Éliane","Joël","Marie Claude","Alain",
-  "Marion","Ludo","Matt","Laura","David","Fabien",
-  "Sophie","Diego","Sophie D","Pauline","Xavier","Rico",
-  "Mag","Stephan","Laura D","Kiki","Wojtek"
-];
-const DAYS = [
-  {s:"Mar 23",f:"Mardi 23"},{s:"Mer 24",f:"Mercredi 24"},
-  {s:"Jeu 25",f:"Jeudi 25"},{s:"Ven 26",f:"Vendredi 26"},
-  {s:"Lun 29",f:"Lundi 29"},{s:"Mar 30",f:"Mardi 30"}
-];
-const TODAY_IDX = (()=>{ const d=new Date().getDate(); const m={23:0,24:1,25:2,26:3,29:4,30:5}; return d in m?m[d]:-1; })();
+const ADMIN="1414";
+const NAMES=["Seb","Solène","Éliane","Joël","Marie Claude","Alain","Marion","Ludo","Matt","Laura","David","Fabien","Sophie","Diego","Sophie D","Pauline","Xavier","Rico","Mag","Stephan","Laura D","Kiki","Wojtek","Joelle"];
+const DAYS=[{s:"Mar 23",f:"Mardi 23"},{s:"Mer 24",f:"Mercredi 24"},{s:"Jeu 25",f:"Jeudi 25"},{s:"Ven 26",f:"Vendredi 26"},{s:"Lun 29",f:"Lundi 29"},{s:"Mar 30",f:"Mardi 30"}];
+const TIDX=(()=>{const d=new Date().getDate(),m={23:0,24:1,25:2,26:3,29:4,30:5};return d in m?m[d]:-1;})();
 
-let counts = {};
-let config = { futPrice: 65, futLiters: 14, biereName: "" };
-let isAdmin = false;
-let currentUser = null;
-let screen = "login";
+let counts={},cfg={p1:65,l1:14,n1:"",p2:65,l2:14,n2:"",f2:false};
+let isAdmin=false,user=null,screen="login";
 
-const initCounts = ()=>{ const o={}; NAMES.forEach(n=>{o[n]=new Array(DAYS.length).fill(0);}); return o; };
-counts = initCounts();
+const init=()=>{const o={};NAMES.forEach(n=>{o[n]=new Array(DAYS.length).fill(0);});return o;};
+counts=init();
 
-// Firebase refs
-const countsRef = ref(db, "bieres/counts");
-const configRef = ref(db, "bieres/config");
+// helpers
+const gpf=(l)=>Math.round(((l||14)*100)/25);
+const ppg=(p,l)=>(p||65)/gpf(l||14);
+const eur=n=>n.toFixed(2).replace(".",",")+"\u202f€";
+const ptot=n=>(counts[n]||[]).reduce((a,b)=>a+b,0);
+const dtot=di=>NAMES.reduce((s,n)=>s+(counts[n]?.[di]||0),0);
+const gtot=()=>NAMES.reduce((s,n)=>s+ptot(n),0);
 
-// Listen realtime
-onValue(countsRef, snap => {
-  const data = snap.val();
-  if (data) NAMES.forEach(n=>{ if(Array.isArray(data[n])) counts[n]=data[n]; });
-  document.getElementById("loader").style.display="none";
-  document.getElementById("app").style.display="block";
-  render();
-});
-onValue(configRef, snap => {
-  const data = snap.val();
-  if (data) config = { ...config, ...data };
-  if (screen !== "login") render();
-});
+onValue(CREF,s=>{const d=s.val();if(d)NAMES.forEach(n=>{if(Array.isArray(d[n]))counts[n]=d[n];});document.getElementById("loader").style.display="none";document.getElementById("app").style.display="block";render();});
+onValue(CFGREF,s=>{const d=s.val();if(d)cfg={...cfg,...d};if(screen!=="login")render();});
 
-async function saveCounts(newCounts) {
-  try { await set(countsRef, JSON.parse(JSON.stringify(newCounts))); } catch(e){}
-}
-async function saveConfig(newConfig) {
-  try { await set(configRef, JSON.parse(JSON.stringify(newConfig))); } catch(e){}
-}
+async function saveC(c){try{await set(CREF,JSON.parse(JSON.stringify(c)));}catch(e){}}
+async function saveCFG(c){try{await set(CFGREF,JSON.parse(JSON.stringify(c)));}catch(e){}}
 
-// Helpers
-const glassesPerFut = (liters)=> Math.round(((liters||config.futLiters)*100)/25);
-const pricePerGlass = (price, liters)=> (price||config.futPrice) / glassesPerFut(liters||config.futLiters);
-const fmtEur = n=> n.toFixed(2).replace(".",",")+"\u202f€";
-const personTotal = n=> (counts[n]||[]).reduce((a,b)=>a+b,0);
-const dayTotal = di=> NAMES.reduce((s,n)=>s+(counts[n]?.[di]||0),0);
-const grandTotal = ()=> NAMES.reduce((s,n)=>s+personTotal(n),0);
+function notif(msg,col="#81c784"){const e=document.getElementById("notif");e.textContent=msg;e.style.background=col;e.style.display="block";e.style.opacity="1";clearTimeout(window._nt);window._nt=setTimeout(()=>{e.style.opacity="0";setTimeout(()=>e.style.display="none",300);},1800);}
 
-function notify(msg, color="#81c784") {
-  const el=document.getElementById("notif");
-  el.textContent=msg; el.style.background=color; el.style.display="block"; el.style.opacity="1";
-  clearTimeout(window._nt);
-  window._nt=setTimeout(()=>{el.style.opacity="0";setTimeout(()=>el.style.display="none",300);},1800);
-}
-
-function render() {
+function render(){
   const app=document.getElementById("app");
-  if(screen==="login")  { app.innerHTML=renderLogin();  bindLogin();  }
-  if(screen==="home")   { app.innerHTML=renderHome();   bindHome();   }
-  if(screen==="saisie") { app.innerHTML=renderSaisie(); bindSaisie(); }
-  if(screen==="recap")  { app.innerHTML=renderRecap();  bindRecap();  }
-  if(screen==="admin")  { app.innerHTML=renderAdmin();  bindAdmin();  }
+  if(screen==="login"){app.innerHTML=rLogin();bLogin();}
+  if(screen==="home"){app.innerHTML=rHome();bHome();}
+  if(screen==="saisie"){app.innerHTML=rSaisie();bSaisie();}
+  if(screen==="recap"){app.innerHTML=rRecap();bRecap();}
+  if(screen==="admin"){app.innerHTML=rAdmin();bAdmin();}
 }
 
 // ══ LOGIN ══
-function renderLogin() {
-  const nameButtons = NAMES.map(name=>{
-    const t=personTotal(name);
-    return `<button class="name-btn" data-name="${name}">
-      <div class="name-ava">${name[0]}</div>
-      <span class="name-txt">${name}</span>
-      ${t>0?`<span class="name-count">${t}🍺</span>`:""}
-    </button>`;
-  }).join("");
-  return `<div class="page">
-    <div style="padding:24px 14px 0;">
-      <div class="hero-card">
-        <div class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
-        <svg width="220" height="18" viewBox="0 0 240 20" style="display:block;margin:0 auto 14px;opacity:0.5;">
-          <line x1="0" y1="10" x2="90" y2="10" stroke="#D4860A" stroke-width="0.8"/>
-          <circle cx="100" cy="10" r="3" fill="#D4860A"/>
-          <circle cx="112" cy="5" r="2" fill="#F2A91E"/>
-          <circle cx="120" cy="10" r="4" fill="#F2A91E"/>
-          <circle cx="128" cy="5" r="2" fill="#F2A91E"/>
-          <circle cx="140" cy="10" r="3" fill="#D4860A"/>
-          <line x1="150" y1="10" x2="240" y2="10" stroke="#D4860A" stroke-width="0.8"/>
-        </svg>
-        <div class="logo-row">
-          <div class="beer-wrap">
-            <div class="stream"></div>
-            <div class="glass">
-              <div class="liquid">
-                <div class="bubble"></div>
-                <div class="bubble"></div>
-                <div class="bubble"></div>
-              </div>
-              <div class="foam"></div>
-            </div>
-          </div>
-          <div class="ss-block">
-            <div class="ss-letters">S<span class="ss-amp">&amp;</span>S</div>
-            <div class="ss-mariage">Mariage</div>
-          </div>
-        </div>
-        <div class="hero-divider">
-          <div class="divider-line"></div>
-          <div class="divider-diamond"></div>
-          <div class="divider-line"></div>
-        </div>
-        <div class="title-biere">BIÈRE</div>
-        <div class="love-edition">✦ &nbsp; Love Edition &nbsp; ✦</div>
-        ${config.biereName ? `<div class="biere-model-badge">🍺 ${config.biereName}</div>` : ""}
-        <div class="hero-ornament" style="margin-top:14px;">✦ &nbsp; ✦ &nbsp; ✦</div>
-      </div>
+function rLogin(){
+  const nbtn=NAMES.map(n=>{const t=ptot(n);return`<button class="name-btn" data-n="${n}"><div class="nava">${n[0]}</div><span class="ntxt">${n}</span>${t>0?`<span class="ncount">${t}🍺</span>`:""}</button>`;}).join("");
+  const f2row=cfg.f2?`<div class="fut-badge2">🍺 Fût 2 · ${cfg.l2}L · ${cfg.p2}€ · ${gpf(cfg.l2)}v · ${eur(ppg(cfg.p2,cfg.l2))}/v${cfg.n2?" — "+cfg.n2:""}</div>`:"";
+  return`<div class="page">
+  <div class="hero">
+    <div class="orn">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <svg width="210" height="16" viewBox="0 0 240 20" style="display:block;margin:0 auto 12px;opacity:.45;"><line x1="0" y1="10" x2="88" y2="10" stroke="#D4860A" stroke-width=".8"/><circle cx="99" cy="10" r="3" fill="#D4860A"/><circle cx="111" cy="5" r="2" fill="#F2A91E"/><circle cx="120" cy="10" r="4" fill="#F2A91E"/><circle cx="129" cy="5" r="2" fill="#F2A91E"/><circle cx="141" cy="10" r="3" fill="#D4860A"/><line x1="152" y1="10" x2="240" y2="10" stroke="#D4860A" stroke-width=".8"/></svg>
+    <div class="logo-row">
+      <div class="beer-wrap"><div class="bstream"></div><div class="bglass"><div class="bliq"><div class="bub"></div><div class="bub"></div><div class="bub"></div></div><div class="bfoam"></div></div></div>
+      <div><div class="ss">S<span class="ss-amp">&amp;</span>S</div><div class="ss-mar">Mariage</div></div>
     </div>
-    <div class="login-sub">Mar 23 — Mar 30</div>
-    <div style="text-align:center;margin-bottom:10px;display:flex;flex-direction:column;gap:5px;align-items:center;">
-      <span class="fut-pill">🍺 Fût 1 · ${config.futLiters}L · ${config.futPrice}€ · ${glassesPerFut()}v · ${fmtEur(pricePerGlass())}/v${config.biereName?' — '+config.biereName:''}</span>
-      ${config.fut2Active?`<span class="fut-pill" style="border-color:rgba(100,181,246,0.4);color:#64b5f6;">🍺 Fût 2 · ${config.fut2Liters}L · ${config.fut2Price}€ · ${glassesPerFut(config.fut2Liters)}v · ${fmtEur(pricePerGlass(config.fut2Price,config.fut2Liters))}/v${config.fut2Name?' — '+config.fut2Name:''}</span>`:''}
+    <div class="hdiv"><div class="hdivl"></div><div class="hdivm"></div><div class="hdivl"></div></div>
+    <div class="htitle">BIÈRE</div>
+    <div class="hlove">✦ &nbsp; Love Edition &nbsp; ✦</div>
+    ${cfg.n1?`<div class="hmodel">🍺 ${cfg.n1}</div>`:""}
+    <div class="orn" style="margin-top:12px;">✦ &nbsp; ✦ &nbsp; ✦</div>
+  </div>
+  <div class="sub">Mar 23 — Mar 30</div>
+  <div class="fut-info">
+    <div class="fut-badge">🍺 Fût 1 · ${cfg.l1}L · ${cfg.p1}€ · ${gpf(cfg.l1)}v · ${eur(ppg(cfg.p1,cfg.l1))}/v${cfg.n1?" — "+cfg.n1:""}</div>
+    ${f2row}
+  </div>
+  <div class="slbl">👤 QUI ES-TU ?</div>
+  <div class="name-grid">${nbtn}</div>
+  <button id="btn-al" class="admin-lnk">🔐 Admin</button>
+  <div id="pin-panel" style="display:none;">
+    <div class="pin-wrap">
+      <div class="pin-title">CODE ADMIN</div>
+      <div class="pin-dots">${[0,1,2,3].map(()=>`<div class="pin-dot"></div>`).join("")}</div>
+      <div id="pin-err" style="display:none;color:var(--red);font-size:12px;font-weight:800;letter-spacing:1px;text-align:center;margin-bottom:6px;">✗ Code incorrect</div>
+      <div class="pin-grid">${[1,2,3,4,5,6,7,8,9,null,"0","⌫"].map(d=>d===null?`<div></div>`:`<button class="pin-btn" data-d="${d}">${d}</button>`).join("")}</div>
+      <button id="pin-bk" class="pin-back">← Retour</button>
     </div>
-    <div class="section-lbl">👤 QUI ES-TU ?</div>
-    <div class="name-grid">${nameButtons}</div>
-    <button id="btn-admin-link" class="admin-link">🔐 Admin</button>
-    <div id="pin-panel" style="display:none;">
-      <div class="pin-wrap">
-        <div class="pin-title">CODE ADMIN</div>
-        <div class="pin-dots" id="pin-dots">
-          ${[0,1,2,3].map(()=>`<div class="pin-dot"></div>`).join("")}
-        </div>
-        <div id="pin-err" style="display:none;color:var(--red);font-size:12px;font-weight:800;letter-spacing:1px;margin-bottom:6px;text-align:center;">✗ Code incorrect</div>
-        <div class="pin-grid">
-          ${[1,2,3,4,5,6,7,8,9,null,"0","⌫"].map(d=>
-            d===null?`<div></div>`:
-            `<button class="pin-btn" data-d="${d}">${d}</button>`
-          ).join("")}
-        </div>
-        <button id="pin-back" class="back-txt">← Retour</button>
-      </div>
-    </div>
-  </div>`;
+  </div>
+</div>`;
 }
-
-function bindLogin() {
+function bLogin(){
   let pin="";
-  document.querySelectorAll(".name-btn").forEach(btn=>{
-    btn.addEventListener("click",()=>{ currentUser=btn.dataset.name; isAdmin=false; screen="home"; render(); });
-  });
-  document.getElementById("btn-admin-link").addEventListener("click",()=>{
-    document.getElementById("btn-admin-link").style.display="none";
-    document.getElementById("pin-panel").style.display="block";
-  });
-  document.getElementById("pin-back").addEventListener("click",()=>{
-    pin=""; updatePinDots(pin,false);
-    document.getElementById("btn-admin-link").style.display="block";
-    document.getElementById("pin-panel").style.display="none";
-    document.getElementById("pin-err").style.display="none";
-  });
-  document.querySelectorAll(".pin-btn").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      const d=btn.dataset.d;
-      if(d==="⌫"){ pin=pin.slice(0,-1); updatePinDots(pin,false); document.getElementById("pin-err").style.display="none"; return; }
-      if(pin.length>=4) return;
-      pin+=d; updatePinDots(pin,false);
-      if(pin.length===4){
-        if(pin===ADMIN_PIN){ isAdmin=true; currentUser="Seb"; screen="home"; render(); }
-        else{ updatePinDots(pin,true); document.getElementById("pin-err").style.display="block"; setTimeout(()=>{ pin=""; updatePinDots(pin,false); document.getElementById("pin-err").style.display="none"; },700); }
-      }
-    });
-  });
+  document.querySelectorAll(".name-btn").forEach(b=>b.addEventListener("click",()=>{user=b.dataset.n;isAdmin=false;screen="home";render();}));
+  document.getElementById("btn-al").addEventListener("click",()=>{document.getElementById("btn-al").style.display="none";document.getElementById("pin-panel").style.display="block";});
+  document.getElementById("pin-bk").addEventListener("click",()=>{pin="";upDots(pin,false);document.getElementById("btn-al").style.display="block";document.getElementById("pin-panel").style.display="none";document.getElementById("pin-err").style.display="none";});
+  document.querySelectorAll(".pin-btn").forEach(b=>b.addEventListener("click",()=>{
+    const d=b.dataset.d;
+    if(d==="⌫"){pin=pin.slice(0,-1);upDots(pin,false);document.getElementById("pin-err").style.display="none";return;}
+    if(pin.length>=4)return;
+    pin+=d;upDots(pin,false);
+    if(pin.length===4){
+      if(pin===ADMIN){isAdmin=true;user="Seb";screen="home";render();}
+      else{upDots(pin,true);document.getElementById("pin-err").style.display="block";setTimeout(()=>{pin="";upDots(pin,false);document.getElementById("pin-err").style.display="none";},700);}
+    }
+  }));
 }
-
-function updatePinDots(pin,err) {
-  document.querySelectorAll(".pin-dot").forEach((dot,i)=>{
-    dot.style.background=pin.length>i?"var(--gold)":"rgba(255,255,255,0.1)";
-    dot.style.boxShadow=pin.length>i?"0 0 12px rgba(242,169,30,0.5)":"none";
-    dot.style.borderColor=err?"rgba(239,154,154,0.6)":"rgba(242,169,30,0.3)";
-  });
-}
+function upDots(pin,err){document.querySelectorAll(".pin-dot").forEach((d,i)=>{d.style.background=pin.length>i?"var(--gold)":"rgba(255,255,255,0.1)";d.style.boxShadow=pin.length>i?"0 0 10px rgba(242,169,30,0.5)":"none";d.style.borderColor=err?"rgba(239,154,154,0.6)":"rgba(242,169,30,0.3)";});}
 
 // ══ HOME ══
-function renderHome() {
-  const gt=grandTotal(), collected=gt, futCost=gt*pricePerGlass(), balance=collected-futCost;
-  const myTot=personTotal(currentUser);
-  return `<div class="page">
-    <div class="header">
-      <button id="btn-quit" class="quit-btn">← Quitter</button>
-      <div class="header-name">${isAdmin?"👑 ADMIN — SEB":currentUser.toUpperCase()}</div>
-      <div class="sync-dot" style="background:var(--green);box-shadow:0 0 6px rgba(129,199,116,0.4);"></div>
-    </div>
-    <div class="my-card">
-      <div class="my-card-lbl">MES VERRES · SEMAINE</div>
-      <div class="my-big">${myTot}</div>
-      <div class="my-due">Je dois <strong style="color:var(--green)">${myTot},00\u202f€</strong></div>
-      <div class="my-real">Coût réel\u202f: ${fmtEur(myTot*pricePerGlass())}</div>
-    </div>
-    <div class="fut-home-info">
-      🛢 Fût 1 · ${config.futLiters}L · ${config.futPrice}€ · ${fmtEur(pricePerGlass())}/verre
-      ${config.biereName?`<div class="fut-biere-name">🍺 ${config.biereName}</div>`:""}
-      ${config.fut2Active?`<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06);">🛢 Fût 2 · ${config.fut2Liters}L · ${config.fut2Price}€ · ${fmtEur(pricePerGlass(config.fut2Price,config.fut2Liters))}/verre${config.fut2Name?`<div class="fut-biere-name" style="color:#64b5f6;">🍺 ${config.fut2Name}</div>`:''}</div>`:""}
-    </div>
-    <div class="tri-cards">
-      <div class="tri-card" style="border-color:rgba(242,169,30,0.35)">
-        <div style="font-family:'Bebas Neue',cursive;font-size:20px;color:var(--gold);letter-spacing:1px;">${gt}</div>
-        <div class="tri-lbl">🍺 Total</div>
-      </div>
-      <div class="tri-card" style="border-color:rgba(129,199,116,0.35)">
-        <div style="font-family:'Bebas Neue',cursive;font-size:17px;color:var(--green);letter-spacing:1px;">${fmtEur(collected)}</div>
-        <div class="tri-lbl">💰 Caisse</div>
-      </div>
-      <div class="tri-card" style="border-color:${balance>=0?"rgba(129,199,116,0.35)":"rgba(239,154,154,0.35)"}">
-        <div style="font-family:'Bebas Neue',cursive;font-size:15px;color:${balance>=0?"var(--green)":"var(--red)"};letter-spacing:1px;">${(balance>=0?"+":"")+fmtEur(balance)}</div>
-        <div class="tri-lbl">⚖️ Solde</div>
-      </div>
-    </div>
-    <div class="act-col">
-      <button class="act-btn" id="btn-saisie">
-        <span style="font-size:22px;">✏️</span>
-        <div style="flex:1;text-align:left;"><div style="font-size:14px;font-weight:800;color:var(--cream);">Saisir mes verres</div><div style="font-size:11px;color:var(--mid);margin-top:1px;">Enregistrer ma consommation</div></div>
-      </button>
-      <button class="act-btn" id="btn-recap">
-        <span style="font-size:22px;">📊</span>
-        <div style="flex:1;text-align:left;"><div style="font-size:14px;font-weight:800;color:var(--cream);">Tableau complet</div><div style="font-size:11px;color:var(--mid);margin-top:1px;">Voir tout le monde</div></div>
-      </button>
-      ${isAdmin?`<button class="act-btn act-gold" id="btn-admin">
-        <span style="font-size:22px;">👑</span>
-        <div style="flex:1;text-align:left;"><div style="font-size:14px;font-weight:800;color:var(--gold);">Administration</div><div style="font-size:11px;color:var(--mid);margin-top:1px;">Modifier · Fût · Réinitialiser</div></div>
-      </button>`:""}
-    </div>
-    <div class="foot-sync">⟳ Synchronisation Firebase temps réel</div>
-  </div>`;
+function rHome(){
+  const gt=gtot(),myT=ptot(user);
+  const collected=myT*ppg(cfg.p1,cfg.l1);
+  const gtCost=gt*ppg(cfg.p1,cfg.l1);
+  const balance=gt*ppg(cfg.p1,cfg.l1)-gt*ppg(cfg.p1,cfg.l1); // sera 0 car prix = prix réel
+  // Solde = ce que chacun a payé (nbVerres * prixRéel) - coût réel fût consommé
+  const totalPaid=gt*ppg(cfg.p1,cfg.l1);
+  const totalCost=gt*ppg(cfg.p1,cfg.l1);
+  const sol=totalPaid-totalCost;
+  return`<div class="page">
+  <div class="topbar">
+    <button class="topbar-quit" id="btn-quit">← Quitter</button>
+    <div class="topbar-title">${isAdmin?"👑 ADMIN — SEB":user.toUpperCase()}</div>
+    <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(129,199,116,0.4);flex-shrink:0;"></div>
+  </div>
+  <div class="my-card">
+    <div class="my-lbl">MES VERRES · SEMAINE</div>
+    <div class="my-big">${myT}</div>
+    <div class="my-due">Je dois <strong style="color:var(--green)">${eur(myT*ppg(cfg.p1,cfg.l1))}</strong></div>
+    <div class="my-real">= ${myT} verre${myT>1?"s":""} × ${eur(ppg(cfg.p1,cfg.l1))}/verre</div>
+  </div>
+  <div class="fut-bar">
+    <div class="fut-bar-row">🛢 Fût 1 · ${cfg.l1}L · ${cfg.p1}€ · <strong>${eur(ppg(cfg.p1,cfg.l1))}/verre</strong>${cfg.n1?" · "+cfg.n1:""}</div>
+    ${cfg.f2?`<div class="fut-bar-row blue" style="margin-top:3px;">🛢 Fût 2 · ${cfg.l2}L · ${cfg.p2}€ · <strong>${eur(ppg(cfg.p2,cfg.l2))}/verre</strong>${cfg.n2?" · "+cfg.n2:""}</div>`:""}
+  </div>
+  <div class="tri">
+    <div class="tri-c" style="border-color:rgba(242,169,30,0.3)"><div class="tri-v" style="color:var(--gold)">${gt}</div><div class="tri-l">🍺 Total</div></div>
+    <div class="tri-c" style="border-color:rgba(129,199,116,0.3)"><div class="tri-v" style="color:var(--green);font-size:14px;">${eur(totalPaid)}</div><div class="tri-l">💰 Caisse</div></div>
+    <div class="tri-c" style="border-color:rgba(129,199,116,0.3)"><div class="tri-v" style="color:var(--green);font-size:14px;">0,00 €</div><div class="tri-l">⚖️ Solde</div></div>
+  </div>
+  <div class="acts">
+    <button class="act" id="btn-s"><span class="act-ico">✏️</span><div><div class="act-lbl">Saisir mes verres</div><div class="act-sub">Enregistrer ma consommation</div></div></button>
+    <button class="act" id="btn-r"><span class="act-ico">📊</span><div><div class="act-lbl">Tableau complet</div><div class="act-sub">Classement · Bilan fût</div></div></button>
+    ${isAdmin?`<button class="act act-gold" id="btn-a"><span class="act-ico">👑</span><div><div class="act-lbl" style="color:var(--gold);">Administration</div><div class="act-sub">Modifier · Fûts · Config</div></div></button>`:""}
+  </div>
+  <div class="fsync">⟳ Synchronisation Firebase temps réel</div>
+</div>`;
 }
-
-function bindHome() {
-  document.getElementById("btn-quit").addEventListener("click",()=>{ currentUser=null; isAdmin=false; screen="login"; render(); });
-  document.getElementById("btn-saisie").addEventListener("click",()=>{ screen="saisie"; render(); });
-  document.getElementById("btn-recap").addEventListener("click",()=>{ screen="recap"; render(); });
-  if(isAdmin) document.getElementById("btn-admin").addEventListener("click",()=>{ screen="admin"; render(); });
+function bHome(){
+  document.getElementById("btn-quit").addEventListener("click",()=>{user=null;isAdmin=false;screen="login";render();});
+  document.getElementById("btn-s").addEventListener("click",()=>{screen="saisie";render();});
+  document.getElementById("btn-r").addEventListener("click",()=>{screen="recap";render();});
+  if(isAdmin)document.getElementById("btn-a").addEventListener("click",()=>{screen="admin";render();});
 }
 
 // ══ SAISIE ══
-function renderSaisie() {
-  const name=currentUser, mc=counts[name]||new Array(DAYS.length).fill(0), tot=mc.reduce((a,b)=>a+b,0);
-  return `<div class="page">
-    <div class="top-bar">
-      <button class="back-btn" id="btn-back">← Retour</button>
-      <div class="top-bar-txt">${name}</div>
-      <div style="width:70px;"></div>
-    </div>
-    <div class="saisie-wrap">
-      <div class="tot-banner">
-        <span style="font-size:12px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;">Total semaine</span>
-        <span id="tot-val" style="font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);letter-spacing:1px;">${tot} 🍺 · ${tot},00\u202f€</span>
-      </div>
-      ${DAYS.map((day,di)=>{
-        const v=mc[di]||0, today=di===TODAY_IDX;
-        return `<div class="day-row${today?" day-today":""}" >
-          <div><div class="day-name">${day.f}</div>${today?`<div class="today-tag">AUJOURD'HUI</div>`:""}</div>
-          <div class="counter">
-            <button class="btn-minus" data-name="${name}" data-di="${di}">−</button>
-            <span class="c-val${v>0?" c-active":""}" id="val-${di}">${v}</span>
-            <button class="btn-plus" data-name="${name}" data-di="${di}">+</button>
-          </div>
-        </div>`;
-      }).join("")}
-    </div>
-  </div>`;
+function rSaisie(){
+  const mc=counts[user]||new Array(DAYS.length).fill(0),tot=mc.reduce((a,b)=>a+b,0);
+  return`<div class="page">
+  <div class="topbar"><button class="topbar-back" id="btn-bk">← Retour</button><div class="topbar-title">${user}</div><div style="width:70px;"></div></div>
+  <div class="saisie-wrap">
+    <div class="tot-ban"><span class="tot-lbl">Total semaine</span><span class="tot-val" id="tv">${tot} 🍺 · ${eur(tot*ppg(cfg.p1,cfg.l1))}</span></div>
+    ${DAYS.map((day,di)=>{const v=mc[di]||0,td=di===TIDX;return`<div class="day-row${td?" day-today":""}"><div><div class="day-name">${day.f}</div>${td?`<div class="today-tag">AUJOURD'HUI</div>`:""}</div><div class="ctr"><button class="bminus" data-n="${user}" data-i="${di}">−</button><span class="cval${v>0?" cval-on":""}" id="v${di}">${v}</span><button class="bplus" data-n="${user}" data-i="${di}">+</button></div></div>`;}).join("")}
+  </div>
+</div>`;
 }
-
-function bindSaisie() {
-  document.getElementById("btn-back").addEventListener("click",()=>{ screen="home"; render(); });
-  document.querySelectorAll(".btn-minus,.btn-plus").forEach(btn=>{
-    btn.addEventListener("click",async()=>{
-      const name=btn.dataset.name, di=parseInt(btn.dataset.di), delta=btn.classList.contains("btn-plus")?1:-1;
-      counts[name]=counts[name]||new Array(DAYS.length).fill(0);
-      counts[name][di]=Math.max(0,(counts[name][di]||0)+delta);
-      await saveCounts(counts);
-      const el=document.getElementById(`val-${di}`);
-      if(el){ el.textContent=counts[name][di]; el.className="c-val"+(counts[name][di]>0?" c-active":""); }
-      const tot=(counts[name]||[]).reduce((a,b)=>a+b,0);
-      const totEl=document.getElementById("tot-val");
-      if(totEl) totEl.textContent=`${tot} 🍺 · ${tot},00\u202f€`;
-      notify(delta>0?"+1 🍺":"−1 🍺",delta>0?"#81c784":"#ef9a9a");
-    });
-  });
+function bSaisie(){
+  document.getElementById("btn-bk").addEventListener("click",()=>{screen="home";render();});
+  document.querySelectorAll(".bminus,.bplus").forEach(b=>b.addEventListener("click",async()=>{
+    const n=b.dataset.n,di=parseInt(b.dataset.i),d=b.classList.contains("bplus")?1:-1;
+    counts[n]=counts[n]||new Array(DAYS.length).fill(0);
+    counts[n][di]=Math.max(0,(counts[n][di]||0)+d);
+    await saveC(counts);
+    const e=document.getElementById(`v${di}`);
+    if(e){e.textContent=counts[n][di];e.className="cval"+(counts[n][di]>0?" cval-on":"");}
+    const tot=(counts[n]||[]).reduce((a,b)=>a+b,0);
+    const tv=document.getElementById("tv");
+    if(tv)tv.textContent=`${tot} 🍺 · ${eur(tot*ppg(cfg.p1,cfg.l1))}`;
+    notif(d>0?"+1 🍺":"−1 🍺",d>0?"#81c784":"#ef9a9a");
+  }));
 }
 
 // ══ RECAP ══
-function renderRecap() {
-  const gt=grandTotal(), collected=gt, futCost=gt*pricePerGlass(), balance=collected-futCost;
-  const sorted=[...NAMES].sort((a,b)=>personTotal(b)-personTotal(a));
-  const maxV=Math.max(...NAMES.map(personTotal),1);
-  return `<div class="page">
-    <div class="top-bar">
-      <button class="back-btn" id="btn-back">← Retour</button>
-      <div class="top-bar-txt">TABLEAU COMPLET</div>
-      <div style="width:70px;"></div>
+function rRecap(){
+  const gt=gtot(),cost=gt*ppg(cfg.p1,cfg.l1);
+  const sorted=[...NAMES].sort((a,b)=>ptot(b)-ptot(a)),maxV=Math.max(...NAMES.map(ptot),1);
+  return`<div class="page">
+  <div class="topbar"><button class="topbar-back" id="btn-bk">← Retour</button><div class="topbar-title">TABLEAU</div><div style="width:70px;"></div></div>
+  <div class="scroll">
+    <div class="bloc">
+      <div class="bloc-title">🛢 FÛT 1</div>
+      ${cfg.n1?`<div class="ligne ligne-hi"><span class="llbl">Modèle</span><span class="lval lval-hi">🍺 ${cfg.n1}</span></div>`:""}
+      <div class="ligne"><span class="llbl">Volume · Prix</span><span class="lval">${cfg.l1}L · ${cfg.p1}€ TTC</span></div>
+      <div class="ligne"><span class="llbl">Verres estimés (~25cl)</span><span class="lval">${gpf(cfg.l1)} verres</span></div>
+      <div class="ligne ligne-hi"><span class="llbl">Prix réel / verre</span><span class="lval lval-hi">${eur(ppg(cfg.p1,cfg.l1))}</span></div>
     </div>
-    <div class="scroll-wrap">
-      <div class="bloc">
-        <div class="bloc-title">🛢 BILAN FÛT</div>
-        <div class="ligne ligne-hi"><span class="ligne-lbl">🛢 Fût 1</span><span class="ligne-val ligne-val-hi">${config.futLiters}L · ${config.futPrice}€</span></div>
-        ${config.biereName?`<div class="ligne"><span class="ligne-lbl">Modèle fût 1</span><span class="ligne-val">🍺 ${config.biereName}</span></div>`:""}
-        <div class="ligne"><span class="ligne-lbl">Verres fût 1 (~25cl)</span><span class="ligne-val">${glassesPerFut()} verres · ${fmtEur(pricePerGlass())}/v</span></div>
-        ${config.fut2Active?`
-        <div class="ligne ligne-hi"><span class="ligne-lbl">🛢 Fût 2</span><span class="ligne-val" style="color:#64b5f6;">${config.fut2Liters}L · ${config.fut2Price}€</span></div>
-        ${config.fut2Name?`<div class="ligne"><span class="ligne-lbl">Modèle fût 2</span><span class="ligne-val">🍺 ${config.fut2Name}</span></div>`:""}
-        <div class="ligne"><span class="ligne-lbl">Verres fût 2 (~25cl)</span><span class="ligne-val">${glassesPerFut(config.fut2Liters)} verres · ${fmtEur(pricePerGlass(config.fut2Price,config.fut2Liters))}/v</span></div>
-        `:""}
-        <div class="ligne"><span class="ligne-lbl">Prix facturé / verre</span><span class="ligne-val">1,00\u202f€</span></div>
-        <div class="ligne ligne-hi"><span class="ligne-lbl">Verres consommés</span><span class="ligne-val ligne-val-hi">${gt} 🍺</span></div>
-        <div class="ligne"><span class="ligne-lbl">Collecté</span><span class="ligne-val">${fmtEur(collected)}</span></div>
-        <div class="ligne"><span class="ligne-lbl">Coût fût réel</span><span class="ligne-val">${fmtEur(futCost)}</span></div>
-        <div class="ligne ligne-hi"><span class="ligne-lbl">Solde</span><span class="ligne-val" style="color:${balance>=0?"var(--green)":"var(--red)"}">${(balance>=0?"+":"")+fmtEur(balance)}</span></div>
-      </div>
-      <div class="bloc">
-        <div class="bloc-title">📅 PAR JOUR</div>
-        ${DAYS.map((day,di)=>`<div class="ligne${di===TODAY_IDX?" ligne-hi":""}"><span class="ligne-lbl">${day.f}</span><span class="ligne-val${di===TODAY_IDX?" ligne-val-hi":""}">${dayTotal(di)} 🍺</span></div>`).join("")}
-      </div>
-      <div class="bloc">
-        <div class="bloc-title">🏆 CLASSEMENT</div>
-        ${sorted.map((name,i)=>{
-          const t=personTotal(name);
-          return `<div class="rank-row${name===currentUser?" rank-me":""}">
-            <span class="r-i">${i+1}</span>
-            <span class="r-name">${name}</span>
-            <div class="r-bar"><div class="r-fill" style="width:${(t/maxV)*100}%"></div></div>
-            <span class="r-val" style="color:${t>0?"var(--gold)":"rgba(255,255,255,0.15)"}">${t}</span>
-            <span class="r-eur">${t}€</span>
-          </div>`;
-        }).join("")}
-      </div>
+    ${cfg.f2?`<div class="bloc">
+      <div class="bloc-title" style="color:var(--blue);">🛢 FÛT 2</div>
+      ${cfg.n2?`<div class="ligne ligne-hi"><span class="llbl">Modèle</span><span class="lval lval-blue">🍺 ${cfg.n2}</span></div>`:""}
+      <div class="ligne"><span class="llbl">Volume · Prix</span><span class="lval">${cfg.l2}L · ${cfg.p2}€ TTC</span></div>
+      <div class="ligne"><span class="llbl">Verres estimés (~25cl)</span><span class="lval">${gpf(cfg.l2)} verres</span></div>
+      <div class="ligne ligne-hi"><span class="llbl">Prix réel / verre</span><span class="lval lval-blue">${eur(ppg(cfg.p2,cfg.l2))}</span></div>
+    </div>`:""}
+    <div class="bloc">
+      <div class="bloc-title">📅 PAR JOUR</div>
+      ${DAYS.map((day,di)=>`<div class="ligne${di===TIDX?" ligne-hi":""}"><span class="llbl">${day.f}</span><span class="lval${di===TIDX?" lval-hi":""}">${dtot(di)} 🍺</span></div>`).join("")}
     </div>
-  </div>`;
+    <div class="bloc">
+      <div class="bloc-title">💰 BILAN</div>
+      <div class="ligne ligne-hi"><span class="llbl">Verres consommés</span><span class="lval lval-hi">${gt} 🍺</span></div>
+      <div class="ligne"><span class="llbl">Coût total (prix réel)</span><span class="lval">${eur(cost)}</span></div>
+      <div class="ligne"><span class="llbl">Prix / verre facturé</span><span class="lval lval-hi">${eur(ppg(cfg.p1,cfg.l1))}</span></div>
+    </div>
+    <div class="bloc">
+      <div class="bloc-title">🏆 CLASSEMENT</div>
+      ${sorted.map((n,i)=>{const t=ptot(n);return`<div class="rank-row${n===user?" rank-me":""}"><span class="ri">${i+1}</span><span class="rn">${n}</span><div class="rb"><div class="rbf" style="width:${(t/maxV)*100}%"></div></div><span class="rv" style="color:${t>0?"var(--gold)":"rgba(255,255,255,0.15)"}">${t}</span><span class="re">${eur(t*ppg(cfg.p1,cfg.l1))}</span></div>`;}).join("")}
+    </div>
+  </div>
+</div>`;
 }
-
-function bindRecap() {
-  document.getElementById("btn-back").addEventListener("click",()=>{ screen="home"; render(); });
-}
+function bRecap(){document.getElementById("btn-bk").addEventListener("click",()=>{screen="home";render();});}
 
 // ══ ADMIN ══
-function renderAdmin() {
-  const personCards=NAMES.map(name=>{
-    const mc=counts[name]||new Array(DAYS.length).fill(0), tot=mc.reduce((a,b)=>a+b,0);
-    const dayBoxes=DAYS.map((day,di)=>{
-      const v=mc[di]||0;
-      return `<div class="ad-box${di===TODAY_IDX?" ad-today":""}">
-        <div class="ad-lbl">${day.s}</div>
-        <div class="ad-val${v>0?" ad-active":""}" id="adv-${name.replace(/\s/g,"_")}-${di}">${v}</div>
-        <div class="ad-btns">
-          <button class="ad-m" data-name="${name}" data-di="${di}">−</button>
-          <button class="ad-p" data-name="${name}" data-di="${di}">+</button>
-        </div>
-      </div>`;
-    }).join("");
-    return `<div class="ap-wrap">
-      <div class="ap-row" data-person="${name}">
-        <div class="ap-ava">${name[0]}</div>
-        <span class="ap-name">${name}</span>
-        <span class="ap-tot" id="apt-${name.replace(/\s/g,"_")}">${tot}🍺·${tot}€</span>
-        <span class="ap-chev" id="chev-${name.replace(/\s/g,"_")}">▼</span>
-      </div>
-      <div class="ad-grid" id="grid-${name.replace(/\s/g,"_")}" style="display:none;">${dayBoxes}</div>
-    </div>`;
+function rAdmin(){
+  const cards=NAMES.map(n=>{
+    const mc=counts[n]||new Array(DAYS.length).fill(0),tot=mc.reduce((a,b)=>a+b,0);
+    const boxes=DAYS.map((day,di)=>{const v=mc[di]||0;return`<div class="ad-box${di===TIDX?" ad-today":""}"><div class="ad-lbl">${day.s}</div><div class="ad-val${v>0?" ad-on":""}" id="av-${n.replace(/\s/g,"_")}-${di}">${v}</div><div class="ad-btns"><button class="adm" data-n="${n}" data-i="${di}">−</button><button class="adp" data-n="${n}" data-i="${di}">+</button></div></div>`;}).join("");
+    return`<div class="ap-wrap"><div class="ap-row" data-p="${n}"><div class="ap-ava">${n[0]}</div><span class="ap-name">${n}</span><span class="ap-tot" id="at-${n.replace(/\s/g,"_")}">${tot}🍺·${eur(tot*ppg(cfg.p1,cfg.l1))}</span><span class="ap-chev" id="ac-${n.replace(/\s/g,"_")}">▼</span></div><div class="ad-grid" id="ag-${n.replace(/\s/g,"_")}" style="display:none;">${boxes}</div></div>`;
   }).join("");
-
-  return `<div class="page">
-    <div class="top-bar">
-      <button class="back-btn" id="btn-back">← Retour</button>
-      <div class="top-bar-txt">👑 ADMIN</div>
-      <div style="width:70px;"></div>
+  return`<div class="page">
+  <div class="topbar"><button class="topbar-back" id="btn-bk">← Retour</button><div class="topbar-title">👑 ADMIN</div><div style="width:70px;"></div></div>
+  <div class="scroll">
+    <div class="admin-badge">Mode administrateur · Accès complet</div>
+    <div class="bloc">
+      <div class="bloc-title">🛢 FÛT 1</div>
+      <div class="cfg-row"><span class="cfg-lbl">Prix (€)</span><input class="cfg-in" type="number" id="p1" value="${cfg.p1}" min="1"></div>
+      <div class="cfg-row"><span class="cfg-lbl">Volume (L)</span><input class="cfg-in" type="number" id="l1" value="${cfg.l1}" min="1"></div>
+      <div class="cfg-info" id="ci1">${gpf(cfg.l1)} verres · <strong style="color:var(--gold)">${eur(ppg(cfg.p1,cfg.l1))}</strong>/verre</div>
+      <div class="cfg-row" style="flex-direction:column;align-items:flex-start;gap:5px;"><span class="cfg-lbl">Modèle de bière</span><input type="text" class="cfg-in-txt" id="n1" placeholder="ex: Leffe Blonde…" value="${cfg.n1||""}"></div>
     </div>
-    <div class="scroll-wrap">
-      <div class="admin-badge">Mode administrateur · Accès complet</div>
-
-      <!-- CONFIG FÛT -->
-      <div class="bloc">
-        <div class="bloc-title">🛢 FÛT 1</div>
-        <div class="config-row">
-          <span class="config-lbl">Prix du fût (€)</span>
-          <input class="config-input" type="number" id="cfg-price" value="${config.futPrice}" min="1" step="1">
-        </div>
-        <div class="config-row">
-          <span class="config-lbl">Volume du fût (L)</span>
-          <input class="config-input" type="number" id="cfg-liters" value="${config.futLiters}" min="1" step="1">
-        </div>
-        <div class="config-info" id="cfg-calc">
-          Verres (~25cl)\u202f: <strong style="color:var(--gold)">${glassesPerFut()}</strong> · Prix réel\u202f: <strong style="color:var(--gold)">${fmtEur(pricePerGlass())}</strong>
-        </div>
-        <div class="config-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
-          <span class="config-lbl">Modèle de bière — fût 1</span>
-          <input type="text" class="config-input" id="cfg-biere" placeholder="ex: Leffe Blonde…" value="${config.biereName||""}" style="width:100%;font-family:'Nunito',sans-serif;font-size:13px;letter-spacing:0;">
-        </div>
+    <div class="bloc">
+      <div class="bloc-title" style="color:var(--blue);">🛢 FÛT 2</div>
+      <div class="cfg-row"><span class="cfg-lbl">Activer fût 2</span><label class="cfg-check"><input type="checkbox" id="f2chk" ${cfg.f2?"checked":""}><span style="font-size:13px;color:var(--mid);">Activé</span></label></div>
+      <div id="f2fields" style="display:${cfg.f2?"block":"none"}">
+        <div class="cfg-row"><span class="cfg-lbl">Prix (€)</span><input class="cfg-in" type="number" id="p2" value="${cfg.p2}" min="1"></div>
+        <div class="cfg-row"><span class="cfg-lbl">Volume (L)</span><input class="cfg-in" type="number" id="l2" value="${cfg.l2}" min="1"></div>
+        <div class="cfg-info" id="ci2">${gpf(cfg.l2)} verres · <strong style="color:var(--blue)">${eur(ppg(cfg.p2,cfg.l2))}</strong>/verre</div>
+        <div class="cfg-row" style="flex-direction:column;align-items:flex-start;gap:5px;"><span class="cfg-lbl">Modèle de bière</span><input type="text" class="cfg-in-txt" id="n2" placeholder="ex: Kronenbourg…" value="${cfg.n2||""}"></div>
       </div>
-
-      <div class="bloc">
-        <div class="bloc-title" style="color:#64b5f6;">🛢 FÛT 2</div>
-        <div class="config-row">
-          <span class="config-lbl">Activer le fût 2</span>
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-            <input type="checkbox" id="cfg-fut2-active" ${config.fut2Active?"checked":""} style="width:20px;height:20px;accent-color:var(--gold);">
-            <span style="font-size:13px;color:var(--mid);">Activé</span>
-          </label>
-        </div>
-        <div id="fut2-fields" style="display:${config.fut2Active?"block":"none"}">
-          <div class="config-row">
-            <span class="config-lbl">Prix du fût 2 (€)</span>
-            <input class="config-input" type="number" id="cfg-price2" value="${config.fut2Price||65}" min="1" step="1">
-          </div>
-          <div class="config-row">
-            <span class="config-lbl">Volume fût 2 (L)</span>
-            <input class="config-input" type="number" id="cfg-liters2" value="${config.fut2Liters||14}" min="1" step="1">
-          </div>
-          <div class="config-info" id="cfg-calc2">
-            Verres (~25cl)\u202f: <strong style="color:#64b5f6;">${glassesPerFut(config.fut2Liters||14)}</strong> · Prix réel\u202f: <strong style="color:#64b5f6;">${fmtEur(pricePerGlass(config.fut2Price||65,config.fut2Liters||14))}</strong>
-          </div>
-          <div class="config-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
-            <span class="config-lbl">Modèle de bière — fût 2</span>
-            <input type="text" class="config-input" id="cfg-biere2" placeholder="ex: Kronenbourg…" value="${config.fut2Name||""}" style="width:100%;font-family:'Nunito',sans-serif;font-size:13px;letter-spacing:0;">
-          </div>
-        </div>
-        <button class="save-config-btn" id="btn-save-config">✅ Enregistrer la configuration</button>
-      </div>
-
-      <!-- MODIFIER COMPTEURS -->
-      <div class="bloc">
-        <div class="bloc-title">✏️ MODIFIER LES COMPTEURS</div>
-        ${personCards}
-      </div>
-
-      <!-- DANGER -->
-      <div class="bloc">
-        <div class="bloc-title">⚠️ DANGER</div>
-        <button id="btn-reset" class="reset-btn">🔄 Réinitialiser toute la semaine</button>
-      </div>
+      <button class="save-btn" id="btn-sv">✅ Enregistrer la configuration</button>
     </div>
-  </div>`;
+    <div class="bloc">
+      <div class="bloc-title">✏️ MODIFIER LES COMPTEURS</div>
+      ${cards}
+    </div>
+    <div class="bloc">
+      <div class="bloc-title">⚠️ DANGER</div>
+      <button class="reset-btn" id="btn-rst">🔄 Réinitialiser toute la semaine</button>
+    </div>
+  </div>
+</div>`;
 }
-
-function bindAdmin() {
-  document.getElementById("btn-back").addEventListener("click",()=>{ screen="home"; render(); });
-
-  // Live calc fut1
-  const updateCalc=()=>{
-    const p=parseFloat(document.getElementById("cfg-price").value)||65;
-    const l=parseFloat(document.getElementById("cfg-liters").value)||14;
-    const g=Math.round((l*100)/25);
-    const ppg=(p/g).toFixed(2).replace(".",",")+"\u202f€";
-    document.getElementById("cfg-calc").innerHTML=`Verres (~25cl)\u202f: <strong style="color:var(--gold)">${g}</strong> · Prix réel\u202f: <strong style="color:var(--gold)">${ppg}</strong>`;
-  };
-  document.getElementById("cfg-price").addEventListener("input",updateCalc);
-  document.getElementById("cfg-liters").addEventListener("input",updateCalc);
-
-  // Toggle fut2
-  document.getElementById("cfg-fut2-active").addEventListener("change",function(){
-    document.getElementById("fut2-fields").style.display=this.checked?"block":"none";
+function bAdmin(){
+  document.getElementById("btn-bk").addEventListener("click",()=>{screen="home";render();});
+  const uc1=()=>{const p=parseFloat(document.getElementById("p1").value)||65,l=parseFloat(document.getElementById("l1").value)||14,g=gpf(l);document.getElementById("ci1").innerHTML=`${g} verres · <strong style="color:var(--gold)">${eur(p/g)}</strong>/verre`;};
+  document.getElementById("p1").addEventListener("input",uc1);
+  document.getElementById("l1").addEventListener("input",uc1);
+  document.getElementById("f2chk").addEventListener("change",function(){document.getElementById("f2fields").style.display=this.checked?"block":"none";});
+  const uc2=()=>{const p=parseFloat(document.getElementById("p2").value)||65,l=parseFloat(document.getElementById("l2").value)||14,g=gpf(l);document.getElementById("ci2").innerHTML=`${g} verres · <strong style="color:var(--blue)">${eur(p/g)}</strong>/verre`;};
+  document.getElementById("p2").addEventListener("input",uc2);
+  document.getElementById("l2").addEventListener("input",uc2);
+  document.getElementById("btn-sv").addEventListener("click",async()=>{
+    cfg={p1:parseFloat(document.getElementById("p1").value)||65,l1:parseFloat(document.getElementById("l1").value)||14,n1:document.getElementById("n1").value.trim(),f2:document.getElementById("f2chk").checked,p2:parseFloat(document.getElementById("p2").value)||65,l2:parseFloat(document.getElementById("l2").value)||14,n2:document.getElementById("n2").value.trim()};
+    await saveCFG(cfg);notif("Configuration sauvegardée ✓");
   });
-
-  // Live calc fut2
-  const updateCalc2=()=>{
-    const p2=parseFloat(document.getElementById("cfg-price2").value)||65;
-    const l2=parseFloat(document.getElementById("cfg-liters2").value)||14;
-    const g2=Math.round((l2*100)/25);
-    const ppg2=(p2/g2).toFixed(2).replace(".",",")+"\u202f€";
-    document.getElementById("cfg-calc2").innerHTML=`Verres (~25cl)\u202f: <strong style="color:#64b5f6;">${g2}</strong> · Prix réel\u202f: <strong style="color:#64b5f6;">${ppg2}</strong>`;
-  };
-  document.getElementById("cfg-price2").addEventListener("input",updateCalc2);
-  document.getElementById("cfg-liters2").addEventListener("input",updateCalc2);
-
-  // Save config
-  document.getElementById("btn-save-config").addEventListener("click",async()=>{
-    const fut2Active=document.getElementById("cfg-fut2-active").checked;
-    const newConfig={
-      futPrice: parseFloat(document.getElementById("cfg-price").value)||65,
-      futLiters: parseFloat(document.getElementById("cfg-liters").value)||14,
-      biereName: document.getElementById("cfg-biere").value.trim(),
-      fut2Active: fut2Active,
-      fut2Price: parseFloat(document.getElementById("cfg-price2").value)||65,
-      fut2Liters: parseFloat(document.getElementById("cfg-liters2").value)||14,
-      fut2Name: document.getElementById("cfg-biere2").value.trim()
-    };
-    config={...newConfig};
-    await saveConfig(newConfig);
-    notify("Configuration sauvegardée ✓","#81c784");
-  });
-
-  // Accordion
-  document.querySelectorAll(".ap-row").forEach(row=>{
-    row.addEventListener("click",()=>{
-      const name=row.dataset.person, key=name.replace(/\s/g,"_");
-      const grid=document.getElementById(`grid-${key}`), chev=document.getElementById(`chev-${key}`);
-      const open=grid.style.display!=="none";
-      document.querySelectorAll(".ad-grid").forEach(g=>g.style.display="none");
-      document.querySelectorAll(".ap-chev").forEach(c=>c.textContent="▼");
-      if(!open){ grid.style.display="grid"; chev.textContent="▲"; }
-    });
-  });
-
-  // +/- admin
-  document.querySelectorAll(".ad-m,.ad-p").forEach(btn=>{
-    btn.addEventListener("click",async(e)=>{
-      e.stopPropagation();
-      const name=btn.dataset.name, di=parseInt(btn.dataset.di), delta=btn.classList.contains("ad-p")?1:-1;
-      counts[name]=counts[name]||new Array(DAYS.length).fill(0);
-      counts[name][di]=Math.max(0,(counts[name][di]||0)+delta);
-      await saveCounts(counts);
-      const key=name.replace(/\s/g,"_");
-      const el=document.getElementById(`adv-${key}-${di}`);
-      if(el){ el.textContent=counts[name][di]; el.className="ad-val"+(counts[name][di]>0?" ad-active":""); }
-      const tot=(counts[name]||[]).reduce((a,b)=>a+b,0);
-      const totEl=document.getElementById(`apt-${key}`);
-      if(totEl) totEl.textContent=`${tot}🍺·${tot}€`;
-      notify(delta>0?`+1 🍺 (${name})`:`−1 🍺 (${name})`,delta>0?"#81c784":"#ef9a9a");
-    });
-  });
-
-  document.getElementById("btn-reset").addEventListener("click",async()=>{
-    if(!confirm("Réinitialiser TOUS les compteurs ?")) return;
-    counts=initCounts();
-    await saveCounts(counts);
-    notify("Réinitialisé ✓","#ef9a9a");
-    render();
+  document.querySelectorAll(".ap-row").forEach(r=>r.addEventListener("click",()=>{
+    const k=r.dataset.p.replace(/\s/g,"_"),g=document.getElementById(`ag-${k}`),c=document.getElementById(`ac-${k}`),o=g.style.display!=="none";
+    document.querySelectorAll(".ad-grid").forEach(x=>x.style.display="none");
+    document.querySelectorAll(".ap-chev").forEach(x=>x.textContent="▼");
+    if(!o){g.style.display="grid";c.textContent="▲";}
+  }));
+  document.querySelectorAll(".adm,.adp").forEach(b=>b.addEventListener("click",async(e)=>{
+    e.stopPropagation();
+    const n=b.dataset.n,di=parseInt(b.dataset.i),d=b.classList.contains("adp")?1:-1;
+    counts[n]=counts[n]||new Array(DAYS.length).fill(0);
+    counts[n][di]=Math.max(0,(counts[n][di]||0)+d);
+    await saveC(counts);
+    const k=n.replace(/\s/g,"_"),ev=document.getElementById(`av-${k}-${di}`);
+    if(ev){ev.textContent=counts[n][di];ev.className="ad-val"+(counts[n][di]>0?" ad-on":"");}
+    const tot=(counts[n]||[]).reduce((a,b)=>a+b,0);
+    const te=document.getElementById(`at-${k}`);
+    if(te)te.textContent=`${tot}🍺·${eur(tot*ppg(cfg.p1,cfg.l1))}`;
+    notif(d>0?`+1 (${n})`:`−1 (${n})`,d>0?"#81c784":"#ef9a9a");
+  }));
+  document.getElementById("btn-rst").addEventListener("click",async()=>{
+    if(!confirm("Réinitialiser TOUS les compteurs ?"))return;
+    counts=init();await saveC(counts);notif("Réinitialisé ✓","#ef9a9a");render();
   });
 }
 </script>

@@ -351,6 +351,7 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 .chat-input-area{position:relative;display:flex;flex-direction:column;}
 
 /* ══ WIZZ ══ */
+@keyframes wizzPulse{0%,100%{transform:scale(1);box-shadow:0 3px 10px rgba(255,111,0,0.4);}50%{transform:scale(1.06);box-shadow:0 4px 16px rgba(255,111,0,0.6);}}
 @keyframes wizzShake{0%{transform:translate(0,0) rotate(0);}10%{transform:translate(-8px,-4px) rotate(-3deg);}20%{transform:translate(8px,4px) rotate(3deg);}30%{transform:translate(-6px,6px) rotate(-2deg);}40%{transform:translate(6px,-6px) rotate(2deg);}50%{transform:translate(-4px,4px) rotate(-1deg);}60%{transform:translate(4px,-2px) rotate(1deg);}70%{transform:translate(-2px,2px) rotate(0);}80%{transform:translate(2px,-2px) rotate(0);}100%{transform:translate(0,0) rotate(0);}}
 .wizz-active{animation:wizzShake .6s ease-in-out!important;}
 .wizz-msg{background:linear-gradient(135deg,#FFF3E0,#FFE0B2)!important;border-color:rgba(212,134,10,0.3)!important;}
@@ -1033,27 +1034,26 @@ function rChat(){
   }).join("");
 
   return`<div class="page" style="display:flex;flex-direction:column;height:calc(100vh - 62px);">
-  <div class="topbar">
-    <div style="width:60px;"></div>
+
+  <!-- TOPBAR avec bouton WIZZ bien visible -->
+  <div class="topbar" style="gap:8px;">
+    <div style="width:50px;"></div>
     <div class="topbar-title">💬 TCHAT</div>
-    <div style="width:60px;text-align:right;font-size:11px;color:var(--mid);">${chatMsgs.length} msg</div>
+    <button id="btn-open-wizz" style="
+      background:linear-gradient(135deg,#FF6F00,#FF8F00);
+      border:none;border-radius:20px;
+      padding:7px 14px;
+      font-size:13px;font-weight:800;
+      color:#FFFFFF;letter-spacing:1px;
+      box-shadow:0 3px 10px rgba(255,111,0,0.4);
+      white-space:nowrap;
+      animation:wizzPulse 2s ease-in-out infinite;
+    ">⚡ WIZZ</button>
   </div>
 
   <!-- MESSAGES -->
   <div class="chat-msgs" id="chat-msgs" style="flex:1;overflow-y:auto;padding:10px 12px;">
     ${msgs||`<div style="text-align:center;padding:40px 20px;color:var(--mid);font-size:14px;">Soyez les premiers 🍺</div>`}
-  </div>
-
-  <!-- WIZZ BAR -->
-  <div style="background:linear-gradient(135deg,#FFF3E0,#FFE8CC);border-top:2px solid rgba(255,111,0,0.25);padding:8px 10px 6px;">
-    <div style="font-size:9px;font-weight:800;color:#E65100;letter-spacing:2px;margin-bottom:5px;">⚡ WIZZ — SECOUE LE TÉLÉPHONE DE...</div>
-    <div style="display:flex;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:3px;">
-      ${NAMES.filter(n=>n!==user).map(n=>`
-        <button class="wizz-btn" data-n="${n}" style="flex-shrink:0;white-space:nowrap;">
-          ${getAva(n)} ${n.split(" ")[0]}
-        </button>
-      `).join("")}
-    </div>
   </div>
 
   <!-- INPUT + MSN PICKER -->
@@ -1075,6 +1075,34 @@ function bChat(){
   setTimeout(()=>{const el=document.getElementById("chat-msgs");if(el)el.scrollTop=el.scrollHeight;},80);
   const send=async()=>{const inp=document.getElementById("chat-in");const txt=inp.value.trim();if(!txt)return;await sendChat(txt);inp.value="";};
   document.getElementById("chat-send").onclick=send;
+
+  // WIZZ button in topbar
+  document.getElementById("btn-open-wizz").addEventListener("click",()=>{
+    const modal=document.createElement("div");
+    modal.className="bingo-modal";
+    modal.innerHTML=`<div class="bingo-card" style="max-height:80vh;overflow-y:auto;">
+      <div style="text-align:center;margin-bottom:14px;">
+        <div style="font-size:40px;margin-bottom:6px;">⚡</div>
+        <div style="font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:3px;color:#FF8F00;">ENVOYER UN WIZZ</div>
+        <div style="font-size:12px;color:var(--mid);margin-top:3px;">Secoue le téléphone de quelqu'un !</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        ${NAMES.filter(n=>n!==user).map(n=>`
+          <button class="wizz-btn" data-n="${n}" style="padding:12px 8px;border-radius:14px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px;justify-content:center;">
+            <span style="font-size:20px;">${getAva(n)}</span> ${n}
+          </button>
+        `).join("")}
+      </div>
+      <button id="close-wizz-modal" style="margin-top:14px;display:block;width:100%;background:rgba(180,120,50,0.1);border:1.5px solid rgba(180,120,50,0.2);border-radius:12px;padding:11px;color:var(--mid);font-family:'Bebas Neue',cursive;font-size:15px;letter-spacing:2px;">FERMER</button>
+    </div>`;
+    document.body.appendChild(modal);
+    modal.querySelectorAll(".wizz-btn").forEach(b=>b.addEventListener("click",()=>{
+      sendWizz(b.dataset.n);
+      modal.remove();
+    }));
+    document.getElementById("close-wizz-modal").onclick=()=>modal.remove();
+    modal.onclick=e=>{if(e.target===modal)modal.remove();};
+  });
   document.getElementById("chat-in").addEventListener("keydown",e=>{if(e.key==="Enter")send();});
 
   // MSN Emoticons

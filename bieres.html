@@ -1040,7 +1040,7 @@ function rChat(){
 }
 
 function bChat(){
-  setTimeout(()=>{const el=document.getElementById("chat-msgs");if(el)el.scrollTop=el.scrollHeight;},50);
+  setTimeout(()=>{const el=document.getElementById("chat-msgs");if(el)el.scrollTop=el.scrollHeight;},80);
   const send=async()=>{const inp=document.getElementById("chat-in");const txt=inp.value.trim();if(!txt)return;await sendChat(txt);inp.value="";};
   document.getElementById("chat-send").onclick=send;
   document.getElementById("chat-in").addEventListener("keydown",e=>{if(e.key==="Enter")send();});

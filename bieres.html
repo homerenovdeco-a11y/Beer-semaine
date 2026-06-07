@@ -348,7 +348,7 @@ const db=getDatabase(initializeApp(FB));
 const CREF=ref(db,"bieres/counts"),CFGREF=ref(db,"bieres/config"),CHATREF=ref(db,"bieres/chat"),REACTREF=ref(db,"bieres/reactions"),AVREF=ref(db,"bieres/avatars"),ANNREF=ref(db,"bieres/annonce");
 
 const ADMIN="1414";
-const NAMES=["Seb","Solène","Éliane","Joël","Marie Claude","Alain","Marion","Ludo","Matt","Laura","David","Fabien","Sophie","Diego","Sophie D","Pauline","Xavier","Rico","Mag","Stephan","Laura D","Kiki","Wojtek","Joelle"];
+const NAMES=["Seb","Solène","Éliane","Joël","Marie Claude","Alain","Marion","Ludo","Matt","Laura","David","Fabien","Sophie","Diego","Sophie D","Pauline","Xavier","Rico","Mag","Stephan","Laura D","Kiki","Wojtek","Joelle","Gérard","Nounou","Arlette"];
 const DAYS=[{s:"Mar 23",f:"Mardi 23"},{s:"Mer 24",f:"Mercredi 24"},{s:"Jeu 25",f:"Jeudi 25"},{s:"Ven 26",f:"Vendredi 26"},{s:"Lun 29",f:"Lundi 29"},{s:"Mar 30",f:"Mardi 30"}];
 const TIDX=(()=>{const d=new Date().getDate(),m={23:0,24:1,25:2,26:3,29:4,30:5};return d in m?m[d]:-1;})();
 const EMOJIS=[

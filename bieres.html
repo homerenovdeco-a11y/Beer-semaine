@@ -266,6 +266,53 @@ input,textarea{font-family:'Nunito',sans-serif;outline:none;}
 .quiz-locked-icon{font-size:60px;display:block;margin-bottom:12px;}
 .quiz-notif-banner{margin:8px 14px 0;background:rgba(242,169,30,0.1);border:1px solid rgba(242,169,30,0.3);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;}
 
+
+/* ══ BINGO ══ */
+.bingo-modal{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9000;display:flex;align-items:center;justify-content:center;padding:14px;overflow-y:auto;}
+.bingo-card{background:var(--dark2);border:1px solid rgba(242,169,30,0.3);border-radius:22px;padding:20px 16px;width:100%;max-width:440px;}
+.bingo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;}
+.bingo-cell{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:var(--cream);line-height:1.3;cursor:pointer;transition:all .2s;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.bingo-cell.checked{background:rgba(129,199,116,0.2);border-color:var(--green);color:var(--green);}
+.bingo-cell .bingo-ico{font-size:20px;}
+.bingo-win{background:rgba(242,169,30,0.15);border:2px solid var(--gold)!important;color:var(--gold)!important;animation:pulse .6s ease-in-out 3;}
+
+/* ══ PARI ══ */
+.pari-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.pari-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:12px 14px;margin:6px 12px;}
+.pari-status{font-size:10px;font-weight:800;letter-spacing:1px;border-radius:10px;padding:2px 8px;}
+.pari-status.open{background:rgba(242,169,30,0.15);color:var(--gold);}
+.pari-status.won{background:rgba(129,199,116,0.15);color:var(--green);}
+.pari-status.lost{background:rgba(239,154,154,0.15);color:var(--red);}
+
+/* ══ PHOTOS ══ */
+.photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:10px 12px;}
+.photo-item{border-radius:14px;overflow:hidden;aspect-ratio:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);position:relative;cursor:pointer;}
+.photo-img{width:100%;height:100%;object-fit:cover;}
+.photo-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.8));padding:8px;font-size:10px;color:var(--cream);}
+.photo-upload-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:30px;height:140px;color:var(--mid);}
+
+/* ══ CITATIONS ══ */
+.citation-card{background:rgba(206,147,216,0.06);border:1px solid rgba(206,147,216,0.2);border-radius:16px;padding:16px;margin:6px 12px;}
+.citation-text{font-size:15px;font-style:italic;color:var(--cream);line-height:1.5;margin-bottom:8px;}
+.citation-author{font-size:11px;color:var(--amber);font-weight:700;}
+.citation-time{font-size:10px;color:var(--mid);margin-top:2px;}
+
+/* ══ BILAN FINAL ══ */
+.bilan-page{padding:20px 14px;}
+.bilan-hero{text-align:center;background:linear-gradient(160deg,#1e1508,#0C0803);border:1px solid rgba(212,134,10,0.3);border-radius:20px;padding:24px 16px;margin-bottom:16px;}
+.bilan-podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:20px 0;}
+.bilan-podium-item{text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bilan-podium-ava{font-size:28px;}
+.bilan-podium-name{font-size:11px;font-weight:700;color:var(--cream);}
+.bilan-podium-score{font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);}
+.bilan-podium-bar{background:linear-gradient(180deg,var(--gold),var(--amber));border-radius:4px 4px 0 0;width:50px;}
+.diplome{background:linear-gradient(135deg,#1e1508,#2a1e08);border:3px solid rgba(212,134,10,0.5);border-radius:20px;padding:24px 20px;margin:12px;text-align:center;position:relative;}
+.diplome::before{content:"";position:absolute;inset:6px;border:1px solid rgba(212,134,10,0.2);border-radius:14px;pointer-events:none;}
+.diplome-title{font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:5px;color:var(--amber);margin-bottom:8px;}
+.diplome-name{font-family:'Playfair Display',serif;font-size:32px;color:var(--gold);font-style:italic;text-shadow:0 0 20px rgba(242,169,30,0.3);}
+.diplome-text{font-size:12px;color:var(--mid);margin-top:8px;line-height:1.6;}
+.diplome-seal{font-size:36px;margin-top:12px;display:block;}
+
 /* PDF EXPORT */
 @media print{.bnav,.topbar{display:none!important;}.page{padding-bottom:0!important;}}
 </style>
@@ -288,7 +335,20 @@ const ADMIN="1414";
 const NAMES=["Seb","Solène","Éliane","Joël","Marie Claude","Alain","Marion","Ludo","Matt","Laura","David","Fabien","Sophie","Diego","Sophie D","Pauline","Xavier","Rico","Mag","Stephan","Laura D","Kiki","Wojtek","Joelle"];
 const DAYS=[{s:"Mar 23",f:"Mardi 23"},{s:"Mer 24",f:"Mercredi 24"},{s:"Jeu 25",f:"Jeudi 25"},{s:"Ven 26",f:"Vendredi 26"},{s:"Lun 29",f:"Lundi 29"},{s:"Mar 30",f:"Mardi 30"}];
 const TIDX=(()=>{const d=new Date().getDate(),m={23:0,24:1,25:2,26:3,29:4,30:5};return d in m?m[d]:-1;})();
-const EMOJIS=["🍺","🎉","🥂","🎸","🌟","🦁","🐯","🦊","🐸","🦄","🍕","🌈","🎯","🔥","💎","🎪","🐙","🦋","🌺","🏆","⚡","🎭","🌊","🎨"];
+const EMOJIS=[
+  // Animaux drôles
+  "🐸","🦊","🐧","🦆","🐨","🦥","🦦","🦝","🐙","🦑","🦀","🐡","🦭","🐻‍❄️","🦬","🦙","🦘","🦔","🐿️","🦫",
+  // Têtes rigolotes
+  "🤡","👻","💀","👽","🤖","🎃","🥸","🤓","😎","🥴","🤪","😜","🤩","🥳","😈","👹","👺","🫠","🤯","🥶",
+  // Nourriture / boisson
+  "🍺","🍻","🥂","🍾","🍕","🌮","🍔","🌭","🍿","🥨","🧀","🍣","🍜","🌯","🥗","🧆","🍩","🎂","🍭","🍦",
+  // Sport / activités
+  "🏄","🤸","🧗","🎯","🎳","🎲","🎮","🕹️","🎸","🥁","🎻","🎺","🎭","🎪","🎠","🎡","🎢","🎬","🎤","🎧",
+  // Nature / magie
+  "🌵","🌈","⚡","🌊","🔥","💎","🌺","🦋","🌸","🍀","🌙","⭐","🌟","💫","✨","🎆","🎇","🌋","🏔️","🌍",
+  // Objets drôles
+  "🚀","🛸","🦄","🐉","🧸","🪆","🧿","🪬","🔮","🧲","🪤","🎩","🪄","🧨","🎊","🎋","🪅","🪩","💈","🗿"
+];
 const REACT_EMOJIS=["🍺","🔥","😂","💀","👑","🎉"];
 const BADGE_DEFS=[{id:"first5",icon:"🥇",label:"Premiers 5",check:t=>t>=5},{id:"ten",icon:"🔟",label:"10 verres",check:t=>t>=10},{id:"king",icon:"👑",label:"Roi du fût",check:(t,rank)=>rank===0&&t>0},{id:"streak",icon:"🔥",label:"Assidu",check:(t,r,s)=>s>=3}];
 
@@ -460,7 +520,10 @@ function rLogin(){
 function bLogin(){
   let pin="";
   document.querySelectorAll(".name-btn").forEach(b=>b.addEventListener("click",()=>{
-    user=b.dataset.n;isAdmin=false;screen="avatar";render();
+    user=b.dataset.n;isAdmin=false;
+    // Show avatar picker only if no avatar yet
+    if(!getAva(user) || getAva(user)===user[0]) { screen="avatar"; render(); }
+    else { screen="main"; subScreen="home"; render(); }
   }));
   document.getElementById("btn-al").onclick=()=>{document.getElementById("btn-al").style.display="none";document.getElementById("pin-panel").style.display="block";};
   document.getElementById("pin-bk").onclick=()=>{pin="";upDots(pin,false);document.getElementById("btn-al").style.display="block";document.getElementById("pin-panel").style.display="none";document.getElementById("pin-err").style.display="none";};
@@ -480,14 +543,27 @@ function upDots(pin,err){document.querySelectorAll(".pin-dot").forEach((d,i)=>{d
 // ══ AVATAR PICKER ══
 function rAvatarPicker(){
   const current=getAva(user);
-  return`<div class="page" style="padding:30px 14px;">
-  <div style="text-align:center;margin-bottom:20px;">
-    <div style="font-size:48px;margin-bottom:8px;">${current.length>1||current.codePointAt(0)>127?current:user[0]}</div>
+  const cats=[
+    {label:"🐾 Animaux",range:[0,20]},
+    {label:"😂 Têtes",range:[20,40]},
+    {label:"🍺 Festif",range:[40,60]},
+    {label:"🎮 Activités",range:[60,80]},
+    {label:"✨ Magie",range:[80,100]},
+    {label:"🎩 Objets",range:[100,120]},
+  ];
+  const catBtns=cats.map((c,i)=>`<button class="cat-btn" data-from="${c.range[0]}" data-to="${c.range[1]}" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--cream);white-space:nowrap;">${c.label}</button>`).join("");
+  const allBtns=EMOJIS.map((e,i)=>`<button class="av-btn${e===current?" selected":""}" data-e="${e}" data-idx="${i}">${e}</button>`).join("");
+  return`<div class="page" style="padding-bottom:80px;">
+  <div style="text-align:center;padding:28px 20px 16px;background:linear-gradient(180deg,var(--dark2),var(--dark));border-bottom:1px solid var(--border);">
+    <div style="font-size:56px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(242,169,30,0.3));">${current.length>1||current.codePointAt(0)>127?current:"🎭"}</div>
     <div style="font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:4px;color:var(--gold);">CHOISIS TON AVATAR</div>
-    <div style="font-size:12px;color:var(--mid);margin-top:4px;">Visible dans le tchat et le classement</div>
+    <div style="font-size:12px;color:var(--mid);margin-top:4px;">Pour toujours — choisis bien 😄</div>
   </div>
-  <div class="avatar-picker">${EMOJIS.map(e=>`<button class="av-btn${e===current?" selected":""}" data-e="${e}">${e}</button>`).join("")}</div>
-  <button id="skip-ava" style="display:block;margin:20px auto 0;background:none;border:none;color:var(--mid);font-size:13px;">Continuer sans avatar →</button>
+  <div style="display:flex;gap:6px;padding:12px 12px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;" id="cat-scroll">${catBtns}</div>
+  <div class="avatar-picker" id="ava-grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:8px 12px;">${allBtns}</div>
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:12px 14px;background:var(--dark2);border-top:1px solid var(--border);">
+    <button id="skip-ava" style="display:block;width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:var(--mid);font-size:13px;padding:11px;font-family:'Nunito',sans-serif;">Continuer sans avatar →</button>
+  </div>
 </div>`;
 }
 function bAvatarPicker(){
@@ -496,6 +572,19 @@ function bAvatarPicker(){
     screen="main";subScreen="home";render();
   }));
   document.getElementById("skip-ava").onclick=()=>{screen="main";subScreen="home";render();};
+  // Category filter
+  document.querySelectorAll(".cat-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const from=parseInt(btn.dataset.from), to=parseInt(btn.dataset.to);
+      document.querySelectorAll(".av-btn").forEach(b=>{
+        const idx=parseInt(b.dataset.idx);
+        b.style.display=(idx>=from&&idx<to)?"flex":"none";
+      });
+      document.querySelectorAll(".cat-btn").forEach(c=>c.style.borderColor="rgba(255,255,255,0.08)");
+      btn.style.borderColor="var(--gold)";
+      btn.style.color="var(--gold)";
+    });
+  });
 }
 
 // ══ HOME ══
@@ -561,6 +650,11 @@ function rHome(){
     </button>
     <button class="act act-purple" id="btn-roulette"><span class="act-ico">🎰</span><div><div class="act-lbl" style="color:var(--purple);">Roulette tournée</div><div class="act-sub">Qui paie la prochaine ?</div></div></button>
     <button class="act" id="btn-chg-ava"><span class="act-ico">😎</span><div><div class="act-lbl">Changer d'avatar</div><div class="act-sub">Personnalise ton profil</div></div></button>
+    <button class="act" onclick="showBingo()" style="background:rgba(129,199,116,0.05);border-color:rgba(129,199,116,0.25);"><span class="act-ico">🎲</span><div><div class="act-lbl" style="color:var(--green);">Bingo bière</div><div class="act-sub">Coche les événements de la soirée</div></div></button>
+    <button class="act" onclick="showParisModal()" style="background:rgba(206,147,216,0.05);border-color:rgba(206,147,216,0.25);"><span class="act-ico">🎰</span><div><div class="act-lbl" style="color:var(--purple);">Paris</div><div class="act-sub">Lance un défi à quelqu'un</div></div></button>
+    <button class="act" onclick="showPhotosModal()" style="background:rgba(100,181,246,0.05);border-color:rgba(100,181,246,0.25);"><span class="act-ico">📸</span><div><div class="act-lbl" style="color:var(--blue);">Photos</div><div class="act-sub">Partage les moments de la soirée</div></div></button>
+    <button class="act" onclick="showCitationsModal()" style="background:rgba(206,147,216,0.05);border-color:rgba(206,147,216,0.2);"><span class="act-ico">💬</span><div><div class="act-lbl" style="color:var(--purple);">Citations du soir</div><div class="act-sub">Les phrases mémorables</div></div></button>
+    <button class="act" onclick="showBilanFinal()" style="background:rgba(242,169,30,0.06);border-color:rgba(242,169,30,0.3);"><span class="act-ico">🏆</span><div><div class="act-lbl" style="color:var(--gold);">Bilan final</div><div class="act-sub">Podium · Diplôme · Statistiques</div></div></button>
   </div>
   <div class="fsync">⟳ Firebase temps réel</div>
 </div>`;
@@ -651,6 +745,9 @@ function rRecap(){
       <div class="ligne"><span class="llbl">Prédiction fût</span><span class="lval" style="color:var(--amber);font-style:italic;">${getPrediction()||"–"}</span></div>
       <div class="ligne ligne-hi"><span class="llbl">Collecté (prix réel)</span><span class="lval lval-hi">${eur(gt*ppg(cfg.p1,cfg.l1))}</span></div>
       <div class="ligne"><span class="llbl">Prix / verre</span><span class="lval">${eur(ppg(cfg.p1,cfg.l1))}</span></div>
+      <div class="ligne"><span class="llbl">📸 Photos partagées</span><span class="lval">${photos.length}</span></div>
+      <div class="ligne"><span class="llbl">💬 Citations</span><span class="lval">${citations.length}</span></div>
+      <div class="ligne"><span class="llbl">🎰 Paris lancés</span><span class="lval">${paris.length}</span></div>
     </div>
 
     <!-- Quiz Classement -->
@@ -1072,6 +1169,366 @@ function checkQuizTrigger() {
   }
 }
 setInterval(checkQuizTrigger, 60000);
+
+
+// ══════════════════════════════════════════
+// NOUVELLES FONCTIONNALITÉS
+// ══════════════════════════════════════════
+
+const CITATIONS_REF = ref(db, "bieres/citations");
+const PARIS_REF = ref(db, "bieres/paris");
+const PHOTOS_REF = ref(db, "bieres/photos");
+const BINGO_REF = ref(db, "bieres/bingo");
+
+let citations = [], paris = [], photos = [], bingoState = {};
+
+onValue(CITATIONS_REF, s => { const d=s.val(); citations=d?Object.values(d).sort((a,b)=>b.ts-a.ts):[]; if(screen!=="login")render(); });
+onValue(PARIS_REF, s => { const d=s.val(); paris=d?Object.values(d):[]; if(screen!=="login")render(); });
+onValue(PHOTOS_REF, s => { const d=s.val(); photos=d?Object.values(d).sort((a,b)=>b.ts-a.ts):[]; if(screen!=="login")render(); });
+onValue(BINGO_REF, s => { const d=s.val(); bingoState=d||{}; if(screen!=="login")render(); });
+
+// ── RAPPEL 18H ──
+function check18hReminder() {
+  const h=new Date().getHours(), m=new Date().getMinutes();
+  if(h===18 && m===0 && user) {
+    playTrumpet();
+    notif("🔥 La soirée commence ! Santé !", "#F2A91E");
+    setTimeout(()=>showConfetti(), 300);
+  }
+}
+setInterval(check18hReminder, 60000);
+
+// ── ALERTE DÉPASSEMENT ──
+let prevRank = null;
+function checkRankChange() {
+  if(!user) return;
+  const rank = getRank(user);
+  if(prevRank !== null && rank > prevRank) {
+    const leader = [...NAMES].sort((a,b)=>ptot(b)-ptot(a))[0];
+    notif(`😅 ${leader} vient de te dépasser !`, "#ef9a9a");
+  }
+  prevRank = rank;
+}
+setInterval(checkRankChange, 15000);
+
+// ══ BINGO ══
+const BINGO_CASES = [
+  {ico:"🍺", txt:"Verre renversé"},
+  {ico:"🎤", txt:"Quelqu'un chante"},
+  {ico:"💃", txt:"Quelqu'un danse"},
+  {ico:"😴", txt:"Quelqu'un s'endort"},
+  {ico:"🤮", txt:"Quelqu'un est malade"},
+  {ico:"📸", txt:"Photo de groupe"},
+  {ico:"🎵", txt:"Blind test"},
+  {ico:"🥂", txt:"Toast général"},
+  {ico:"🃏", txt:"Jeu de cartes"},
+  {ico:"😭", txt:"Quelqu'un pleure de rire"},
+  {ico:"🎯", txt:"Pari tenu"},
+  {ico:"👑", txt:"Seb paie une tournée"},
+  {ico:"🚿", txt:"Quelqu'un disparaît 30min"},
+  {ico:"📱", txt:"Photo selfie post"},
+  {ico:"🍕", txt:"Commande de pizza"},
+  {ico:"💍", txt:"Discours mariage"},
+  {ico:"🎸", txt:"Musique trop forte"},
+  {ico:"🌙", txt:"Dernier debout"},
+];
+
+function showBingo() {
+  const myBingo = bingoState[user?.replace(/\s/g,"_")] || [];
+  const modal = document.createElement("div");
+  modal.className = "bingo-modal";
+  const cells = BINGO_CASES.map((c,i) => {
+    const checked = myBingo.includes(i);
+    return `<div class="bingo-cell${checked?" checked":""}" data-i="${i}">
+      <span class="bingo-ico">${c.ico}</span>
+      <span>${c.txt}</span>
+    </div>`;
+  }).join("");
+  const score = myBingo.length;
+  const hasBingo = checkBingoWin(myBingo);
+  modal.innerHTML = `<div class="bingo-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;color:var(--gold);">🎲 BINGO BIÈRE</div>
+      <button id="close-bingo" style="background:none;border:none;color:var(--mid);font-size:20px;">✕</button>
+    </div>
+    <div style="font-size:11px;color:var(--mid);margin-bottom:10px;">Coche quand ça arrive ! ${score}/18 cochés${hasBingo?" · 🏆 BINGO !":""}</div>
+    <div class="bingo-grid">${cells}</div>
+    <div style="font-size:11px;color:var(--mid);text-align:center;">Coches partagées avec tout le monde 👆</div>
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById("close-bingo").onclick = () => modal.remove();
+  modal.querySelectorAll(".bingo-cell").forEach(cell => {
+    cell.addEventListener("click", async () => {
+      const i = parseInt(cell.dataset.i);
+      const key = user?.replace(/\s/g,"_");
+      const cur = bingoState[key] || [];
+      let updated;
+      if(cur.includes(i)) updated = cur.filter(x=>x!==i);
+      else { updated = [...cur, i]; }
+      await set(ref(db, `bieres/bingo/${key}`), updated);
+      if(updated.length > cur.length) {
+        notif(`${BINGO_CASES[i].ico} ${BINGO_CASES[i].txt} !`, "#F2A91E");
+        playBeerSound();
+        if(checkBingoWin(updated) && !checkBingoWin(cur)) {
+          setTimeout(()=>{ notif("🏆 BINGO ! Tu gagnes une bière !", "#81c784"); showConfetti(); }, 300);
+        }
+      }
+    });
+  });
+}
+
+function checkBingoWin(checked) {
+  // Win = 9 cases cochées (ligne complète dans une grille 3x6)
+  return checked.length >= 9;
+}
+
+window.showBingo = showBingo;
+
+// ══ PARIS ══
+async function addPari(challenger, target, description, enjeu) {
+  try {
+    await push(PARIS_REF, {
+      challenger, target, description, enjeu,
+      ts: Date.now(), status: "open", winner: null
+    });
+    notif(`Pari lancé contre ${target} ! 🎰`, "#ce93d8");
+  } catch(e){}
+}
+
+async function resolvePari(pariId, winner) {
+  try {
+    const existing = paris.find(p=>p.ts===pariId);
+    if(!existing) return;
+    await set(ref(db, `bieres/paris/${pariId}`), {...existing, status: winner?"won":"lost", winner});
+    notif(winner ? `✅ Pari gagné par ${winner} !` : "❌ Pari perdu !", winner?"#81c784":"#ef9a9a");
+  } catch(e){}
+}
+
+function showParisModal() {
+  const modal = document.createElement("div");
+  modal.className = "bingo-modal";
+  const openParis = paris.filter(p=>p.status==="open");
+  const myParis = paris.filter(p=>p.challenger===user||p.target===user);
+  
+  modal.innerHTML = `<div class="bingo-card" style="max-height:85vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;color:var(--gold);">🎰 PARIS</div>
+      <button id="close-paris" style="background:none;border:none;color:var(--mid);font-size:20px;">✕</button>
+    </div>
+    <!-- Nouveau pari -->
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:12px;margin-bottom:12px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:2px;color:var(--amber);margin-bottom:8px;">LANCER UN PARI</div>
+      <select id="pari-target" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--cream);font-size:13px;padding:8px;width:100%;margin-bottom:6px;">
+        <option value="">Contre qui ?</option>
+        ${NAMES.filter(n=>n!==user).map(n=>`<option value="${n}">${getAva(n)} ${n}</option>`).join("")}
+      </select>
+      <input id="pari-desc" type="text" placeholder="Ex: Je bois plus que toi ce soir" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--cream);font-size:13px;padding:8px 11px;width:100%;margin-bottom:6px;" maxlength="80">
+      <input id="pari-enjeu" type="text" placeholder="Enjeu : ex: 1 bière offerte" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--cream);font-size:13px;padding:8px 11px;width:100%;margin-bottom:8px;" maxlength="50">
+      <button id="btn-send-pari" style="background:rgba(206,147,216,0.15);border:1px solid rgba(206,147,216,0.3);border-radius:10px;color:var(--purple);font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:2px;padding:9px;width:100%;">🎰 LANCER LE PARI</button>
+    </div>
+    <!-- Liste paris -->
+    ${paris.length===0?`<div style="text-align:center;padding:20px;color:var(--mid);">Aucun pari pour l'instant !</div>`:""}
+    ${paris.map(p=>`<div class="pari-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+        <div style="font-size:13px;font-weight:700;">${getAva(p.challenger)} ${p.challenger} vs ${getAva(p.target)} ${p.target}</div>
+        <span class="pari-status ${p.status}">${p.status==="open"?"EN COURS":p.status==="won"?"GAGNÉ":"PERDU"}</span>
+      </div>
+      <div style="font-size:13px;color:var(--cream);margin-bottom:4px;">"${p.description}"</div>
+      <div style="font-size:11px;color:var(--amber);">Enjeu : ${p.enjeu}</div>
+      ${p.status==="open"&&(p.challenger===user||isAdmin)?`<div style="display:flex;gap:6px;margin-top:8px;">
+        <button class="resolve-btn" data-ts="${p.ts}" data-winner="${p.challenger}" style="flex:1;background:rgba(129,199,116,0.1);border:1px solid rgba(129,199,116,0.3);border-radius:8px;color:var(--green);font-size:12px;padding:6px;">${p.challenger} gagne ✓</button>
+        <button class="resolve-btn" data-ts="${p.ts}" data-winner="${p.target}" style="flex:1;background:rgba(129,199,116,0.1);border:1px solid rgba(129,199,116,0.3);border-radius:8px;color:var(--green);font-size:12px;padding:6px;">${p.target} gagne ✓</button>
+      </div>`:""}
+    </div>`).join("")}
+  </div>`;
+  
+  document.body.appendChild(modal);
+  document.getElementById("close-paris").onclick = () => modal.remove();
+  modal.onclick = e => { if(e.target===modal) modal.remove(); };
+  document.getElementById("btn-send-pari").onclick = async () => {
+    const target = document.getElementById("pari-target").value;
+    const desc = document.getElementById("pari-desc").value.trim();
+    const enjeu = document.getElementById("pari-enjeu").value.trim();
+    if(!target||!desc||!enjeu) { notif("Remplis tous les champs !","#ef9a9a"); return; }
+    await addPari(user, target, desc, enjeu);
+    modal.remove();
+  };
+  modal.querySelectorAll(".resolve-btn").forEach(b => {
+    b.onclick = async () => {
+      await resolvePari(parseInt(b.dataset.ts), b.dataset.winner);
+      modal.remove();
+    };
+  });
+}
+window.showParisModal = showParisModal;
+
+// ══ PHOTOS ══
+async function uploadPhoto(file, caption) {
+  try {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      const dataUrl = e.target.result;
+      if(dataUrl.length > 800000) { notif("Photo trop lourde (max 600ko)", "#ef9a9a"); return; }
+      await push(PHOTOS_REF, { url: dataUrl, caption, author: user, ava: getAva(user), ts: Date.now() });
+      notif("📸 Photo partagée !", "#81c784");
+    };
+    reader.readAsDataURL(file);
+  } catch(e) { notif("Erreur upload", "#ef9a9a"); }
+}
+
+function showPhotosModal() {
+  const modal = document.createElement("div");
+  modal.className = "bingo-modal";
+  modal.innerHTML = `<div class="bingo-card" style="max-height:85vh;overflow-y:auto;width:100%;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;color:var(--gold);">📸 PHOTOS</div>
+      <button id="close-photos" style="background:none;border:none;color:var(--mid);font-size:20px;">✕</button>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;background:rgba(129,199,116,0.08);border:1px dashed rgba(129,199,116,0.3);border-radius:12px;padding:14px;text-align:center;cursor:pointer;">
+        <div style="font-size:30px;margin-bottom:4px;">📷</div>
+        <div style="font-size:13px;color:var(--green);font-weight:700;">Ajouter une photo</div>
+        <div style="font-size:11px;color:var(--mid);">JPG ou PNG · max 600ko</div>
+        <input type="file" id="photo-input" accept="image/*" style="display:none;">
+      </label>
+      <input id="photo-caption" type="text" placeholder="Une légende... (optionnel)" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--cream);font-size:13px;padding:8px 11px;width:100%;margin-top:6px;" maxlength="60">
+    </div>
+    <div class="photo-grid" id="photo-grid">
+      ${photos.length===0?`<div style="grid-column:span 2;text-align:center;padding:20px;color:var(--mid);">Aucune photo pour l'instant !</div>`:""}
+      ${photos.map(p=>`<div class="photo-item">
+        <img class="photo-img" src="${p.url}" loading="lazy">
+        <div class="photo-caption">${p.ava} ${p.author}${p.caption?` · ${p.caption}`:""}</div>
+      </div>`).join("")}
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById("close-photos").onclick = () => modal.remove();
+  modal.onclick = e => { if(e.target===modal) modal.remove(); };
+  document.getElementById("photo-input").onchange = async e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const caption = document.getElementById("photo-caption").value.trim();
+    await uploadPhoto(file, caption);
+    modal.remove();
+  };
+}
+window.showPhotosModal = showPhotosModal;
+
+// ══ CITATIONS ══
+async function addCitation(text) {
+  if(!text.trim()||!user) return;
+  try {
+    await push(CITATIONS_REF, { text: text.trim(), author: user, ava: getAva(user), ts: Date.now() });
+    notif("💬 Citation ajoutée !", "#ce93d8");
+  } catch(e){}
+}
+
+function showCitationsModal() {
+  const modal = document.createElement("div");
+  modal.className = "bingo-modal";
+  modal.innerHTML = `<div class="bingo-card" style="max-height:85vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;color:var(--gold);">💬 CITATIONS DU SOIR</div>
+      <button id="close-cit" style="background:none;border:none;color:var(--mid);font-size:20px;">✕</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <input id="cit-input" type="text" placeholder="Une phrase mémorable..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:var(--cream);font-size:13px;padding:9px 12px;" maxlength="120">
+      <button id="btn-add-cit" style="background:rgba(206,147,216,0.15);border:1px solid rgba(206,147,216,0.3);border-radius:10px;color:var(--purple);font-size:18px;width:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✓</button>
+    </div>
+    ${citations.length===0?`<div style="text-align:center;padding:20px;color:var(--mid);">Aucune citation pour l'instant !</div>`:""}
+    ${citations.map(c=>`<div class="citation-card">
+      <div class="citation-text">"${c.text}"</div>
+      <div class="citation-author">${c.ava} ${c.author}</div>
+      <div class="citation-time">${new Date(c.ts).toLocaleString("fr-FR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</div>
+    </div>`).join("")}
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById("close-cit").onclick = () => modal.remove();
+  modal.onclick = e => { if(e.target===modal) modal.remove(); };
+  const send = async () => {
+    const inp = document.getElementById("cit-input");
+    await addCitation(inp.value);
+    modal.remove();
+  };
+  document.getElementById("btn-add-cit").onclick = send;
+  document.getElementById("cit-input").addEventListener("keydown", e => { if(e.key==="Enter") send(); });
+}
+window.showCitationsModal = showCitationsModal;
+
+// ══ BILAN FINAL ══
+function showBilanFinal() {
+  const modal = document.createElement("div");
+  modal.className = "bingo-modal";
+  const sorted = [...NAMES].sort((a,b)=>ptot(b)-ptot(a));
+  const top3 = sorted.slice(0,3);
+  const gt = gtot();
+  const maxDay = DAYS.reduce((mx,_,i)=>dtot(i)>dtot(mx)?i:mx,0);
+  const quizSorted = Object.entries(quizScores).sort((a,b)=>b[1]-a[1]);
+  const quizWinner = quizSorted[0]?.[0];
+  const podiumHeights = [80,60,45];
+  
+  modal.innerHTML = `<div class="bingo-card" style="max-height:90vh;overflow-y:auto;" id="bilan-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:3px;color:var(--gold);">🏆 BILAN DE LA SEMAINE</div>
+      <button id="close-bilan" style="background:none;border:none;color:var(--mid);font-size:20px;">✕</button>
+    </div>
+    <!-- Hero -->
+    <div style="text-align:center;background:linear-gradient(160deg,#1e1508,#0C0803);border:1px solid rgba(212,134,10,0.3);border-radius:18px;padding:20px;margin-bottom:14px;">
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);font-style:italic;">S & S</div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:5px;color:var(--amber);">BIÈRE LOVE EDITION</div>
+      <div style="font-size:11px;color:var(--mid);margin-top:4px;">Mar 23 → Mar 30 · ${gt} verres au total</div>
+    </div>
+    <!-- Podium -->
+    <div style="text-align:center;margin-bottom:14px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:3px;color:var(--amber);margin-bottom:12px;">🏆 PODIUM BIÈRES</div>
+      <div class="bilan-podium">
+        ${[top3[1],top3[0],top3[2]].map((n,i)=>{
+          const realI = i===0?1:i===1?0:2;
+          const h = podiumHeights[realI];
+          return n?`<div class="bilan-podium-item">
+            <div class="bilan-podium-ava">${getAva(n)}</div>
+            <div class="bilan-podium-name">${n}</div>
+            <div class="bilan-podium-score">${ptot(n)}🍺</div>
+            <div style="display:flex;align-items:flex-end;justify-content:center;">
+              <div class="bilan-podium-bar" style="height:${h}px;">${realI===0?"🥇":realI===1?"🥈":"🥉"}</div>
+            </div>
+          </div>`:"";
+        }).join("")}
+      </div>
+    </div>
+    <!-- Stats -->
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:12px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:12px;letter-spacing:3px;color:var(--amber);padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">📊 CHIFFRES DE LA SEMAINE</div>
+      <div style="display:flex;justify-content:space-between;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-size:13px;color:var(--mid);">Total verres</span><span style="font-size:13px;font-weight:700;color:var(--gold);">${gt} 🍺</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-size:13px;color:var(--mid);">Meilleur jour</span><span style="font-size:13px;font-weight:700;">${DAYS[maxDay]?.f} (${dtot(maxDay)} v)</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-size:13px;color:var(--mid);">Montant total</span><span style="font-size:13px;font-weight:700;color:var(--green);">${eur(gt*ppg(cfg.p1,cfg.l1))}</span></div>
+      ${quizWinner?`<div style="display:flex;justify-content:space-between;padding:8px 14px;"><span style="font-size:13px;color:var(--mid);">Champion quiz</span><span style="font-size:13px;font-weight:700;color:var(--purple);">${getAva(quizWinner)} ${quizWinner} (${quizSorted[0][1]}pts)</span></div>`:""}
+    </div>
+    <!-- Diplôme -->
+    ${top3[0]?`<div class="diplome">
+      <div class="diplome-title">CERTIFICAT D'EXCELLENCE</div>
+      <div style="font-size:30px;margin-bottom:8px;">${getAva(top3[0])}</div>
+      <div class="diplome-name">${top3[0]}</div>
+      <div class="diplome-text">est proclamé(e) Champion(ne) de la<br><strong style="color:var(--gold);">Bière Love Edition S&S</strong><br>avec ${ptot(top3[0])} verres consommés</div>
+      <span class="diplome-seal">🏆</span>
+    </div>`:""}
+    <!-- Citations -->
+    ${citations.length>0?`<div style="margin-top:12px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:12px;letter-spacing:3px;color:var(--amber);margin-bottom:8px;">💬 CITATIONS MÉMORABLES</div>
+      ${citations.slice(0,3).map(c=>`<div class="citation-card"><div class="citation-text">"${c.text}"</div><div class="citation-author">${c.ava} ${c.author}</div></div>`).join("")}
+    </div>`:""}
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button id="btn-print-bilan" style="flex:1;background:rgba(242,169,30,0.12);border:1px solid rgba(242,169,30,0.3);border-radius:12px;color:var(--gold);font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:2px;padding:11px;">🖨 IMPRIMER / PDF</button>
+      <button id="close-bilan-2" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:var(--cream);font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:2px;padding:11px;">FERMER</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById("close-bilan").onclick = () => modal.remove();
+  document.getElementById("close-bilan-2").onclick = () => modal.remove();
+  modal.onclick = e => { if(e.target===modal) modal.remove(); };
+  document.getElementById("btn-print-bilan").onclick = () => window.print();
+}
+window.showBilanFinal = showBilanFinal;
 
 window.toggleTheme=toggleTheme;
 </script>

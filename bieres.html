@@ -10,11 +10,11 @@
 <title>Bières S&S 🍺</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
 <style>
-:root{--gold:#F2A91E;--amber:#D4860A;--dark:#0C0803;--dark2:#1A1208;--mid:#6B4C2A;--cream:#FFF8E7;--green:#81c784;--red:#ef9a9a;--blue:#64b5f6;--border:rgba(212,134,10,0.18);}
+:root{--gold:#F2A91E;--amber:#D4860A;--dark:#0C0803;--dark2:#1A1208;--mid:#6B4C2A;--cream:#FFF8E7;--green:#81c784;--red:#ef9a9a;--blue:#64b5f6;--purple:#ce93d8;--border:rgba(212,134,10,0.18);}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
 body{background:var(--dark);font-family:'Nunito',sans-serif;color:var(--cream);max-width:480px;margin:0 auto;min-height:100vh;}
 button{cursor:pointer;font-family:'Nunito',sans-serif;border:none;outline:none;}
-input{font-family:'Nunito',sans-serif;outline:none;}
+input,textarea{font-family:'Nunito',sans-serif;outline:none;}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:rgba(242,169,30,0.2);border-radius:2px;}
 
 #notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);padding:8px 20px;border-radius:30px;font-weight:800;font-size:13px;z-index:9999;color:#1A1208;letter-spacing:1px;box-shadow:0 4px 20px rgba(0,0,0,0.5);white-space:nowrap;pointer-events:none;display:none;transition:opacity .3s;}
@@ -23,7 +23,7 @@ input{font-family:'Nunito',sans-serif;outline:none;}
 #loader p{font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:4px;color:var(--amber);margin-top:10px;}
 @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.2);}}
 
-/* ═══ HERO ═══ */
+/* HERO */
 .hero{margin:20px 14px 0;background:linear-gradient(160deg,#1e1508,#0C0803);border:1px solid rgba(212,134,10,0.3);border-radius:22px;padding:24px 16px 20px;text-align:center;}
 .orn{font-family:'Bebas Neue',cursive;font-size:10px;color:rgba(212,134,10,0.4);letter-spacing:3px;margin-bottom:12px;}
 .logo-row{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin-bottom:12px;}
@@ -40,7 +40,6 @@ input{font-family:'Nunito',sans-serif;outline:none;}
 @keyframes bliq{0%{height:0;}62%{height:80%;}78%{height:80%;}100%{height:0;}}
 @keyframes bfoam{0%,46%{opacity:0;}56%{opacity:1;}74%{opacity:1;transform:translateY(-1px);}90%,100%{opacity:0;transform:translateY(-4px);}}
 @keyframes bub{0%,38%{bottom:2px;opacity:0;}48%{opacity:.8;}72%{bottom:55%;opacity:.3;}78%,100%{opacity:0;}}
-
 .ss{font-family:'Playfair Display',serif;font-size:68px;color:var(--gold);line-height:1;font-style:italic;font-weight:700;text-shadow:0 0 28px rgba(242,169,30,0.3),0 2px 6px rgba(0,0,0,0.6);letter-spacing:-2px;}
 .ss-amp{font-size:38px;color:var(--amber);vertical-align:middle;margin:0 2px;}
 .ss-mar{font-size:10px;letter-spacing:7px;color:rgba(212,134,10,0.65);text-transform:uppercase;margin-top:2px;font-family:'Nunito',sans-serif;font-weight:400;font-style:normal;}
@@ -48,16 +47,35 @@ input{font-family:'Nunito',sans-serif;outline:none;}
 .hdivl{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,134,10,0.3),transparent);}
 .hdivm{width:5px;height:5px;background:var(--amber);transform:rotate(45deg);opacity:.55;flex-shrink:0;}
 .htitle{font-family:'Bebas Neue',cursive;font-size:48px;letter-spacing:11px;color:var(--gold);line-height:1;text-shadow:0 0 28px rgba(242,169,30,0.25);text-indent:11px;}
-.hlove{font-size:11px;letter-spacing:5px;color:var(--amber);font-style:italic;margin-top:5px;font-family:'Nunito',sans-serif;}
+.hlove{font-size:11px;letter-spacing:5px;color:var(--amber);font-style:italic;margin-top:5px;}
 .hmodel{display:inline-block;margin-top:8px;background:rgba(242,169,30,0.09);border:1px solid rgba(242,169,30,0.22);border-radius:20px;padding:3px 13px;font-size:12px;color:var(--gold);font-style:italic;}
 
-/* ═══ GENERAL ═══ */
+/* FÛT JAUGE */
+.fut-gauge-wrap{margin:10px 14px 0;display:flex;gap:8px;}
+.fut-gauge{flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:10px 12px;position:relative;overflow:hidden;}
+.fut-gauge-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(242,169,30,0.35),rgba(212,134,10,0.5));transition:height 0.6s ease;border-radius:0 0 13px 13px;}
+.fut-gauge-fill.blue{background:linear-gradient(180deg,rgba(100,181,246,0.25),rgba(100,181,246,0.4));}
+.fut-gauge-content{position:relative;z-index:1;text-align:center;}
+.fut-gauge-label{font-family:'Bebas Neue',cursive;font-size:11px;letter-spacing:2px;color:var(--amber);display:block;}
+.fut-gauge-label.blue{color:var(--blue);}
+.fut-gauge-pct{font-family:'Bebas Neue',cursive;font-size:28px;color:var(--gold);line-height:1;}
+.fut-gauge-pct.blue{color:var(--blue);}
+.fut-gauge-info{font-size:10px;color:var(--mid);margin-top:2px;}
+.fut-gauge-alert{font-size:10px;color:var(--red);font-weight:800;margin-top:2px;animation:blink 1s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+/* ANNONCE ADMIN */
+.annonce-banner{margin:8px 14px 0;background:rgba(206,147,216,0.1);border:1px solid rgba(206,147,216,0.3);border-radius:14px;padding:10px 14px;display:flex;gap:10px;align-items:flex-start;}
+.annonce-icon{font-size:20px;flex-shrink:0;}
+.annonce-txt{font-size:13px;color:var(--cream);line-height:1.5;}
+.annonce-time{font-size:10px;color:var(--mid);margin-top:3px;}
+
+/* GENERAL */
 .page{min-height:100vh;padding-bottom:28px;}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--dark2);position:sticky;top:0;z-index:10;}
 .topbar-title{font-family:'Bebas Neue',cursive;font-size:17px;letter-spacing:3px;color:var(--gold);}
 .topbar-back{background:none;color:var(--gold);font-size:13px;font-weight:700;width:70px;text-align:left;}
 .topbar-quit{background:none;color:var(--gold);font-size:13px;font-weight:700;}
-
 .bloc{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.065);border-radius:16px;overflow:hidden;margin-bottom:8px;}
 .bloc-title{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:3px;color:var(--amber);padding:10px 14px 6px;border-bottom:1px solid rgba(255,255,255,0.05);}
 .ligne{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.035);}
@@ -67,19 +85,27 @@ input{font-family:'Nunito',sans-serif;outline:none;}
 .lval-hi{color:var(--gold)!important;}
 .lval-blue{color:var(--blue)!important;}
 
-/* ═══ LOGIN ═══ */
+/* LOGIN */
 .sub{font-family:'Bebas Neue',cursive;font-size:17px;letter-spacing:5px;color:var(--amber);text-align:center;padding:12px 0 4px;}
 .fut-info{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 14px 10px;}
 .fut-badge{background:rgba(242,169,30,0.08);border:1px solid rgba(242,169,30,0.2);border-radius:20px;padding:4px 14px;font-size:11px;color:var(--amber);}
 .fut-badge2{background:rgba(100,181,246,0.07);border:1px solid rgba(100,181,246,0.2);border-radius:20px;padding:4px 14px;font-size:11px;color:var(--blue);}
 .slbl{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:4px;color:var(--mid);padding:12px 16px 8px;}
 .name-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px;}
-.name-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:9px 12px;color:var(--cream);}
+.name-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:9px 12px;color:var(--cream);position:relative;}
 .name-btn:active{background:rgba(242,169,30,0.08);}
-.nava{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A1208;font-weight:800;font-size:13px;flex-shrink:0;}
+.nava{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A1208;font-weight:800;font-size:16px;flex-shrink:0;}
 .ntxt{flex:1;font-size:13px;font-weight:700;text-align:left;}
 .ncount{font-family:'Bebas Neue',cursive;font-size:15px;color:var(--gold);}
+.nbadge{position:absolute;top:-4px;right:-4px;background:var(--gold);color:#1A1208;font-size:9px;font-weight:800;border-radius:10px;padding:1px 5px;letter-spacing:.5px;}
 .admin-lnk{display:block;margin:16px auto 6px;background:none;border:1px solid rgba(212,134,10,0.2);border-radius:10px;color:var(--mid);font-size:13px;padding:10px 28px;letter-spacing:1px;}
+
+/* AVATAR PICKER */
+.avatar-picker{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px;justify-content:center;}
+.av-btn{font-size:28px;width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,0.03);border:2px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;}
+.av-btn.selected{border-color:var(--gold);background:rgba(242,169,30,0.12);}
+.av-btn:active{transform:scale(0.9);}
+
 /* PIN */
 .pin-wrap{padding:28px 24px;text-align:center;}
 .pin-title{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:6px;color:var(--amber);margin-bottom:22px;}
@@ -90,12 +116,14 @@ input{font-family:'Nunito',sans-serif;outline:none;}
 .pin-btn:active{background:rgba(242,169,30,0.12);}
 .pin-back{background:none;color:var(--mid);font-size:13px;margin-top:14px;letter-spacing:1px;}
 
-/* ═══ HOME ═══ */
+/* HOME */
 .my-card{margin:14px 14px 8px;background:rgba(242,169,30,0.06);border:1px solid rgba(242,169,30,0.18);border-radius:18px;padding:18px;text-align:center;}
 .my-lbl{font-size:10px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:5px;}
 .my-big{font-family:'Bebas Neue',cursive;font-size:76px;color:var(--gold);line-height:1;text-shadow:0 0 28px rgba(242,169,30,0.22);}
 .my-due{font-size:15px;font-weight:700;margin-top:4px;}
 .my-real{font-size:11px;color:var(--mid);margin-top:2px;}
+.my-badges{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:8px;}
+.badge{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 10px;font-size:11px;display:flex;align-items:center;gap:4px;}
 .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 14px 8px;}
 .tri-c{background:rgba(255,255,255,0.025);border:1px solid;border-radius:12px;padding:10px 5px;text-align:center;}
 .tri-v{font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:1px;line-height:1;}
@@ -108,16 +136,16 @@ input{font-family:'Nunito',sans-serif;outline:none;}
 .act-lbl{font-size:14px;font-weight:800;color:var(--cream);}
 .act-sub{font-size:11px;color:var(--mid);margin-top:1px;}
 .fsync{text-align:center;font-size:10px;color:#3D2B1F;letter-spacing:1px;padding-top:12px;}
-.fut-bar{margin:0 14px 8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:9px 14px;}
-.fut-bar-row{font-size:12px;color:var(--mid);line-height:1.7;}
-.fut-bar-row strong{color:var(--gold);}
-.fut-bar-row.blue strong{color:var(--blue);}
 
-/* ═══ SAISIE ═══ */
+/* RECORD DU JOUR */
+.record-card{margin:0 14px 8px;background:rgba(206,147,216,0.07);border:1px solid rgba(206,147,216,0.2);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+.record-ico{font-size:24px;}
+.record-txt{font-size:13px;color:var(--cream);font-weight:700;}
+.record-sub{font-size:11px;color:var(--mid);margin-top:2px;}
+
+/* SAISIE */
 .saisie-wrap{padding:10px 12px;display:flex;flex-direction:column;gap:7px;}
 .tot-ban{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;background:rgba(242,169,30,0.07);border:1px solid rgba(242,169,30,0.18);border-radius:14px;}
-.tot-lbl{font-size:11px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;}
-.tot-val{font-family:'Bebas Neue',cursive;font-size:20px;color:var(--gold);letter-spacing:1px;}
 .day-row{border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:11px 15px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.02);}
 .day-today{background:rgba(242,169,30,0.06)!important;border-color:rgba(242,169,30,0.3)!important;}
 .day-name{font-size:14px;font-weight:700;}
@@ -130,22 +158,54 @@ input{font-family:'Nunito',sans-serif;outline:none;}
 .bplus{width:44px;height:44px;border-radius:50%;border:2px solid rgba(129,199,116,0.4);background:rgba(129,199,116,0.06);color:var(--green);font-size:24px;display:flex;align-items:center;justify-content:center;font-weight:800;}
 .bplus:active{background:rgba(129,199,116,0.15);}
 
-/* ═══ RECAP ═══ */
+/* RÉACTIONS */
+.reactions-row{display:flex;gap:6px;padding:4px 15px 10px;flex-wrap:wrap;}
+.react-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 10px;font-size:13px;display:flex;align-items:center;gap:4px;color:var(--cream);}
+.react-btn.active{background:rgba(242,169,30,0.15);border-color:rgba(242,169,30,0.4);}
+.react-count{font-size:11px;color:var(--mid);}
+
+/* GRAPH */
+.graph-wrap{padding:10px 14px 14px;}
+.graph-bars{display:flex;align-items:flex-end;gap:6px;height:80px;}
+.graph-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.graph-bar{width:100%;background:linear-gradient(180deg,var(--gold),var(--amber));border-radius:4px 4px 0 0;min-height:3px;transition:height .4s;}
+.graph-lbl{font-size:9px;color:var(--mid);letter-spacing:.5px;}
+.graph-val{font-family:'Bebas Neue',cursive;font-size:13px;color:var(--gold);}
+
+/* RECAP */
 .scroll{padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
 .rank-row{display:flex;align-items:center;gap:6px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.035);}
 .rank-me{background:rgba(242,169,30,0.04);}
 .ri{font-size:10px;color:#3D2B1F;width:16px;text-align:right;flex-shrink:0;}
-.rn{width:80px;font-size:12px;font-weight:700;flex-shrink:0;}
+.rn{width:72px;font-size:11px;font-weight:700;flex-shrink:0;}
 .rb{flex:1;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;}
 .rbf{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));border-radius:3px;}
 .rv{font-family:'Bebas Neue',cursive;font-size:18px;width:24px;text-align:right;flex-shrink:0;}
 .re{font-size:10px;color:var(--mid);width:40px;text-align:right;flex-shrink:0;}
+.rank-badges{display:flex;gap:3px;width:40px;}
+.rb-ico{font-size:12px;}
 
-/* ═══ ADMIN ═══ */
+/* TCHAT */
+.chat-wrap{padding:10px 12px;display:flex;flex-direction:column;gap:0;}
+.chat-msgs{display:flex;flex-direction:column;gap:8px;padding-bottom:10px;max-height:60vh;overflow-y:auto;}
+.chat-msg{display:flex;gap:8px;align-items:flex-start;}
+.chat-ava{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.chat-bubble{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:0 14px 14px 14px;padding:8px 12px;max-width:75%;}
+.chat-bubble.mine{background:rgba(242,169,30,0.1);border-color:rgba(242,169,30,0.25);}
+.chat-name{font-size:10px;color:var(--amber);font-weight:700;margin-bottom:3px;}
+.chat-text{font-size:13px;color:var(--cream);line-height:1.4;}
+.chat-time{font-size:9px;color:var(--mid);margin-top:3px;}
+.chat-input-wrap{display:flex;gap:8px;padding:10px 0 0;border-top:1px solid rgba(255,255,255,0.06);}
+.chat-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:10px 14px;color:var(--cream);font-size:13px;}
+.chat-input:focus{border-color:rgba(242,169,30,0.4);}
+.chat-send{width:42px;height:42px;border-radius:50%;background:rgba(242,169,30,0.15);border:1px solid rgba(242,169,30,0.3);color:var(--gold);font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-send:active{background:rgba(242,169,30,0.25);}
+
+/* ADMIN */
 .admin-badge{margin:8px 12px;background:rgba(242,169,30,0.07);border:1px solid rgba(242,169,30,0.2);border-radius:10px;padding:7px 14px;font-size:12px;color:var(--amber);text-align:center;}
 .ap-wrap{border-bottom:1px solid rgba(255,255,255,0.04);}
 .ap-row{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;}
-.ap-ava{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A1208;font-weight:800;font-size:12px;flex-shrink:0;}
+.ap-ava{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A1208;font-weight:800;font-size:14px;flex-shrink:0;}
 .ap-name{flex:1;font-size:13px;font-weight:700;}
 .ap-tot{font-family:'Bebas Neue',cursive;font-size:15px;color:var(--gold);letter-spacing:1px;}
 .ap-chev{font-size:9px;color:var(--mid);margin-left:4px;}
@@ -169,61 +229,127 @@ input{font-family:'Nunito',sans-serif;outline:none;}
 .cfg-check input{width:20px;height:20px;accent-color:var(--gold);}
 .save-btn{margin:10px 14px;background:rgba(129,199,116,0.08);border:1px solid rgba(129,199,116,0.28);border-radius:10px;color:var(--green);font-size:13px;font-weight:700;letter-spacing:1px;padding:11px;width:calc(100% - 28px);}
 .reset-btn{margin:10px 14px;background:rgba(239,154,154,0.05);border:1px solid rgba(239,154,154,0.25);border-radius:10px;color:var(--red);font-size:13px;font-weight:700;letter-spacing:1px;padding:11px;width:calc(100% - 28px);}
+.annonce-send{margin:10px 14px;background:rgba(206,147,216,0.08);border:1px solid rgba(206,147,216,0.25);border-radius:10px;color:var(--purple);font-size:13px;font-weight:700;letter-spacing:1px;padding:11px;width:calc(100% - 28px);}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#1A1208;border-top:1px solid rgba(212,134,10,0.2);display:flex;z-index:100;height:58px;}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;color:#6B4C2A;transition:color .15s;}
+.bnav-btn.active{color:var(--gold);}
+.bnav-ico{font-size:20px;}
+.bnav-lbl{font-size:9px;letter-spacing:.5px;text-transform:uppercase;font-weight:700;}
+.bnav-badge{position:absolute;top:6px;right:calc(50% - 18px);background:var(--red);border-radius:10px;padding:1px 5px;font-size:9px;color:#1A1208;font-weight:800;}
 </style>
 </head>
 <body>
 <div id="notif"></div>
 <div id="loader"><span>🍺</span><p>Connexion...</p></div>
-<div id="app" style="display:none;"></div>
+<div id="app" style="display:none;padding-bottom:58px;"></div>
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getDatabase,ref,onValue,set}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import{getDatabase,ref,onValue,set,push,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const FB={apiKey:"AIzaSyBdmzcmnUd4nTRS53m40ArT6WnLvgSdyew",authDomain:"beer-conso.firebaseapp.com",projectId:"beer-conso",storageBucket:"beer-conso.firebasestorage.app",messagingSenderId:"247215118379",appId:"1:247215118379:web:98c025e40ca9c4392db26e",databaseURL:"https://beer-conso-default-rtdb.europe-west1.firebasedatabase.app"};
 const db=getDatabase(initializeApp(FB));
 const CREF=ref(db,"bieres/counts");
 const CFGREF=ref(db,"bieres/config");
+const CHATREF=ref(db,"bieres/chat");
+const REACTREF=ref(db,"bieres/reactions");
+const AVREF=ref(db,"bieres/avatars");
+const ANNREF=ref(db,"bieres/annonce");
 
 const ADMIN="1414";
 const NAMES=["Seb","Solène","Éliane","Joël","Marie Claude","Alain","Marion","Ludo","Matt","Laura","David","Fabien","Sophie","Diego","Sophie D","Pauline","Xavier","Rico","Mag","Stephan","Laura D","Kiki","Wojtek","Joelle"];
 const DAYS=[{s:"Mar 23",f:"Mardi 23"},{s:"Mer 24",f:"Mercredi 24"},{s:"Jeu 25",f:"Jeudi 25"},{s:"Ven 26",f:"Vendredi 26"},{s:"Lun 29",f:"Lundi 29"},{s:"Mar 30",f:"Mardi 30"}];
 const TIDX=(()=>{const d=new Date().getDate(),m={23:0,24:1,25:2,26:3,29:4,30:5};return d in m?m[d]:-1;})();
+const EMOJIS=["🍺","🎉","🥂","🎸","🌟","🦁","🐯","🦊","🐸","🦄","🍕","🌈","🎯","🔥","💎","🎪","🐙","🦋","🌺","🏆","⚡","🎭","🌊","🎨"];
+const BADGE_DEFS=[{id:"first5",icon:"🥇",label:"Premiers 5",check:t=>t>=5},{id:"ten",icon:"🔟",label:"10 verres",check:t=>t>=10},{id:"king",icon:"👑",label:"Roi du fût",check:(t,rank)=>rank===0&&t>0},{id:"daily",icon:"🔥",label:"Assidu",check:(t,rank,streak)=>streak>=3}];
+const REACT_EMOJIS=["🍺","🔥","😂","💀","👑","🎉"];
 
 let counts={},cfg={p1:65,l1:14,n1:"",p2:65,l2:14,n2:"",f2:false};
-let isAdmin=false,user=null,screen="login";
+let avatars={},chatMsgs=[],reactions={},annonce=null;
+let isAdmin=false,user=null,screen="home-sub",subScreen="home";
+let unreadChat=0,lastChatSeen=0;
 
 const init=()=>{const o={};NAMES.forEach(n=>{o[n]=new Array(DAYS.length).fill(0);});return o;};
 counts=init();
 
-// helpers
 const gpf=(l)=>Math.round(((l||14)*100)/25);
 const ppg=(p,l)=>(p||65)/gpf(l||14);
 const eur=n=>n.toFixed(2).replace(".",",")+"\u202f€";
 const ptot=n=>(counts[n]||[]).reduce((a,b)=>a+b,0);
 const dtot=di=>NAMES.reduce((s,n)=>s+(counts[n]?.[di]||0),0);
 const gtot=()=>NAMES.reduce((s,n)=>s+ptot(n),0);
-
-onValue(CREF,s=>{const d=s.val();if(d)NAMES.forEach(n=>{if(Array.isArray(d[n]))counts[n]=d[n];});document.getElementById("loader").style.display="none";document.getElementById("app").style.display="block";render();});
-onValue(CFGREF,s=>{const d=s.val();if(d)cfg={...cfg,...d};if(screen!=="login")render();});
+const getAva=n=>avatars[n]||n[0];
+const getRank=n=>[...NAMES].sort((a,b)=>ptot(b)-ptot(a)).indexOf(n);
+const getStreak=n=>{let s=0;for(let i=DAYS.length-1;i>=0;i--){if((counts[n]||[])[i]>0)s++;else break;}return s;};
+const getBadges=n=>{const t=ptot(n),rank=getRank(n),streak=getStreak(n);return BADGE_DEFS.filter(b=>b.check(t,rank,streak));};
+const getDayRecord=()=>{if(TIDX<0)return null;let max=0,who="";NAMES.forEach(n=>{const v=(counts[n]||[])[TIDX]||0;if(v>max){max=v;who=n;}});return max>0?{who,val:max}:null;};
+const fmtTime=ts=>{if(!ts)return"";const d=new Date(ts);return d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});};
 
 async function saveC(c){try{await set(CREF,JSON.parse(JSON.stringify(c)));}catch(e){}}
 async function saveCFG(c){try{await set(CFGREF,JSON.parse(JSON.stringify(c)));}catch(e){}}
+async function sendChat(text){if(!text.trim()||!user)return;try{await push(CHATREF,{user,ava:getAva(user),text:text.trim(),ts:Date.now()});}catch(e){}}
+async function saveReact(dayKey,emoji){try{const r=reactions[dayKey]||{};r[emoji]=(r[emoji]||0)+1;await set(ref(db,`bieres/reactions/${dayKey}`),r);}catch(e){}}
+async function saveAva(n,emoji){try{await set(ref(db,`bieres/avatars/${n.replace(/\s/g,"_")}`),emoji);}catch(e){}}
+async function saveAnnonce(txt){try{await set(ANNREF,{text:txt,ts:Date.now(),from:"Admin"});}catch(e){}}
+
+// Firebase listeners
+onValue(CREF,s=>{const d=s.val();if(d)NAMES.forEach(n=>{if(Array.isArray(d[n]))counts[n]=d[n];});document.getElementById("loader").style.display="none";document.getElementById("app").style.display="block";if(screen!=="login")render();});
+onValue(CFGREF,s=>{const d=s.val();if(d)cfg={...cfg,...d};if(screen!=="login")render();});
+onValue(AVREF,s=>{const d=s.val();if(d){Object.keys(d).forEach(k=>{avatars[k.replace(/_/g," ")]=d[k];});}if(screen!=="login")render();});
+onValue(ANNREF,s=>{const d=s.val();annonce=d||null;if(screen!=="login")render();});
+onValue(CHATREF,s=>{
+  const d=s.val();
+  chatMsgs=d?Object.values(d).sort((a,b)=>a.ts-b.ts):[];
+  if(subScreen!=="chat"&&chatMsgs.length>0&&chatMsgs[chatMsgs.length-1].ts>lastChatSeen){
+    unreadChat=chatMsgs.filter(m=>m.ts>lastChatSeen).length;
+  }
+  if(screen!=="login")render();
+});
+onValue(REACTREF,s=>{const d=s.val();reactions=d||{};if(screen!=="login")render();});
 
 function notif(msg,col="#81c784"){const e=document.getElementById("notif");e.textContent=msg;e.style.background=col;e.style.display="block";e.style.opacity="1";clearTimeout(window._nt);window._nt=setTimeout(()=>{e.style.opacity="0";setTimeout(()=>e.style.display="none",300);},1800);}
 
 function render(){
   const app=document.getElementById("app");
-  if(screen==="login"){app.innerHTML=rLogin();bLogin();}
-  if(screen==="home"){app.innerHTML=rHome();bHome();}
-  if(screen==="saisie"){app.innerHTML=rSaisie();bSaisie();}
-  if(screen==="recap"){app.innerHTML=rRecap();bRecap();}
-  if(screen==="admin"){app.innerHTML=rAdmin();bAdmin();}
+  if(screen==="login"){app.innerHTML=rLogin();bLogin();return;}
+  // Main layout with bottom nav
+  const nav=`<div class="bnav">
+    <button class="bnav-btn${subScreen==="home"?" active":""}" id="nav-home"><span class="bnav-ico">🏠</span><span class="bnav-lbl">Accueil</span></button>
+    <button class="bnav-btn${subScreen==="saisie"?" active":""}" id="nav-saisie"><span class="bnav-ico">✏️</span><span class="bnav-lbl">Saisie</span></button>
+    <button class="bnav-btn${subScreen==="recap"?" active":""}" id="nav-recap"><span class="bnav-ico">📊</span><span class="bnav-lbl">Stats</span></button>
+    <button class="bnav-btn${subScreen==="chat"?" active":""}" id="nav-chat" style="position:relative;"><span class="bnav-ico">💬</span><span class="bnav-lbl">Tchat</span>${unreadChat>0?`<span class="bnav-badge">${unreadChat}</span>`:""}</button>
+    ${isAdmin?`<button class="bnav-btn${subScreen==="admin"?" active":""}" id="nav-admin"><span class="bnav-ico">👑</span><span class="bnav-lbl">Admin</span></button>`:""}
+  </div>`;
+
+  let content="";
+  if(subScreen==="home")content=rHome();
+  if(subScreen==="saisie")content=rSaisie();
+  if(subScreen==="recap")content=rRecap();
+  if(subScreen==="chat")content=rChat();
+  if(subScreen==="admin"&&isAdmin)content=rAdmin();
+
+  app.innerHTML=content+nav;
+  if(subScreen==="home")bHome();
+  if(subScreen==="saisie")bSaisie();
+  if(subScreen==="recap"){}
+  if(subScreen==="chat")bChat();
+  if(subScreen==="admin"&&isAdmin)bAdmin();
+  bindNav();
+}
+
+function bindNav(){
+  document.getElementById("nav-home").addEventListener("click",()=>{subScreen="home";render();});
+  document.getElementById("nav-saisie").addEventListener("click",()=>{subScreen="saisie";render();});
+  document.getElementById("nav-recap").addEventListener("click",()=>{subScreen="recap";render();});
+  document.getElementById("nav-chat").addEventListener("click",()=>{subScreen="chat";unreadChat=0;lastChatSeen=Date.now();render();});
+  if(isAdmin){document.getElementById("nav-admin").addEventListener("click",()=>{subScreen="admin";render();});}
 }
 
 // ══ LOGIN ══
 function rLogin(){
-  const nbtn=NAMES.map(n=>{const t=ptot(n);return`<button class="name-btn" data-n="${n}"><div class="nava">${n[0]}</div><span class="ntxt">${n}</span>${t>0?`<span class="ncount">${t}🍺</span>`:""}</button>`;}).join("");
+  const nbtn=NAMES.map(n=>{const t=ptot(n),ava=getAva(n);const isEmoji=ava.length>1||ava.codePointAt(0)>127;return`<button class="name-btn" data-n="${n}"><div class="nava">${isEmoji?ava:n[0]}</div><span class="ntxt">${n}</span>${t>0?`<span class="ncount">${t}🍺</span>`:""}</button>`;}).join("");
   const f2row=cfg.f2?`<div class="fut-badge2">🍺 Fût 2 · ${cfg.l2}L · ${cfg.p2}€ · ${gpf(cfg.l2)}v · ${eur(ppg(cfg.p2,cfg.l2))}/v${cfg.n2?" — "+cfg.n2:""}</div>`:"";
   return`<div class="page">
   <div class="hero">
@@ -260,7 +386,11 @@ function rLogin(){
 }
 function bLogin(){
   let pin="";
-  document.querySelectorAll(".name-btn").forEach(b=>b.addEventListener("click",()=>{user=b.dataset.n;isAdmin=false;screen="home";render();}));
+  document.querySelectorAll(".name-btn").forEach(b=>b.addEventListener("click",()=>{
+    user=b.dataset.n;isAdmin=false;screen="home-sub";subScreen="home";
+    // avatar picker si pas encore d'avatar
+    if(!avatars[user]){showAvatarPicker();}else{render();}
+  }));
   document.getElementById("btn-al").addEventListener("click",()=>{document.getElementById("btn-al").style.display="none";document.getElementById("pin-panel").style.display="block";});
   document.getElementById("pin-bk").addEventListener("click",()=>{pin="";upDots(pin,false);document.getElementById("btn-al").style.display="block";document.getElementById("pin-panel").style.display="none";document.getElementById("pin-err").style.display="none";});
   document.querySelectorAll(".pin-btn").forEach(b=>b.addEventListener("click",()=>{
@@ -269,72 +399,121 @@ function bLogin(){
     if(pin.length>=4)return;
     pin+=d;upDots(pin,false);
     if(pin.length===4){
-      if(pin===ADMIN){isAdmin=true;user="Seb";screen="home";render();}
+      if(pin===ADMIN){isAdmin=true;user="Seb";screen="home-sub";subScreen="home";render();}
       else{upDots(pin,true);document.getElementById("pin-err").style.display="block";setTimeout(()=>{pin="";upDots(pin,false);document.getElementById("pin-err").style.display="none";},700);}
     }
   }));
 }
 function upDots(pin,err){document.querySelectorAll(".pin-dot").forEach((d,i)=>{d.style.background=pin.length>i?"var(--gold)":"rgba(255,255,255,0.1)";d.style.boxShadow=pin.length>i?"0 0 10px rgba(242,169,30,0.5)":"none";d.style.borderColor=err?"rgba(239,154,154,0.6)":"rgba(242,169,30,0.3)";});}
 
+function showAvatarPicker(){
+  const app=document.getElementById("app");
+  app.innerHTML=`<div class="page" style="padding:30px 14px;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-family:'Bebas Neue',cursive;font-size:24px;letter-spacing:4px;color:var(--gold);">CHOISIS TON AVATAR</div>
+      <div style="font-size:13px;color:var(--mid);margin-top:4px;">Il apparaîtra sur ton profil et dans le tchat</div>
+    </div>
+    <div class="avatar-picker">${EMOJIS.map(e=>`<button class="av-btn" data-e="${e}">${e}</button>`).join("")}</div>
+    <button id="skip-ava" style="display:block;margin:20px auto 0;background:none;border:none;color:var(--mid);font-size:13px;">Passer →</button>
+  </div>`;
+  document.querySelectorAll(".av-btn").forEach(b=>b.addEventListener("click",async()=>{
+    const e=b.dataset.e;avatars[user]=e;
+    await saveAva(user,e);render();
+  }));
+  document.getElementById("skip-ava").addEventListener("click",()=>render());
+}
+
 // ══ HOME ══
 function rHome(){
   const gt=gtot(),myT=ptot(user);
-  const collected=myT*ppg(cfg.p1,cfg.l1);
-  const gtCost=gt*ppg(cfg.p1,cfg.l1);
-  const balance=gt*ppg(cfg.p1,cfg.l1)-gt*ppg(cfg.p1,cfg.l1); // sera 0 car prix = prix réel
-  // Solde = ce que chacun a payé (nbVerres * prixRéel) - coût réel fût consommé
-  const totalPaid=gt*ppg(cfg.p1,cfg.l1);
-  const totalCost=gt*ppg(cfg.p1,cfg.l1);
-  const sol=totalPaid-totalCost;
+  const myBadges=getBadges(user);
+  const record=getDayRecord();
+  // Jauge fût
+  const consumed1=gt,total1=gpf(cfg.l1);
+  const pct1=Math.min(100,Math.round((consumed1/total1)*100));
+  const remaining1=Math.max(0,total1-consumed1);
+  const low1=remaining1<=Math.ceil(total1*0.1);
+
   return`<div class="page">
   <div class="topbar">
     <button class="topbar-quit" id="btn-quit">← Quitter</button>
-    <div class="topbar-title">${isAdmin?"👑 ADMIN — SEB":user.toUpperCase()}</div>
+    <div class="topbar-title">${isAdmin?"👑 SEB":getAva(user)+" "+user.split(" ")[0].toUpperCase()}</div>
     <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(129,199,116,0.4);flex-shrink:0;"></div>
   </div>
+
+  ${annonce?`<div class="annonce-banner"><div class="annonce-icon">📢</div><div><div class="annonce-txt">${annonce.text}</div><div class="annonce-time">Admin · ${fmtTime(annonce.ts)}</div></div></div>`:""}
+
   <div class="my-card">
     <div class="my-lbl">MES VERRES · SEMAINE</div>
     <div class="my-big">${myT}</div>
     <div class="my-due">Je dois <strong style="color:var(--green)">${eur(myT*ppg(cfg.p1,cfg.l1))}</strong></div>
-    <div class="my-real">= ${myT} verre${myT>1?"s":""} × ${eur(ppg(cfg.p1,cfg.l1))}/verre</div>
+    <div class="my-real">${myT} verre${myT>1?"s":""} × ${eur(ppg(cfg.p1,cfg.l1))}/verre</div>
+    ${myBadges.length>0?`<div class="my-badges">${myBadges.map(b=>`<div class="badge">${b.icon} <span style="font-size:11px;">${b.label}</span></div>`).join("")}</div>`:""}
   </div>
-  <div class="fut-bar">
-    <div class="fut-bar-row">🛢 Fût 1 · ${cfg.l1}L · ${cfg.p1}€ · <strong>${eur(ppg(cfg.p1,cfg.l1))}/verre</strong>${cfg.n1?" · "+cfg.n1:""}</div>
-    ${cfg.f2?`<div class="fut-bar-row blue" style="margin-top:3px;">🛢 Fût 2 · ${cfg.l2}L · ${cfg.p2}€ · <strong>${eur(ppg(cfg.p2,cfg.l2))}/verre</strong>${cfg.n2?" · "+cfg.n2:""}</div>`:""}
+
+  ${record?`<div class="record-card"><div class="record-ico">⭐</div><div><div class="record-txt">Record du jour — ${getAva(record.who)} ${record.who}</div><div class="record-sub">${record.val} verre${record.val>1?"s":""} aujourd'hui · ${DAYS[TIDX]?.f||""}</div></div></div>`:""}
+
+  <!-- Jauges fûts -->
+  <div class="fut-gauge-wrap">
+    <div class="fut-gauge">
+      <div class="fut-gauge-fill" style="height:${pct1}%;"></div>
+      <div class="fut-gauge-content">
+        <span class="fut-gauge-label">🛢 FÛT 1</span>
+        <div class="fut-gauge-pct">${pct1}%</div>
+        <div class="fut-gauge-info">${remaining1} verres restants</div>
+        ${low1?`<div class="fut-gauge-alert">⚠️ Presque vide !</div>`:""}
+        ${cfg.n1?`<div style="font-size:10px;color:var(--amber);margin-top:2px;font-style:italic;">${cfg.n1}</div>`:""}
+      </div>
+    </div>
+    ${cfg.f2?`<div class="fut-gauge">
+      <div class="fut-gauge-fill blue" style="height:${Math.min(100,Math.round((gt/gpf(cfg.l2))*100))}%;"></div>
+      <div class="fut-gauge-content">
+        <span class="fut-gauge-label blue">🛢 FÛT 2</span>
+        <div class="fut-gauge-pct blue">${Math.min(100,Math.round((gt/gpf(cfg.l2))*100))}%</div>
+        <div class="fut-gauge-info">${Math.max(0,gpf(cfg.l2)-gt)} verres restants</div>
+        ${cfg.n2?`<div style="font-size:10px;color:var(--blue);margin-top:2px;font-style:italic;">${cfg.n2}</div>`:""}
+      </div>
+    </div>`:""}
   </div>
-  <div class="tri">
+
+  <div class="tri" style="margin-top:8px;">
     <div class="tri-c" style="border-color:rgba(242,169,30,0.3)"><div class="tri-v" style="color:var(--gold)">${gt}</div><div class="tri-l">🍺 Total</div></div>
-    <div class="tri-c" style="border-color:rgba(129,199,116,0.3)"><div class="tri-v" style="color:var(--green);font-size:14px;">${eur(totalPaid)}</div><div class="tri-l">💰 Caisse</div></div>
-    <div class="tri-c" style="border-color:rgba(129,199,116,0.3)"><div class="tri-v" style="color:var(--green);font-size:14px;">0,00 €</div><div class="tri-l">⚖️ Solde</div></div>
+    <div class="tri-c" style="border-color:rgba(129,199,116,0.3)"><div class="tri-v" style="color:var(--green);font-size:14px;">${eur(gt*ppg(cfg.p1,cfg.l1))}</div><div class="tri-l">💰 Caisse</div></div>
+    <div class="tri-c" style="border-color:rgba(129,199,116,0.3)"><div class="tri-v" style="color:var(--green);font-size:12px;">${eur(ppg(cfg.p1,cfg.l1))}</div><div class="tri-l">💸 /verre</div></div>
   </div>
-  <div class="acts">
-    <button class="act" id="btn-s"><span class="act-ico">✏️</span><div><div class="act-lbl">Saisir mes verres</div><div class="act-sub">Enregistrer ma consommation</div></div></button>
-    <button class="act" id="btn-r"><span class="act-ico">📊</span><div><div class="act-lbl">Tableau complet</div><div class="act-sub">Classement · Bilan fût</div></div></button>
-    ${isAdmin?`<button class="act act-gold" id="btn-a"><span class="act-ico">👑</span><div><div class="act-lbl" style="color:var(--gold);">Administration</div><div class="act-sub">Modifier · Fûts · Config</div></div></button>`:""}
-  </div>
-  <div class="fsync">⟳ Synchronisation Firebase temps réel</div>
+  <div class="fsync" style="padding-bottom:8px;">⟳ Firebase temps réel · <button id="btn-chg-ava" style="background:none;border:none;color:var(--amber);font-size:10px;letter-spacing:1px;">Changer avatar</button></div>
 </div>`;
 }
 function bHome(){
   document.getElementById("btn-quit").addEventListener("click",()=>{user=null;isAdmin=false;screen="login";render();});
-  document.getElementById("btn-s").addEventListener("click",()=>{screen="saisie";render();});
-  document.getElementById("btn-r").addEventListener("click",()=>{screen="recap";render();});
-  if(isAdmin)document.getElementById("btn-a").addEventListener("click",()=>{screen="admin";render();});
+  document.getElementById("btn-chg-ava").addEventListener("click",()=>showAvatarPicker());
 }
 
 // ══ SAISIE ══
 function rSaisie(){
   const mc=counts[user]||new Array(DAYS.length).fill(0),tot=mc.reduce((a,b)=>a+b,0);
+  const rows=DAYS.map((day,di)=>{
+    const v=mc[di]||0,td=di===TIDX;
+    const rKey=`${di}`;
+    const dayReacts=reactions[rKey]||{};
+    const reactBtns=REACT_EMOJIS.map(e=>`<button class="react-btn${dayReacts[e]>0?" active":""}" data-di="${di}" data-e="${e}">${e}<span class="react-count">${dayReacts[e]||""}</span></button>`).join("");
+    return`<div style="display:flex;flex-direction:column;gap:0;">
+      <div class="day-row${td?" day-today":""}">
+        <div><div class="day-name">${day.f}</div>${td?`<div class="today-tag">AUJOURD'HUI</div>`:""}</div>
+        <div class="ctr"><button class="bminus" data-n="${user}" data-i="${di}">−</button><span class="cval${v>0?" cval-on":""}" id="v${di}">${v}</span><button class="bplus" data-n="${user}" data-i="${di}">+</button></div>
+      </div>
+      <div class="reactions-row">${reactBtns}</div>
+    </div>`;
+  }).join("");
   return`<div class="page">
-  <div class="topbar"><button class="topbar-back" id="btn-bk">← Retour</button><div class="topbar-title">${user}</div><div style="width:70px;"></div></div>
+  <div class="topbar"><div style="width:70px;"></div><div class="topbar-title">MES VERRES</div><div style="width:70px;"></div></div>
   <div class="saisie-wrap">
-    <div class="tot-ban"><span class="tot-lbl">Total semaine</span><span class="tot-val" id="tv">${tot} 🍺 · ${eur(tot*ppg(cfg.p1,cfg.l1))}</span></div>
-    ${DAYS.map((day,di)=>{const v=mc[di]||0,td=di===TIDX;return`<div class="day-row${td?" day-today":""}"><div><div class="day-name">${day.f}</div>${td?`<div class="today-tag">AUJOURD'HUI</div>`:""}</div><div class="ctr"><button class="bminus" data-n="${user}" data-i="${di}">−</button><span class="cval${v>0?" cval-on":""}" id="v${di}">${v}</span><button class="bplus" data-n="${user}" data-i="${di}">+</button></div></div>`;}).join("")}
+    <div class="tot-ban"><span style="font-size:11px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;">Total semaine</span><span id="tv" style="font-family:'Bebas Neue',cursive;font-size:20px;color:var(--gold);letter-spacing:1px;">${tot} 🍺 · ${eur(tot*ppg(cfg.p1,cfg.l1))}</span></div>
+    ${rows}
   </div>
 </div>`;
 }
 function bSaisie(){
-  document.getElementById("btn-bk").addEventListener("click",()=>{screen="home";render();});
   document.querySelectorAll(".bminus,.bplus").forEach(b=>b.addEventListener("click",async()=>{
     const n=b.dataset.n,di=parseInt(b.dataset.i),d=b.classList.contains("bplus")?1:-1;
     counts[n]=counts[n]||new Array(DAYS.length).fill(0);
@@ -346,60 +525,115 @@ function bSaisie(){
     const tv=document.getElementById("tv");
     if(tv)tv.textContent=`${tot} 🍺 · ${eur(tot*ppg(cfg.p1,cfg.l1))}`;
     notif(d>0?"+1 🍺":"−1 🍺",d>0?"#81c784":"#ef9a9a");
+    // check badges
+    const newBadges=getBadges(n);
+    if(newBadges.length>0&&d>0){const last=newBadges[newBadges.length-1];setTimeout(()=>notif(`${last.icon} Badge débloqué : ${last.label} !`,"#ce93d8"),500);}
+  }));
+  document.querySelectorAll(".react-btn").forEach(b=>b.addEventListener("click",async()=>{
+    const di=b.dataset.di,e=b.dataset.e;
+    await saveReact(di,e);
+    notif(e,"#F2A91E");
   }));
 }
 
 // ══ RECAP ══
 function rRecap(){
-  const gt=gtot(),cost=gt*ppg(cfg.p1,cfg.l1);
+  const gt=gtot();
   const sorted=[...NAMES].sort((a,b)=>ptot(b)-ptot(a)),maxV=Math.max(...NAMES.map(ptot),1);
+  const maxDay=DAYS.reduce((mx,_,i)=>dtot(i)>dtot(mx)?i:mx,0);
   return`<div class="page">
-  <div class="topbar"><button class="topbar-back" id="btn-bk">← Retour</button><div class="topbar-title">TABLEAU</div><div style="width:70px;"></div></div>
+  <div class="topbar"><div style="width:70px;"></div><div class="topbar-title">STATS</div><div style="width:70px;"></div></div>
   <div class="scroll">
+    <!-- Graphique par jour -->
     <div class="bloc">
-      <div class="bloc-title">🛢 FÛT 1</div>
-      ${cfg.n1?`<div class="ligne ligne-hi"><span class="llbl">Modèle</span><span class="lval lval-hi">🍺 ${cfg.n1}</span></div>`:""}
-      <div class="ligne"><span class="llbl">Volume · Prix</span><span class="lval">${cfg.l1}L · ${cfg.p1}€ TTC</span></div>
-      <div class="ligne"><span class="llbl">Verres estimés (~25cl)</span><span class="lval">${gpf(cfg.l1)} verres</span></div>
-      <div class="ligne ligne-hi"><span class="llbl">Prix réel / verre</span><span class="lval lval-hi">${eur(ppg(cfg.p1,cfg.l1))}</span></div>
+      <div class="bloc-title">📈 ÉVOLUTION PAR JOUR</div>
+      <div class="graph-wrap">
+        <div class="graph-bars">
+          ${DAYS.map((day,di)=>{const t=dtot(di),pct=maxV>0?Math.round((t/Math.max(...DAYS.map((_,i)=>dtot(i)),1))*100):0;return`<div class="graph-bar-wrap"><div class="graph-val">${t}</div><div class="graph-bar" style="height:${Math.max(pct,4)}%;background:${di===TIDX?"var(--gold)":di===maxDay?"var(--amber)":"rgba(212,134,10,0.4)"};"></div><div class="graph-lbl">${day.s.split(" ")[0]}</div></div>`;}).join("")}
+        </div>
+      </div>
     </div>
-    ${cfg.f2?`<div class="bloc">
-      <div class="bloc-title" style="color:var(--blue);">🛢 FÛT 2</div>
-      ${cfg.n2?`<div class="ligne ligne-hi"><span class="llbl">Modèle</span><span class="lval lval-blue">🍺 ${cfg.n2}</span></div>`:""}
-      <div class="ligne"><span class="llbl">Volume · Prix</span><span class="lval">${cfg.l2}L · ${cfg.p2}€ TTC</span></div>
-      <div class="ligne"><span class="llbl">Verres estimés (~25cl)</span><span class="lval">${gpf(cfg.l2)} verres</span></div>
-      <div class="ligne ligne-hi"><span class="llbl">Prix réel / verre</span><span class="lval lval-blue">${eur(ppg(cfg.p2,cfg.l2))}</span></div>
-    </div>`:""}
+    <!-- Jauges -->
     <div class="bloc">
-      <div class="bloc-title">📅 PAR JOUR</div>
-      ${DAYS.map((day,di)=>`<div class="ligne${di===TIDX?" ligne-hi":""}"><span class="llbl">${day.f}</span><span class="lval${di===TIDX?" lval-hi":""}">${dtot(di)} 🍺</span></div>`).join("")}
+      <div class="bloc-title">🛢 FÛTS</div>
+      <div class="ligne ligne-hi"><span class="llbl">Fût 1 · ${cfg.n1||"–"}</span><span class="lval lval-hi">${gt}/${gpf(cfg.l1)} verres (${Math.min(100,Math.round((gt/gpf(cfg.l1))*100))}%)</span></div>
+      <div class="ligne"><span class="llbl">Prix réel/verre</span><span class="lval">${eur(ppg(cfg.p1,cfg.l1))}</span></div>
+      ${cfg.f2?`<div class="ligne ligne-hi"><span class="llbl" style="color:var(--blue);">Fût 2 · ${cfg.n2||"–"}</span><span class="lval lval-blue">${eur(ppg(cfg.p2,cfg.l2))}/verre</span></div>`:""}
+      <div class="ligne"><span class="llbl">Total collecté</span><span class="lval">${eur(gt*ppg(cfg.p1,cfg.l1))}</span></div>
     </div>
-    <div class="bloc">
-      <div class="bloc-title">💰 BILAN</div>
-      <div class="ligne ligne-hi"><span class="llbl">Verres consommés</span><span class="lval lval-hi">${gt} 🍺</span></div>
-      <div class="ligne"><span class="llbl">Coût total (prix réel)</span><span class="lval">${eur(cost)}</span></div>
-      <div class="ligne"><span class="llbl">Prix / verre facturé</span><span class="lval lval-hi">${eur(ppg(cfg.p1,cfg.l1))}</span></div>
-    </div>
+    <!-- Classement avec badges -->
     <div class="bloc">
       <div class="bloc-title">🏆 CLASSEMENT</div>
-      ${sorted.map((n,i)=>{const t=ptot(n);return`<div class="rank-row${n===user?" rank-me":""}"><span class="ri">${i+1}</span><span class="rn">${n}</span><div class="rb"><div class="rbf" style="width:${(t/maxV)*100}%"></div></div><span class="rv" style="color:${t>0?"var(--gold)":"rgba(255,255,255,0.15)"}">${t}</span><span class="re">${eur(t*ppg(cfg.p1,cfg.l1))}</span></div>`;}).join("")}
+      ${sorted.map((n,i)=>{const t=ptot(n),badges=getBadges(n);return`<div class="rank-row${n===user?" rank-me":""}">
+        <span class="ri">${i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1}</span>
+        <span style="font-size:16px;width:24px;flex-shrink:0;">${getAva(n)}</span>
+        <span class="rn">${n}</span>
+        <div class="rb"><div class="rbf" style="width:${(t/maxV)*100}%"></div></div>
+        <span class="rv" style="color:${t>0?"var(--gold)":"rgba(255,255,255,0.15)"}">${t}</span>
+        <span class="re">${eur(t*ppg(cfg.p1,cfg.l1))}</span>
+      </div>
+      ${badges.length>0?`<div style="padding:3px 14px 6px;display:flex;gap:4px;flex-wrap:wrap;">${badges.map(b=>`<span style="font-size:11px;background:rgba(255,255,255,0.04);border-radius:10px;padding:2px 7px;">${b.icon} ${b.label}</span>`).join("")}</div>`:""}`}).join("")}
     </div>
   </div>
 </div>`;
 }
-function bRecap(){document.getElementById("btn-bk").addEventListener("click",()=>{screen="home";render();});}
+
+// ══ TCHAT ══
+function rChat(){
+  const msgs=chatMsgs.slice(-50).map(m=>{
+    const isMe=m.user===user;
+    return`<div class="chat-msg${isMe?" ":" "}" style="flex-direction:${isMe?"row-reverse":"row"};">
+      <div class="chat-ava" style="background:${isMe?"linear-gradient(135deg,var(--amber),var(--gold))":"rgba(255,255,255,0.06)"};">${m.ava||m.user[0]}</div>
+      <div>
+        <div class="chat-bubble${isMe?" mine":""}">
+          ${!isMe?`<div class="chat-name">${m.user}</div>`:""}
+          <div class="chat-text">${m.text}</div>
+          <div class="chat-time">${fmtTime(m.ts)}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+  return`<div class="page">
+  <div class="topbar"><div style="width:70px;"></div><div class="topbar-title">💬 TCHAT</div><div style="width:70px;"></div></div>
+  <div style="padding:10px 12px;display:flex;flex-direction:column;height:calc(100vh - 130px);">
+    <div class="chat-msgs" id="chat-msgs" style="flex:1;">${msgs||`<div style="text-align:center;padding:40px 20px;color:var(--mid);font-size:14px;">Soyez les premiers à briser la glace 🍺</div>`}</div>
+    <div class="chat-input-wrap">
+      <input class="chat-input" id="chat-in" placeholder="Un message..." maxlength="200">
+      <button class="chat-send" id="chat-send">➤</button>
+    </div>
+  </div>
+</div>`;
+}
+function bChat(){
+  // scroll to bottom
+  setTimeout(()=>{const el=document.getElementById("chat-msgs");if(el)el.scrollTop=el.scrollHeight;},50);
+  const inp=document.getElementById("chat-in");
+  const send=async()=>{const txt=inp.value.trim();if(!txt)return;await sendChat(txt);inp.value="";};
+  document.getElementById("chat-send").addEventListener("click",send);
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter")send();});
+}
 
 // ══ ADMIN ══
 function rAdmin(){
   const cards=NAMES.map(n=>{
     const mc=counts[n]||new Array(DAYS.length).fill(0),tot=mc.reduce((a,b)=>a+b,0);
     const boxes=DAYS.map((day,di)=>{const v=mc[di]||0;return`<div class="ad-box${di===TIDX?" ad-today":""}"><div class="ad-lbl">${day.s}</div><div class="ad-val${v>0?" ad-on":""}" id="av-${n.replace(/\s/g,"_")}-${di}">${v}</div><div class="ad-btns"><button class="adm" data-n="${n}" data-i="${di}">−</button><button class="adp" data-n="${n}" data-i="${di}">+</button></div></div>`;}).join("");
-    return`<div class="ap-wrap"><div class="ap-row" data-p="${n}"><div class="ap-ava">${n[0]}</div><span class="ap-name">${n}</span><span class="ap-tot" id="at-${n.replace(/\s/g,"_")}">${tot}🍺·${eur(tot*ppg(cfg.p1,cfg.l1))}</span><span class="ap-chev" id="ac-${n.replace(/\s/g,"_")}">▼</span></div><div class="ad-grid" id="ag-${n.replace(/\s/g,"_")}" style="display:none;">${boxes}</div></div>`;
+    return`<div class="ap-wrap"><div class="ap-row" data-p="${n}"><div class="ap-ava">${getAva(n)}</div><span class="ap-name">${n}</span><span class="ap-tot" id="at-${n.replace(/\s/g,"_")}">${tot}🍺·${eur(tot*ppg(cfg.p1,cfg.l1))}</span><span class="ap-chev" id="ac-${n.replace(/\s/g,"_")}">▼</span></div><div class="ad-grid" id="ag-${n.replace(/\s/g,"_")}" style="display:none;">${boxes}</div></div>`;
   }).join("");
   return`<div class="page">
-  <div class="topbar"><button class="topbar-back" id="btn-bk">← Retour</button><div class="topbar-title">👑 ADMIN</div><div style="width:70px;"></div></div>
+  <div class="topbar"><div style="width:70px;"></div><div class="topbar-title">👑 ADMIN</div><div style="width:70px;"></div></div>
   <div class="scroll">
     <div class="admin-badge">Mode administrateur · Accès complet</div>
+    <!-- ANNONCE -->
+    <div class="bloc">
+      <div class="bloc-title" style="color:var(--purple);">📢 ANNONCE</div>
+      <div class="cfg-row" style="flex-direction:column;align-items:flex-start;gap:5px;">
+        <span class="cfg-lbl">Message visible par tous</span>
+        <input type="text" class="cfg-in-txt" id="ann-txt" placeholder="ex: Nouveau fût en place ! 🍺" value="${annonce?.text||""}">
+      </div>
+      <button class="annonce-send" id="btn-ann">📢 Envoyer l'annonce</button>
+    </div>
+    <!-- FÛT 1 -->
     <div class="bloc">
       <div class="bloc-title">🛢 FÛT 1</div>
       <div class="cfg-row"><span class="cfg-lbl">Prix (€)</span><input class="cfg-in" type="number" id="p1" value="${cfg.p1}" min="1"></div>
@@ -407,6 +641,7 @@ function rAdmin(){
       <div class="cfg-info" id="ci1">${gpf(cfg.l1)} verres · <strong style="color:var(--gold)">${eur(ppg(cfg.p1,cfg.l1))}</strong>/verre</div>
       <div class="cfg-row" style="flex-direction:column;align-items:flex-start;gap:5px;"><span class="cfg-lbl">Modèle de bière</span><input type="text" class="cfg-in-txt" id="n1" placeholder="ex: Leffe Blonde…" value="${cfg.n1||""}"></div>
     </div>
+    <!-- FÛT 2 -->
     <div class="bloc">
       <div class="bloc-title" style="color:var(--blue);">🛢 FÛT 2</div>
       <div class="cfg-row"><span class="cfg-lbl">Activer fût 2</span><label class="cfg-check"><input type="checkbox" id="f2chk" ${cfg.f2?"checked":""}><span style="font-size:13px;color:var(--mid);">Activé</span></label></div>
@@ -416,8 +651,9 @@ function rAdmin(){
         <div class="cfg-info" id="ci2">${gpf(cfg.l2)} verres · <strong style="color:var(--blue)">${eur(ppg(cfg.p2,cfg.l2))}</strong>/verre</div>
         <div class="cfg-row" style="flex-direction:column;align-items:flex-start;gap:5px;"><span class="cfg-lbl">Modèle de bière</span><input type="text" class="cfg-in-txt" id="n2" placeholder="ex: Kronenbourg…" value="${cfg.n2||""}"></div>
       </div>
-      <button class="save-btn" id="btn-sv">✅ Enregistrer la configuration</button>
+      <button class="save-btn" id="btn-sv">✅ Enregistrer configuration</button>
     </div>
+    <!-- COMPTEURS -->
     <div class="bloc">
       <div class="bloc-title">✏️ MODIFIER LES COMPTEURS</div>
       ${cards}
@@ -430,22 +666,23 @@ function rAdmin(){
 </div>`;
 }
 function bAdmin(){
-  document.getElementById("btn-bk").addEventListener("click",()=>{screen="home";render();});
+  document.getElementById("btn-ann").addEventListener("click",async()=>{
+    const txt=document.getElementById("ann-txt").value.trim();
+    if(!txt)return;
+    await saveAnnonce(txt);notif("Annonce envoyée 📢","#ce93d8");
+  });
   const uc1=()=>{const p=parseFloat(document.getElementById("p1").value)||65,l=parseFloat(document.getElementById("l1").value)||14,g=gpf(l);document.getElementById("ci1").innerHTML=`${g} verres · <strong style="color:var(--gold)">${eur(p/g)}</strong>/verre`;};
-  document.getElementById("p1").addEventListener("input",uc1);
-  document.getElementById("l1").addEventListener("input",uc1);
+  document.getElementById("p1").addEventListener("input",uc1);document.getElementById("l1").addEventListener("input",uc1);
   document.getElementById("f2chk").addEventListener("change",function(){document.getElementById("f2fields").style.display=this.checked?"block":"none";});
   const uc2=()=>{const p=parseFloat(document.getElementById("p2").value)||65,l=parseFloat(document.getElementById("l2").value)||14,g=gpf(l);document.getElementById("ci2").innerHTML=`${g} verres · <strong style="color:var(--blue)">${eur(p/g)}</strong>/verre`;};
-  document.getElementById("p2").addEventListener("input",uc2);
-  document.getElementById("l2").addEventListener("input",uc2);
+  document.getElementById("p2").addEventListener("input",uc2);document.getElementById("l2").addEventListener("input",uc2);
   document.getElementById("btn-sv").addEventListener("click",async()=>{
     cfg={p1:parseFloat(document.getElementById("p1").value)||65,l1:parseFloat(document.getElementById("l1").value)||14,n1:document.getElementById("n1").value.trim(),f2:document.getElementById("f2chk").checked,p2:parseFloat(document.getElementById("p2").value)||65,l2:parseFloat(document.getElementById("l2").value)||14,n2:document.getElementById("n2").value.trim()};
-    await saveCFG(cfg);notif("Configuration sauvegardée ✓");
+    await saveCFG(cfg);notif("Sauvegardé ✓");
   });
   document.querySelectorAll(".ap-row").forEach(r=>r.addEventListener("click",()=>{
     const k=r.dataset.p.replace(/\s/g,"_"),g=document.getElementById(`ag-${k}`),c=document.getElementById(`ac-${k}`),o=g.style.display!=="none";
-    document.querySelectorAll(".ad-grid").forEach(x=>x.style.display="none");
-    document.querySelectorAll(".ap-chev").forEach(x=>x.textContent="▼");
+    document.querySelectorAll(".ad-grid").forEach(x=>x.style.display="none");document.querySelectorAll(".ap-chev").forEach(x=>x.textContent="▼");
     if(!o){g.style.display="grid";c.textContent="▲";}
   }));
   document.querySelectorAll(".adm,.adp").forEach(b=>b.addEventListener("click",async(e)=>{

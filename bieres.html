@@ -442,7 +442,7 @@ const EMOJIS=[
   // Têtes rigolotes
   "🤡","👻","💀","👽","🤖","🎃","🥸","🤓","😎","🥴","🤪","😜","🤩","🥳","😈","👹","👺","🫠","🤯","🥶",
   // Nourriture / boisson
-  "🍺","🍻","🥂","🍾","🍕","🌮","🍔","🌭","🍿","🥨","🧀","🍣","🍜","🌯","🥗","🧆","🍩","🎂","🍭","🍦",
+  "🍺","🍻","🥂","🍾","🥃","🍷","🍸","🍕","🌮","🍔","🌭","🍿","🥨","🧀","🍣","🍜","🌯","🥗","🧆","🍩","🎂","🍭","🍦",
   // Sport / activités
   "🏄","🤸","🧗","🎯","🎳","🎲","🎮","🕹️","🎸","🥁","🎻","🎺","🎭","🎪","🎠","🎡","🎢","🎬","🎤","🎧",
   // Nature / magie
@@ -471,12 +471,15 @@ const eur=n=>n.toFixed(2).replace(".",",")+"\u202f€";
 const ptot=n=>(counts[n]||[]).reduce((a,b)=>a+b,0);
 const dtot=di=>NAMES.reduce((s,n)=>s+(counts[n]?.[di]||0),0);
 const gtot=()=>NAMES.reduce((s,n)=>s+ptot(n),0);
+const normKey=n=>n.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"_").toLowerCase();
 const getAva=n=>{
   const key=n.replace(/\s/g,"_");
+  const nk=normKey(n);
   if(avatars[key]) return avatars[key];
   if(avatars[n]) return avatars[n];
-  // fallback to localStorage
+  for(const k in avatars){ if(normKey(k)===nk && avatars[k]) return avatars[k]; }
   try{const ls=localStorage.getItem("ava_"+key);if(ls)return ls;}catch(e){}
+  try{const ls2=localStorage.getItem("ava_"+nk);if(ls2)return ls2;}catch(e){}
   return n[0];
 };
 const getRank=n=>[...NAMES].sort((a,b)=>ptot(b)-ptot(a)).indexOf(n);
@@ -497,10 +500,11 @@ async function sendChat(text){if(!text.trim()||!user)return;try{await push(CHATR
 async function saveReact(dayKey,emoji){try{const r={...(reactions[dayKey]||{})};r[emoji]=(r[emoji]||0)+1;await set(ref(db,`bieres/reactions/${dayKey}`),r);}catch(e){}}
 async function saveAva(n,emoji){
   try{
-    await set(ref(db,`bieres/avatars/${n.replace(/\s/g,"_")}`),emoji);
-    avatars[n.replace(/\s/g,"_")]=emoji;
-    // Also save to localStorage as backup
-    try{localStorage.setItem("ava_"+n.replace(/\s/g,"_"),emoji);}catch(e){}
+    const key=n.replace(/\s/g,"_");
+    await set(ref(db,`bieres/avatars/${key}`),emoji);
+    avatars[key]=emoji;
+    try{localStorage.setItem("ava_"+key,emoji);}catch(e){}
+    try{localStorage.setItem("ava_"+normKey(n),emoji);}catch(e){}
   }catch(e){}
 }
 async function saveAnnonce(txt){try{await set(ANNREF,txt?{text:txt,ts:Date.now()}:null);}catch(e){}}
@@ -665,10 +669,10 @@ function rAvatarPicker(){
     {label:"🦒 Girafes",range:[0,6]},
     {label:"🐾 Animaux",range:[6,26]},
     {label:"😂 Têtes",range:[26,46]},
-    {label:"🍺 Festif",range:[46,66]},
-    {label:"🎮 Activités",range:[66,86]},
-    {label:"✨ Magie",range:[86,106]},
-    {label:"🎩 Objets",range:[106,126]},
+    {label:"🍺 Festif",range:[46,69]},
+    {label:"🎮 Activités",range:[69,89]},
+    {label:"✨ Magie",range:[89,109]},
+    {label:"🎩 Objets",range:[109,129]},
   ];
   const catBtns=cats.map((c,i)=>`<button class="cat-btn" data-from="${c.range[0]}" data-to="${c.range[1]}" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--cream);white-space:nowrap;">${c.label}</button>`).join("");
   const allBtns=EMOJIS.map((e,i)=>`<button class="av-btn${e===current?" selected":""}" data-e="${e}" data-idx="${i}">${e}</button>`).join("");
@@ -680,7 +684,8 @@ function rAvatarPicker(){
   </div>
   <div style="display:flex;gap:6px;padding:12px 12px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;" id="cat-scroll">${catBtns}</div>
   <div class="avatar-picker" id="ava-grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:8px 12px;">${allBtns}</div>
-  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:12px 14px;background:var(--dark2);border-top:1px solid var(--border);">
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:12px 14px;background:var(--dark2);border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;">
+    <button id="repair-ava" style="display:block;width:100%;background:rgba(242,169,30,0.1);border:1px solid rgba(242,169,30,0.25);border-radius:12px;color:var(--gold);font-size:13px;font-weight:800;padding:11px;font-family:'Nunito',sans-serif;">🔧 Réparer mon avatar (si disparu)</button>
     <button id="skip-ava" style="display:block;width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:var(--mid);font-size:13px;padding:11px;font-family:'Nunito',sans-serif;">Continuer sans avatar →</button>
   </div>
 </div>`;
@@ -691,6 +696,12 @@ function bAvatarPicker(){
     screen="main";subScreen="home";render();
   }));
   document.getElementById("skip-ava").onclick=()=>{screen="main";subScreen="home";render();};
+  document.getElementById("repair-ava").onclick=async()=>{
+    const selected=document.querySelector(".av-btn.selected");
+    const emoji=selected?selected.dataset.e:getAva(user);
+    if(emoji && emoji.length>1){ await saveAva(user,emoji); notif("Avatar resynchronisé ✓","#81c784"); }
+    else { notif("Choisis d'abord un avatar ci-dessus","#ef9a9a"); }
+  };
   // Category filter
   document.querySelectorAll(".cat-btn").forEach(btn=>{
     btn.addEventListener("click",()=>{

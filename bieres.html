@@ -442,7 +442,7 @@ const EMOJIS=[
   // Têtes rigolotes
   "🤡","👻","💀","👽","🤖","🎃","🥸","🤓","😎","🥴","🤪","😜","🤩","🥳","😈","👹","👺","🫠","🤯","🥶",
   // Nourriture / boisson
-  "🍺","🍻","🥂","🍾","🥃","🍷","🍸","🍕","🌮","🍔","🌭","🍿","🥨","🧀","🍣","🍜","🌯","🥗","🧆","🍩","🎂","🍭","🍦",
+  "🍺","🍻","🥂","🍾","🥃","🍷","🍸","🍹","🍶","🧉","🍕","🌮","🍔","🌭","🍿","🥨","🧀","🍣","🍜","🌯","🥗","🧆","🍩","🎂","🍭","🍦",
   // Sport / activités
   "🏄","🤸","🧗","🎯","🎳","🎲","🎮","🕹️","🎸","🥁","🎻","🎺","🎭","🎪","🎠","🎡","🎢","🎬","🎤","🎧",
   // Nature / magie
@@ -669,10 +669,10 @@ function rAvatarPicker(){
     {label:"🦒 Girafes",range:[0,6]},
     {label:"🐾 Animaux",range:[6,26]},
     {label:"😂 Têtes",range:[26,46]},
-    {label:"🍺 Festif",range:[46,69]},
-    {label:"🎮 Activités",range:[69,89]},
-    {label:"✨ Magie",range:[89,109]},
-    {label:"🎩 Objets",range:[109,129]},
+    {label:"🍺 Festif",range:[46,72]},
+    {label:"🎮 Activités",range:[72,92]},
+    {label:"✨ Magie",range:[92,112]},
+    {label:"🎩 Objets",range:[112,132]},
   ];
   const catBtns=cats.map((c,i)=>`<button class="cat-btn" data-from="${c.range[0]}" data-to="${c.range[1]}" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--cream);white-space:nowrap;">${c.label}</button>`).join("");
   const allBtns=EMOJIS.map((e,i)=>`<button class="av-btn${e===current?" selected":""}" data-e="${e}" data-idx="${i}">${e}</button>`).join("");
